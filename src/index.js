@@ -1,14 +1,15 @@
-const express = require('express')
-const routes = require('./api/routes/index')
-const config = require('./config/index')
-const app = express()
+import express from 'express';
+import routes from './api/routes';
+import config from './config';
+import './loaders/database';
 
-const port = config.endPointBasePort
+const app = express();
+const port = config.PORT;
 
-app.use(express.json())
-app.use(routes)
+app.use(express.json());
+app.use(routes);
 
 
 app.listen(port, () => {
-    console.log(`Server is up on port ${port}`)
-})
+    console.log(`Server is up on port ${port}`);
+});

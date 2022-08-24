@@ -1,10 +1,8 @@
-const express = require('express');
-const testController = require('./admin/test');
+import { Router } from 'express';
+import userController from './admin/user';
 
-const router = new express.Router()
+const router = new Router()
 
-router.use('/v1/admin', testController)
+router.use('/v1/admin', userController)
 
-
-
-module.exports = router
+export default router;
