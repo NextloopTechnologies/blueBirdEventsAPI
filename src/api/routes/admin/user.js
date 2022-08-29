@@ -17,8 +17,8 @@ const userRegisterValidation = Joi.object({
     name: Joi.string().alphanum().min(3).max(30).required().trim(),
     email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
     password: Joi.string().min(6).max(16).required().trim(),
-    mobile: Joi.string().regex(/^[0-9]{10}$/)
-    .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+    mobile: Joi.string().regex(/^[6-9][0-9]{09}$/)
+    .messages({'string.pattern.base': `Invalid mobile no.`}),
     role: Joi.number().valid(1,2,3).required()
 });
 
