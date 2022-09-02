@@ -1,12 +1,4 @@
-const multer = require('multer');
-
-// const fileSizeLimitErrorHandler = (err, req, res, next) => {
-//     if (err) {
-//       res.send(413)
-//     } else {
-//       next()
-//     }
-// };
+import multer from 'multer';
 
 const fileService = (filename,filelimit) => {
     if(filelimit === 1) {
@@ -37,7 +29,7 @@ const fileService = (filename,filelimit) => {
     }  
 };
 
-module.exports =  fileService 
+export default fileService; 
 
 // var multer = require('multer')({
 //     dest: App.uploadsDir,
@@ -50,21 +42,3 @@ module.exports =  fileService
 //       cb(null, true)
 //     }
 // })
-
-// const fileUploads = {
-//     singleFile: (filename) => {
-//         const upload = multer({
-//             limits: { fileSize: 3000000 }
-//         }).single(filename)
-//         return (req, res, next) =>{
-//             upload(req, res, next,(err) => {
-//                 if(err instanceof multer.MulterError) {
-//                     return res.status(401).send({error: `Multer: ${err.message}` ,success: false })
-//                 } else if (err) {
-//                     return res.status(401).send({error: `U.E: ${err.message}` ,success: false }) // Unknown  error while uploading
-//                 }
-//                 next();
-//             });
-//         }
-//     }
-// };
