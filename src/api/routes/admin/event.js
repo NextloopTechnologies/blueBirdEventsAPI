@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth, requestValidator } from '../../middlewares';
-import { triviaService } from "../../../services";
+import { eventService } from "../../../services";
 import { formatFormError } from '../../../utils/helper';
 import Joi from 'joi';
 
@@ -8,7 +8,7 @@ const router = new Router();
 
 router.get('', auth, async(req, res) => {
     try {
-        const { status, ...data} = await triviaService.read();
+        const { status, ...data} = await eventService.read();
         res.status(status).send(data);
     } catch (error) {
         console.log(error);
@@ -17,15 +17,16 @@ router.get('', auth, async(req, res) => {
     }
 });
 
-const triviaValidation = Joi.object({
-    title: Joi.string().min(6).max(60).trim().required(),
-    descp: Joi.string().min(10).required(),
+const eventValidation = Joi.object({
+    event_title: Joi.string().min(6).max(60).trim().required(),
+    event_descp: Joi.string().min(10).required(),
+    event_img: Joi.string(),
     id: Joi.string()
 });
 
-router.post('/create', auth, requestValidator(triviaValidation), async(req, res) => {
+router.post('/create', auth, requestValidator(eventValidation), async(req, res) => {
     try {
-        const { status, ...data} = await triviaService.create(req.values);
+        const { status, ...data} = await eventService.create(req.values);
         res.status(status).send(data);
     } catch (error) {
         console.log(error);
@@ -37,7 +38,7 @@ router.post('/create', auth, requestValidator(triviaValidation), async(req, res)
 router.get('/read/:id', auth, async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await triviaService.read({_id});
+        const { status, ...data} = await eventService.read({_id});
         res.status(status).send(data);
     } catch (error) {
         console.log(error);
@@ -46,9 +47,9 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, requestValidator(triviaValidation), async(req, res) => {
+router.post('/update/:id', auth, requestValidator(eventValidation), async(req, res) => {
     try {
-        const { status, ...data} = await triviaService.update(req.params.id,req.body);
+        const { status, ...data} = await eventService.update(req.params.id,req.body);
         res.status(status).send(data);
     } catch (error) {
         console.log(error);
@@ -59,7 +60,7 @@ router.post('/update/:id', auth, requestValidator(triviaValidation), async(req, 
 
 router.post('/delete/:id', auth, async (req, res) => {
     try {
-        const { status, ...data} = await triviaService.remove(req.params.id);
+        const { status, ...data} = await eventService.remove(req.params.id);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})
