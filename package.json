@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bunyan": "^1.8.15",
+    "cors": "^2.8.5",
     "esm": "^3.2.25",
     "express": "^4.18.1",
     "joi": "^17.6.0",
