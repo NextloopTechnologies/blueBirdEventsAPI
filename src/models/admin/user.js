@@ -49,7 +49,7 @@ const userSchema = new Schema({
 });
 
 // Necessary Data
-userSchema.methods.toJSON = function (){
+userSchema.methods.toJSON = function() {
     const user = this;
     const userObject = user.toObject();
     delete userObject.password;
@@ -57,25 +57,23 @@ userSchema.methods.toJSON = function (){
     return userObject;
 };
 
-//generateauth token 
+//generateAuth token 
 userSchema.methods.generateAuthToken = async function() {
     const user = this;
     const token = sign({_id:user._id.toString()}, config.JWT);
     user.tokens = user.tokens.concat({ token });
     await user.save();
     return token;
-
 }
 
 //Hash Password
 userSchema.pre('save', async function (next){
-    const user = this
+    const user = this;
     if(user.isModified('password')) {
         user.password = await hash(user.password,8);
     }
-    next()
+    next();
 });
 
 const User = model('User', userSchema);
-
 export default User;
