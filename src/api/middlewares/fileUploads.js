@@ -1,6 +1,7 @@
 import multer, { MulterError } from 'multer';
 
-const fileUploads = (filename,filelimit) => {
+const fileUploads = (filename,filelimit=6) => {
+    console.log("From middleware file ",filename, filelimit);
     if(filelimit === 1) {
         var upload = multer({
             limits: { fileSize: 1 * 1024 * 1024 }
