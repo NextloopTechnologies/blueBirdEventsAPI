@@ -1,24 +1,18 @@
 import mongoose from 'mongoose';
 import config from '../config/index';
 
-mongoose.connect(config.databaseUrl);  
+export default () => {
+    mongoose.connect(config.databaseUrl);  
 
-mongoose.connection.on('open', () => {
-    console.log('MongoDB connected Successfully!');
-    mongoose.connection.db.listCollections().toArray(function (err, names) {
-        // console.log(names);
+    mongoose.connection.on('open', () => {
+        console.log(`
+            ++++++++++++++++++++++++++++++++++++++++++++++++
+            MONGODB CONNECTED SUCCESSFULLY!
+            ++++++++++++++++++++++++++++++++++++++++++++++++
+        `);
+        // console.log('MongoDB connected Successfully!');
+        mongoose.connection.db.listCollections().toArray(function (err, names) {
+            // console.log(names);
+        });
     });
-})
-
-
-// const mongoose = require('mongoose')
-// const config = require('../config/index').default
-
-// mongoose.connect(config.databaseUrl)  
-
-// mongoose.connection.on('open', () => {
-//     console.log('MongoDB connected Successfully!');
-//     mongoose.connection.db.listCollections().toArray(function (err, names) {
-//         // console.log(names);
-//     });
-// })
+}
