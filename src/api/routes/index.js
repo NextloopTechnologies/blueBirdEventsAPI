@@ -8,7 +8,7 @@ import offerBannerController from './admin/offerbanner';
 
 const router = new Router()
 
-router.use('/v1/admin', userController);
+router.use('/v1/admin/user', userController);
 router.use('/v1/admin/trivia', triviaController);
 router.use('/v1/admin/event', eventController);
 router.use('/v1/admin/eventPhoto', eventPhotoController);

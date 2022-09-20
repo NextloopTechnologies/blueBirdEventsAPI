@@ -10,7 +10,7 @@ import fileService from './admin/file';
 export {
     userService,
     fileService,
-    triviaService
+    triviaService,
     eventService,
     eventPhotoService,
     enquiryService,

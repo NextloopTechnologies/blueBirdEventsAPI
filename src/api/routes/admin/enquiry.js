@@ -2,6 +2,7 @@ import { Router } from "express";
 import { auth, requestValidator } from '../../middlewares';
 import { enquiryService } from "../../../services";
 import { formatFormError } from '../../../utils/helper';
+import logger from "../../../loaders/logger";
 import Joi from 'joi';
 
 const router = new Router();
@@ -11,7 +12,7 @@ router.get('', auth, async(req, res) => {
         const { status, ...data} = await enquiryService.read();
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_ENQUIRY-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -38,7 +39,7 @@ router.post('/create', auth, requestValidator(enquiryValidation), async(req, res
         const { status, ...data} = await enquiryService.create(req.values);
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_ENQUIRY-CREATE-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -50,7 +51,7 @@ router.get('/read/:id', auth, async (req, res)=> {
         const { status, ...data} = await enquiryService.read({_id});
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_ENQUIRY-READ-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }

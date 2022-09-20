@@ -2,14 +2,18 @@ import { Router } from 'express';
 import { userService } from '../../../services';
 import { formatFormError } from '../../../utils/helper';
 import Joi from 'joi';
+import logger from "../../../loaders/logger";
 const router = new Router();
 import { auth, fileUploads, requestValidator } from '../../middlewares';
 
-router.get('/test', (req,res) => {
+router.get('', auth, async (req,res) => {
     try {
-        res.send({message: 'Hello'});
+        const { status, ...data} = await userService.read();
+        res.status(status).send(data);
     } catch (error) {
-        res.status(500).send(error);
+        logger('ADMIN_USER-READALL-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
     }
 });
 
@@ -27,7 +31,7 @@ router.post('/create', requestValidator(userRegisterValidation),async (req, res)
         const { status, ...data} = await userService.createUser(req.values);
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_USER-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -43,7 +47,7 @@ router.post('/login', requestValidator(userLoginValidation),async (req, res) => 
         const { status, ...data} = await userService.loginUser(req.values);
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_USER-CREATE-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -60,7 +64,7 @@ router.post('/account/profile', auth, fileUploads('profile',1),(req, res) => {
         res.send('success');
         
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_USER-ACCOUNTPROFILE-CONTROLLER').error(error);
         res.status(500).send({error: "Something went wrong"});
     }
            
@@ -74,7 +78,7 @@ router.post('/logout', auth, async (req, res) => {
         await req.user.save();
         res.send({msgText: 'Successfully Logged Out!'});
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_USER-LOGOUT-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }

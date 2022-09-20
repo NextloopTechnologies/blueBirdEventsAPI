@@ -2,6 +2,7 @@ import { Router } from "express";
 import { auth, requestValidator } from '../../middlewares';
 import { eventService } from "../../../services";
 import { formatFormError } from '../../../utils/helper';
+import logger from "../../../loaders/logger";
 import Joi from 'joi';
 
 const router = new Router();

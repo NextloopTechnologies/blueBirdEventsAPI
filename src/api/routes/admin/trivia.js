@@ -2,6 +2,7 @@ import { Router } from "express";
 import { auth, requestValidator } from '../../middlewares';
 import { triviaService } from "../../../services";
 import { formatFormError } from '../../../utils/helper';
+import logger from "../../../loaders/logger";
 import Joi from 'joi';
 
 const router = new Router();
@@ -11,7 +12,7 @@ router.get('', auth, async(req, res) => {
         const { status, ...data} = await triviaService.read();
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_TRIVIA-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -28,7 +29,7 @@ router.post('/create', auth, requestValidator(triviaValidation), async(req, res)
         const { status, ...data} = await triviaService.create(req.values);
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_TRIVIA-CREATE-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -40,7 +41,7 @@ router.get('/read/:id', auth, async (req, res)=> {
         const { status, ...data} = await triviaService.read({_id});
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_TRIVIA-READ-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -51,7 +52,7 @@ router.post('/update/:id', auth, requestValidator(triviaValidation), async(req, 
         const { status, ...data} = await triviaService.update(req.params.id,req.body);
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_TRIVIA-UPDATE-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }

@@ -6,7 +6,6 @@ import config from "../config";
 import multer from "multer";
 let upload = multer();
 
-
 export default ({app}) => {
     const logger = loggerInstance({name: 'Incoming Request'});
     const reqSerializer = (req) => {
