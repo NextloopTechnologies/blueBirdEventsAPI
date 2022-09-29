@@ -4,6 +4,6 @@ files:
   - source: /
     destination: /home/ec2-user/workspace/bbe-dev
 hooks:
-  AfterInstall:
+  ApplicationStart:
     - location: scripts/start.sh
       runas: ec2-user
