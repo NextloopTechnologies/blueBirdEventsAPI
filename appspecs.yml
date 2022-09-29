@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /usr/repos/bluebirdevents
+    destination: /home/ec2-user/workspace/bbe-dev
 hooks:
   AfterInstall:
     - location: scripts/start.sh
