@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cd /usr/repos/bluebirdevents
+/home/ec2-user/workspace/bbe-dev
 
-npm install
+sudo npm install
 
 pm2 start npm --name "bbe-dev" -- start
