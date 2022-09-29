@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /usr/repos/storeways-server
+cd /usr/repos/bluebirdevents
 
 npm install
 
