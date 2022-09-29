@@ -4,4 +4,4 @@
 
 sudo npm install
 
-pm2 start npm --name "bbe-dev" -- start
+npm run start
