@@ -53,7 +53,6 @@ router.get('/read/:id', auth, async (req, res)=> {
         const { status, ...data} = await offerBannerService.read({_id});
         res.status(status).send(data);
     } catch (error) {
-        // console.log(error);
         logger('ADMIN_OFFERBANNER-READ-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
