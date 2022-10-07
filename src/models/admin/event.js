@@ -9,10 +9,10 @@ const eventSchema = new Schema({
         type: String,
         required: true,
     }, 
-    event_img: [{
-        fileId: String,
-        url: String
-    }],
+    event_img: {
+        type: String,
+        required: true
+    },
     active: {
         type: Boolean,
         default: true

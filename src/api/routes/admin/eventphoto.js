@@ -1,15 +1,16 @@
 import { Router } from "express";
 import { auth, requestValidator } from '../../middlewares';
-import { eventPhotoService } from "../../../services";
+import { eventPhotoService, fileService } from "../../../services";
 import { formatFormError } from '../../../utils/helper';
 import logger from "../../../loaders/logger";
 import Joi from 'joi';
 import { fileUploads } from "../../middlewares";
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', async(req, res) => {
     try {
         const { status, ...data} = await eventPhotoService.read();
+        data.eventphoto = await fileService.getFileUrl(data.eventphoto,'ep_img');
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENTPHOTO-READALL-CONTROLLER').error(error);
@@ -32,7 +33,8 @@ const eventPhotoValidation = Joi.object({
 
 router.post('/create', auth, fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
     try {
-        console.log("from create event ", req.body, req.files);
+        const files = await fileService.uploadMultiple(req.files);
+        req.body.ep_img = files;
         const { status, ...data} = await eventPhotoService.create(req.body);
         res.status(status).send(data);
     } catch (error) {
@@ -48,7 +50,6 @@ router.get('/read/:id', auth, async (req, res)=> {
         const { status, ...data} = await eventPhotoService.read({_id});
         res.status(status).send(data);
     } catch (error) {
-        // console.log(error);
         logger('ADMIN_EVENTPHOTO-READ-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
@@ -57,6 +58,8 @@ router.get('/read/:id', auth, async (req, res)=> {
 
 router.post('/update/:id', auth, fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
     try {
+        const files = await fileService.uploadMultiple(req.files);
+        req.body.ep_img = files;
         const { status, ...data} = await eventPhotoService.update(req.params.id,req.body);
         res.status(status).send(data);
     } catch (error) {

@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { auth, requestValidator } from '../../middlewares';
-import { offerBannerService } from "../../../services";
+import { offerBannerService , fileService} from "../../../services";
 import { formatFormError } from '../../../utils/helper';
 import logger from "../../../loaders/logger";
 import Joi from 'joi';
-import { fileUploads } from "../../middlewares";
+import { auth, requestValidator, fileUploads } from "../../middlewares";
 const router = new Router();
 
 router.get('', auth, async(req, res) => {
     try {
-        const { status, ...data} = await offerBannerService.read();
+        let { status, ...data} = await offerBannerService.read();
+        data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_OFFERBANNER-READALL-CONTROLLER').error(error);
@@ -37,7 +37,8 @@ const offerBannerValidation = Joi.object({
 
 router.post('/create', auth, fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
     try {
-        console.log("from create offerbanner ", req.body, req.file);
+        const { fileName } = await fileService.uploadSingle(req.file);
+        req.body.banner_img = fileName;
         const { status, ...data} = await offerBannerService.create(req.body);
         res.status(status).send(data);
     } catch (error) {
@@ -61,6 +62,8 @@ router.get('/read/:id', auth, async (req, res)=> {
 
 router.post('/update/:id', auth, fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
     try {
+        const { imageName } = await fileService.upload(req.file);
+        req.body.banner_img = imageName;
         const { status, ...data} = await offerBannerService.update(req.params.id,req.body);
         res.status(status).send(data);
     } catch (error) {

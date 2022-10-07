@@ -4,7 +4,7 @@ import * as eventService from './admin/event';
 import * as eventPhotoService from './admin/eventphoto';
 import * as enquiryService from './admin/enquiry';
 import * as offerBannerService from './admin/offerbanner'
-import fileService from './admin/file';
+import * as fileService from './admin/fileuploads';
 
 
 export {

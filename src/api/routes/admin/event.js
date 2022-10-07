@@ -1,18 +1,19 @@
 import { Router } from "express";
-import { auth, requestValidator } from '../../middlewares';
-import { eventService } from "../../../services";
+import { auth, requestValidator, fileUploads } from '../../middlewares';
+import { eventService, fileService} from "../../../services";
 import { formatFormError } from '../../../utils/helper';
 import logger from "../../../loaders/logger";
 import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', async(req, res) => {
     try {
         const { status, ...data} = await eventService.read();
+        data.event = await fileService.getFileUrl(data.event,'event_img',1);
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -25,12 +26,14 @@ const eventValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, requestValidator(eventValidation), async(req, res) => {
+router.post('/create', auth, fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
     try {
+        const { fileName } = await fileService.uploadSingle(req.file);
+        req.values.event_img = fileName;
         const { status, ...data} = await eventService.create(req.values);
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -42,18 +45,20 @@ router.get('/read/:id', auth, async (req, res)=> {
         const { status, ...data} = await eventService.read({_id});
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
 });
 
-router.post('/update/:id', auth, requestValidator(eventValidation), async(req, res) => {
+router.post('/update/:id', auth, fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
     try {
+        const { fileName } = await fileService.uploadSingle(req.file);
+        req.values.event_img = fileName;
         const { status, ...data} = await eventService.update(req.params.id,req.body);
         res.status(status).send(data);
     } catch (error) {
-        console.log(error);
+        logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }

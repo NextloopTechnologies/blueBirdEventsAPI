@@ -19,8 +19,8 @@ router.get('', auth, async(req, res) => {
 });
 
 const enquiryValidation = Joi.object({
-    first_name: Joi.string().min(6).max(60).trim().required(),
-    second_name: Joi.string().min(10).required(),
+    first_name: Joi.string().min(3).max(30).trim().required(),
+    second_name: Joi.string().min(3).max(30).trim().required(),
     event_id: Joi.string().required(),
     event_date: Joi.date().greater('now').required().messages({
         'date.greater': `"event_date" should be greater than todays date`
@@ -34,7 +34,7 @@ const enquiryValidation = Joi.object({
     active: Joi.boolean()
 });
 
-router.post('/create', auth, requestValidator(enquiryValidation), async(req, res) => {
+router.post('/create', requestValidator(enquiryValidation), async(req, res) => {
     try {
         const { status, ...data} = await enquiryService.create(req.values);
         res.status(status).send(data);

@@ -25,18 +25,6 @@ export const read = async(whereClause={}) => {
     }
 };
 
-// export const update = async(id, values) => {
-//     try {
-//         const event = await Event.findByIdAndUpdate(id, values);
-//         if(!event) {
-//             return { status: 404 , msgText: "Event does not exists!" ,success: false }
-//         }  
-//         return { status: 200, msgText: 'Updated Successfully! ',success: true}
-//     } catch (error) {
-//         throw error;
-//     }
-// };
-
 export const remove = async(id)=> {
     try {
         const enquiry = await Enquiry.findByIdAndDelete(id);  
