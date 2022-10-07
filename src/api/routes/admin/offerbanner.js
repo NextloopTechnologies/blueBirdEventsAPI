@@ -6,7 +6,7 @@ import Joi from 'joi';
 import { auth, requestValidator, fileUploads } from "../../middlewares";
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', async(req, res) => {
     try {
         let { status, ...data} = await offerBannerService.read();
         data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
