@@ -5,6 +5,7 @@ import * as eventPhotoService from './admin/eventphoto';
 import * as enquiryService from './admin/enquiry';
 import * as offerBannerService from './admin/offerbanner'
 import * as fileService from './admin/fileuploads';
+import * as freelancerService from './admin/freelancer';
 
 
 export {
@@ -14,5 +15,6 @@ export {
     eventService,
     eventPhotoService,
     enquiryService,
-    offerBannerService
+    offerBannerService,
+    freelancerService
 }

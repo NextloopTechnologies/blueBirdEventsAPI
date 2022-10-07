@@ -5,6 +5,7 @@ import eventController from './admin/event';
 import eventPhotoController from './admin/eventphoto';
 import enquiryController from './admin/enquiry';
 import offerBannerController from './admin/offerbanner';
+import freelancerController from './admin/freelancer';
 
 const router = new Router()
 
@@ -14,5 +15,6 @@ router.use('/v1/admin/event', eventController);
 router.use('/v1/admin/eventPhoto', eventPhotoController);
 router.use('/v1/admin/enquiry', enquiryController);
 router.use('/v1/admin/offerBanner', offerBannerController);
+router.use('/v1/admin/freelancer', freelancerController);
 
 export default router;
