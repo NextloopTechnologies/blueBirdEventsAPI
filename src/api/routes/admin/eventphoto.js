@@ -33,9 +33,12 @@ const eventPhotoValidation = Joi.object({
 
 router.post('/create', auth, fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
     try {
+        if(req.files.length === 0) {
+            throw {status: 401, msgText: 'File is required', success:false}
+        }
         const files = await fileService.uploadMultiple(req.files);
-        req.body.ep_img = files;
-        const { status, ...data} = await eventPhotoService.create(req.body);
+        req.values.ep_img = files;
+        const { status, ...data} = await eventPhotoService.create(req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENTPHOTO-CREATE-CONTROLLER').error(error);
@@ -58,9 +61,11 @@ router.get('/read/:id', auth, async (req, res)=> {
 
 router.post('/update/:id', auth, fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
     try {
-        const files = await fileService.uploadMultiple(req.files);
-        req.body.ep_img = files;
-        const { status, ...data} = await eventPhotoService.update(req.params.id,req.body);
+        if(req.files.length > 0) {
+            const files = await fileService.uploadMultiple(req.files);
+            req.values.ep_img = files;
+        }
+        const { status, ...data} = await eventPhotoService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENTPHOTO-CREATE-CONTROLLER').error(error);

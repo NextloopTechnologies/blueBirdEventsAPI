@@ -37,9 +37,12 @@ const offerBannerValidation = Joi.object({
 
 router.post('/create', auth, fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
     try {
+        if(!req.file) {
+            throw {status: 401, msgText: 'File is required', success:false}
+        }
         const { fileName } = await fileService.uploadSingle(req.file);
-        req.body.banner_img = fileName;
-        const { status, ...data} = await offerBannerService.create(req.body);
+        req.values.banner_img = fileName;
+        const { status, ...data} = await offerBannerService.create(req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_OFFERBANNER-CREATE-CONTROLLER').error(error);
@@ -62,9 +65,11 @@ router.get('/read/:id', auth, async (req, res)=> {
 
 router.post('/update/:id', auth, fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
     try {
-        const { imageName } = await fileService.upload(req.file);
-        req.body.banner_img = imageName;
-        const { status, ...data} = await offerBannerService.update(req.params.id,req.body);
+        if(req.file) {
+            const { imageName } = await fileService.upload(req.file);
+            req.values.banner_img = imageName;
+        }
+        const { status, ...data} = await offerBannerService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_OFFERBANNER-CREATE-CONTROLLER').error(error);

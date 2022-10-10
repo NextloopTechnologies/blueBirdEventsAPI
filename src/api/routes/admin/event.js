@@ -28,6 +28,9 @@ const eventValidation = Joi.object({
 
 router.post('/create', auth, fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
     try {
+        if(!req.file) {
+            throw {status: 401, msgText: 'File is required', success:false}
+        }
         const { fileName } = await fileService.uploadSingle(req.file);
         req.values.event_img = fileName;
         const { status, ...data} = await eventService.create(req.values);
@@ -53,9 +56,11 @@ router.get('/read/:id', auth, async (req, res)=> {
 
 router.post('/update/:id', auth, fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
     try {
-        const { fileName } = await fileService.uploadSingle(req.file);
-        req.values.event_img = fileName;
-        const { status, ...data} = await eventService.update(req.params.id,req.body);
+        if(req.file) {
+            const { fileName } = await fileService.uploadSingle(req.file);
+            req.values.event_img = fileName;
+        }
+        const { status, ...data} = await eventService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);

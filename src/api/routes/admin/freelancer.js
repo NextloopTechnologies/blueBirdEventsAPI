@@ -39,6 +39,9 @@ const freelancerValidation = Joi.object({
 
 router.post('/create', fileUploads('pass_size_pic',1), requestValidator(freelancerValidation), async(req, res) => {
     try {
+        if(!req.file) {
+            throw {status: 401, msgText: 'File is required', success:false}
+        }
         const { fileName } = await fileService.uploadSingle(req.file);
         req.values.pass_size_pic = fileName;
         const { status, ...data} = await freelancerService.create(req.values);
@@ -64,9 +67,11 @@ router.get('/read/:id', auth, async (req, res)=> {
 
 router.post('/update/:id', auth, fileUploads('pass_size_pic',1), requestValidator(freelancerValidation), async(req, res) => {
     try {
-        const { fileName } = await fileService.uploadSingle(req.file);
-        req.values.pass_size_pic = fileName;
-        const { status, ...data} = await freelancerService.update(req.params.id,req.body);
+        if(req.file) {
+            const { fileName } = await fileService.uploadSingle(req.file);
+            req.values.pass_size_pic = fileName;
+        }
+        const { status, ...data} = await freelancerService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_FREELANCER-UPDATE-CONTROLLER').error(error);

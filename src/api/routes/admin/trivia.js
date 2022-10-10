@@ -49,7 +49,7 @@ router.get('/read/:id', auth, async (req, res)=> {
 
 router.post('/update/:id', auth, requestValidator(triviaValidation), async(req, res) => {
     try {
-        const { status, ...data} = await triviaService.update(req.params.id,req.body);
+        const { status, ...data} = await triviaService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_TRIVIA-UPDATE-CONTROLLER').error(error);

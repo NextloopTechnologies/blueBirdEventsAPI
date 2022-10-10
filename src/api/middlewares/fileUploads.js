@@ -3,11 +3,11 @@ import multer, { MulterError } from 'multer';
 const fileUploads = (filename,filelimit=6) => {
     if(filelimit === 1) {
         var upload = multer({
-            limits: { fileSize: 5 * 1024 * 1024 }
+            limits: { fileSize: 2 * 1024 * 1024 }
         }).single(filename);
     } else {
         upload = multer({
-            limits: { fileSize: 5 * 1024 * 1024 }
+            limits: { fileSize: 2 * 1024 * 1024 }
         }).array(filename, filelimit);
     }
     return (req, res, next) => {
@@ -23,10 +23,6 @@ const fileUploads = (filename,filelimit=6) => {
             } else if (err) {
                 console.log(`U.E: ${err.message}`);
                 return res.status(401).send({error: `U.E: ${err.message}` ,success: false }) // Unknown  error while uploading
-            } 
-            if(req.file == undefined){
-                console.log(`File is required`);
-                return res.status(401).send({error: `File is required` ,success: false })
             }
             next();
         });
