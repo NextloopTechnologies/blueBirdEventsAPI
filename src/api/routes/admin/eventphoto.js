@@ -51,6 +51,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await eventPhotoService.read({_id});
+        data.eventphoto = await fileService.getFileUrl(data.eventphoto,'ep_img');
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENTPHOTO-READ-CONTROLLER').error(error);

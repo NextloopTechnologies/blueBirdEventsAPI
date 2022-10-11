@@ -1,12 +1,10 @@
 import { string } from "joi";
-import { model, Schema } from "mongoose";
+import { model, Schema, trusted } from "mongoose";
 
 const freelancerSchema = new Schema({
     dept_id: {
-      // type: Schema.Types.ObjectId
-      type: String
-      // required: true,
-      // ref: 'Event'
+      type: String,
+      required: trusted
     },
     wa_contact_no : {
       type: Number
