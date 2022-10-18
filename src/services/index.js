@@ -6,6 +6,7 @@ import * as enquiryService from './admin/enquiry';
 import * as offerBannerService from './admin/offerbanner'
 import * as fileService from './admin/fileuploads';
 import * as freelancerService from './admin/freelancer';
+import * as subEventService from './admin/subevent';
 
 
 export {
@@ -13,6 +14,7 @@ export {
     fileService,
     triviaService,
     eventService,
+    subEventService,
     eventPhotoService,
     enquiryService,
     offerBannerService,

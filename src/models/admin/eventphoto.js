@@ -1,10 +1,10 @@
 import { model, Schema } from "mongoose";
 
 const eventPhotoSchema = new Schema({
-    event_id: {
+    sub_event_id: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: 'Event'
+        ref: 'SubEvent'
     }, 
     event_date: {
         type: Date,
