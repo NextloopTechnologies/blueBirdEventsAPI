@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Mongoose } from 'mongoose';
 import { hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import config from '../../config/index';
@@ -27,12 +27,10 @@ const userSchema = new Schema({
         trim: true,
         minlength: 6
     },
-    mobile: {
-        type: Number
-    },
-    role: {
-        type: Number,
-        enum : [1,2,3]
+    role_id: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Role'
     },
     tokens: [{
         token: {

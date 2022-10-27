@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { offerBannerService , fileService} from "../../../services";
+import { offerBannerService , fileService, assignedPermissionService } from "../../../services";
 import { formatFormError } from '../../../utils/helper';
 import logger from "../../../loaders/logger";
 import Joi from 'joi';
 import { auth, requestValidator, fileUploads } from "../../middlewares";
+import mongoose from "mongoose";
 const router = new Router();
 
 router.get('', async(req, res) => {
@@ -37,6 +38,7 @@ const offerBannerValidation = Joi.object({
 
 router.post('/create', auth, fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
     try {
+        
         if(!req.file) {
             throw {status: 401, msgText: 'File is required', success:false}
         }
@@ -53,6 +55,8 @@ router.post('/create', auth, fileUploads('banner_img', 1), requestValidator(offe
 
 router.get('/read/:id', auth, async (req, res)=> {
     try {
+        const roleId = mongoose.Types.ObjectId('634feb844a6799669e161a81');
+        await assignedPermissionService.checkPermission(roleId,'update-offerbanner');
         const _id = req.params.id;
         const { status, ...data} = await offerBannerService.read({_id});
         data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);

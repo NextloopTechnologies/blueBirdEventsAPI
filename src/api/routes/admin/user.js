@@ -23,12 +23,13 @@ const userRegisterValidation = Joi.object({
     password: Joi.string().min(6).max(16).required().trim(),
     mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    role: Joi.number().valid(1,2,3).required()
+    role_id: Joi.string().required(),
+    id: Joi.string()
 });
 
-router.post('/create', requestValidator(userRegisterValidation),async (req, res) => {
+router.post('/create', requestValidator(userRegisterValidation), async (req, res) => {
     try {
-        const { status, ...data} = await userService.createUser(req.values);
+        const { status, ...data} = await userService.create(req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_USER-READALL-CONTROLLER').error(error);
@@ -44,7 +45,7 @@ const userLoginValidation = Joi.object({
 
 router.post('/login', requestValidator(userLoginValidation),async (req, res) => {
     try {
-        const { status, ...data} = await userService.loginUser(req.values);
+        const { status, ...data} = await userService.login(req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_USER-CREATE-CONTROLLER').error(error);
@@ -53,7 +54,19 @@ router.post('/login', requestValidator(userLoginValidation),async (req, res) => 
     }
 });
 
-router.get('/account', auth,(req, res) => {
+router.get('/read/:id', auth, async (req, res)=> {
+    try {
+        const _id = req.params.id;
+        const { status, ...data} = await userService.read({_id});
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_USER-READ-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
+router.get('/account', auth, (req, res) => {
     res.status(200).send({ success: true, user: req.user});
 });
 
@@ -68,6 +81,34 @@ router.post('/account/profile', auth, fileUploads('profile',1),(req, res) => {
         res.status(500).send({error: "Something went wrong"});
     }
            
+});
+
+const userUpdateValidation = Joi.object({
+    name: Joi.string().alphanum().min(3).max(30).required().trim(),
+    mobile: Joi.string().regex(/^[0-9]{10}$/)
+    .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+    role_id: Joi.string().required(),
+    id: Joi.string()
+});
+
+router.post('/update/:id', auth, requestValidator(userUpdateValidation), async(req, res) => {
+    try {
+        const { status, ...data} = await userService.update(req.params.id,req.values);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_USER-UPDATE-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
+router.post('/delete/:id', auth, async (req, res) => {
+    try {
+        const { status, ...data} = await userService.remove(req.params.id);
+        res.status(status).send(data);
+    } catch (error) {
+        res.status(500).send({ msgText: 'Something went wrong!'})
+    }
 });
 
 router.post('/logout', auth, async (req, res) => {

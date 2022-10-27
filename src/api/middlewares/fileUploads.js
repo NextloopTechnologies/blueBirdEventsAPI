@@ -1,6 +1,6 @@
 import multer, { MulterError } from 'multer';
 
-const fileUploads = (filename,filelimit=6) => {
+const fileUploads = (filename,filelimit=30) => {
     if(filelimit === 1) {
         var upload = multer({
             limits: { fileSize: 2 * 1024 * 1024 }
