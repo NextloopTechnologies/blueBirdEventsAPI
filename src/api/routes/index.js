@@ -13,6 +13,9 @@ import freelancerController from './admin/freelancer';
 import hotelController from './admin/hotel';
 import hotelRoomController from './admin/hotel_room';
 import hotelRoomTypeController from './admin/hotel_room_type';
+import hotelRoomChecklistController from './admin/room_checklist_name';
+import ghmsGuestlistController from './admin/ghms_guestlist';
+import roomAllotmentController from './admin/room_allotment';
 
 const router = new Router()
 
@@ -30,5 +33,8 @@ router.use('/v1/admin/freelancer', freelancerController);
 router.use('/v1/admin/hotel', hotelController);
 router.use('/v1/admin/hotelroom', hotelRoomController);
 router.use('/v1/admin/hotelroomtype', hotelRoomTypeController);
+router.use('/v1/admin/hotelroomchecklist', hotelRoomChecklistController);
+router.use('/v1/admin/ghmsguestlist', ghmsGuestlistController);
+router.use('/v1/admin/roomallotment', roomAllotmentController);
 
 export default router;

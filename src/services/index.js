@@ -14,6 +14,9 @@ import * as subEventService from './admin/subevent';
 import * as hotelService from './admin/hotel';
 import * as hotelRoomService from './admin/hotel_room';
 import * as hotelRoomTypeService from './admin/hotel_room_type';
+import * as hotelRoomChecklistService from './admin/hotel_room_checklist';
+import * as ghmsGuestlistService from './admin/ghms_guestlist';
+import * as roomAllotmentService from './admin/room_allotment';
 
 export {
     userService,
@@ -31,5 +34,8 @@ export {
     freelancerService,
     hotelService,
     hotelRoomService,
-    hotelRoomTypeService
+    hotelRoomTypeService,
+    hotelRoomChecklistService,
+    ghmsGuestlistService,
+    roomAllotmentService
 }
