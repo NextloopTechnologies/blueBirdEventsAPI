@@ -14,7 +14,9 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const subevent = await SubEvent.find(whereClause)
-        .populate({path: 'event_id', select: ['event_title']})
+        .populate([{path: 'event_id', select: ['event_title']},
+        {path: 'client_id', select: ['name']},
+        {path: 'hotel_id', select: ['hotel_name']} ])
         .sort({ _id: -1 });
         if(!subevent.length > 0) {
             return { status: 404 , msgText: "SubEvent does not exists!" ,success: false }

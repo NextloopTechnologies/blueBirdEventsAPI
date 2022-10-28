@@ -7,7 +7,7 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', async(req, res) => {
+router.get('', auth, async(req, res) => {
     try {
         const { status, ...data} = await roomAllotmentService.read();
         res.status(status).send(data);
@@ -19,7 +19,6 @@ router.get('', async(req, res) => {
 });
 
 const roomAllotmentValidation = Joi.object({
-    sub_event_id: Joi.string().required(),
     hotel_room_id: Joi.string().required(),
     guest_id: Joi.string().required(),
     remarks: Joi.string().min(10).required(),

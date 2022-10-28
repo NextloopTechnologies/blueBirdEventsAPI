@@ -14,9 +14,9 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const roomallotment = await RoomAllotment.find(whereClause)
-        .populate([{path: 'sub_event_id', select: 'subevent_title'},
-        {path: 'hotel_rooms_id', select: 'room_no'},
-        {path: 'guest_id', select: 'guest_name'}])
+        .populate([
+        {path: 'hotel_room_id', select: ['hotel_id','room_no']},
+        {path: 'guest_id', select: ['guest_name','guest_expected_nos']}])
         .sort({ _id: -1 });
         if(!roomallotment.length > 0) {
             return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }

@@ -3,19 +3,22 @@ import { model, Schema } from "mongoose";
 const subEventSchema = new Schema({
     event_id: {
         type: Schema.Types.ObjectId,
-        // required: true,
+        required: true,
         ref: 'Event'
     }, 
     hotel_id: {
         type: Schema.Types.ObjectId,
-        // required: true,
+        required: true,
         ref: 'Hotel'
     }, 
     client_id: {
         type: Schema.Types.ObjectId,
-        // required: true,
+        required: true,
         ref: 'User'
     }, 
+    prod_decor_id: {
+        type: String
+    },
     subevent_date: {
         type: Date,
         required: true,

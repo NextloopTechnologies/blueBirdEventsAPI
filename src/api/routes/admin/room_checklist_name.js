@@ -7,7 +7,7 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', async(req, res) => {
+router.get('', auth, async(req, res) => {
     try {
         const { status, ...data} = await hotelRoomChecklistService.read();
         res.status(status).send(data);
