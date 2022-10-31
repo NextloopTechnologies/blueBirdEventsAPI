@@ -15,6 +15,10 @@ import HotelRoomType from './admin/hote_room_type';
 import HotelRoomChecklist from './admin/hotel_room_checklist';
 import GHMSGuestList from './admin/ghms_guestlist';
 import RoomAllotment from './admin/room_allotment';
+import GHMSArrivalMgmt from './admin/ghms_arrival_mgmt';
+import Vendor from './admin/vendor';
+import VendorCar from './admin/vendor_car';
+import VendorDriver from './admin/vendor_driver';
 
 export {
     User,
@@ -33,5 +37,9 @@ export {
     HotelRoomType,
     HotelRoomChecklist,
     GHMSGuestList,
-    RoomAllotment
+    RoomAllotment,
+    GHMSArrivalMgmt,
+    Vendor,
+    VendorCar,
+    VendorDriver
 }

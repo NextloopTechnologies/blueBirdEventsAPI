@@ -16,6 +16,10 @@ import hotelRoomTypeController from './admin/hotel_room_type';
 import hotelRoomChecklistController from './admin/room_checklist_name';
 import ghmsGuestlistController from './admin/ghms_guestlist';
 import roomAllotmentController from './admin/room_allotment';
+import vendorController from './admin/vendor';
+import vendorCarController from './admin/vendor_car';
+import vendorDriverController from './admin/vendor_driver';
+import ghmsArrivalMgmtController from './admin/ghms_arrival_mgmt';
 
 const router = new Router()
 
@@ -36,5 +40,9 @@ router.use('/v1/admin/hotelroomtype', hotelRoomTypeController);
 router.use('/v1/admin/hotelroomchecklist', hotelRoomChecklistController);
 router.use('/v1/admin/ghmsguestlist', ghmsGuestlistController);
 router.use('/v1/admin/roomallotment', roomAllotmentController);
+router.use('/v1/admin/vendor', vendorController);
+router.use('/v1/admin/vendorcar', vendorCarController);
+router.use('/v1/admin/vendordriver', vendorDriverController);
+router.use('/v1/admin/ghmsarrival', ghmsArrivalMgmtController);
 
 export default router;

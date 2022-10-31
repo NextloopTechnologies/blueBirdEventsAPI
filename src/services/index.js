@@ -17,6 +17,10 @@ import * as hotelRoomTypeService from './admin/hotel_room_type';
 import * as hotelRoomChecklistService from './admin/hotel_room_checklist';
 import * as ghmsGuestlistService from './admin/ghms_guestlist';
 import * as roomAllotmentService from './admin/room_allotment';
+import * as ghmsArrivalMgmtService from './admin/ghms_arrival_mgmt';
+import * as vendorService from './admin/vendor';
+import * as vendorCarService from './admin/vendor_car';
+import * as vendorDriverService from './admin/vendor_driver';
 
 export {
     userService,
@@ -37,5 +41,9 @@ export {
     hotelRoomTypeService,
     hotelRoomChecklistService,
     ghmsGuestlistService,
-    roomAllotmentService
+    roomAllotmentService,
+    ghmsArrivalMgmtService,
+    vendorService,
+    vendorCarService,
+    vendorDriverService
 }
