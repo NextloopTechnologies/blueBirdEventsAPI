@@ -21,6 +21,8 @@ import * as ghmsArrivalMgmtService from './admin/ghms_arrival_mgmt';
 import * as vendorService from './admin/vendor';
 import * as vendorCarService from './admin/vendor_car';
 import * as vendorDriverService from './admin/vendor_driver';
+import * as ghmsDepartureMgmtService from './admin/ghms_departure_mgmt';
+import * as ghmsLostFoundService from './admin/ghms_lost_found';
 
 export {
     userService,
@@ -45,5 +47,7 @@ export {
     ghmsArrivalMgmtService,
     vendorService,
     vendorCarService,
-    vendorDriverService
+    vendorDriverService,
+    ghmsDepartureMgmtService,
+    ghmsLostFoundService
 }

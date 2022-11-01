@@ -19,6 +19,8 @@ import GHMSArrivalMgmt from './admin/ghms_arrival_mgmt';
 import Vendor from './admin/vendor';
 import VendorCar from './admin/vendor_car';
 import VendorDriver from './admin/vendor_driver';
+import GHMSDepartureMgmt from './admin/ghms_departure_mgmt';
+import GHMSLostFound from './admin/ghms_lost_found';
 
 export {
     User,
@@ -41,5 +43,7 @@ export {
     GHMSArrivalMgmt,
     Vendor,
     VendorCar,
-    VendorDriver
+    VendorDriver,
+    GHMSDepartureMgmt,
+    GHMSLostFound
 }

@@ -20,6 +20,8 @@ import vendorController from './admin/vendor';
 import vendorCarController from './admin/vendor_car';
 import vendorDriverController from './admin/vendor_driver';
 import ghmsArrivalMgmtController from './admin/ghms_arrival_mgmt';
+import ghmsDepartureMgmtController from './admin/ghms_departure_mgmt';
+import ghmsLostFoundController from './admin/ghms_lost_found';
 
 const router = new Router()
 
@@ -44,5 +46,7 @@ router.use('/v1/admin/vendor', vendorController);
 router.use('/v1/admin/vendorcar', vendorCarController);
 router.use('/v1/admin/vendordriver', vendorDriverController);
 router.use('/v1/admin/ghmsarrival', ghmsArrivalMgmtController);
+router.use('/v1/admin/ghmsdeparture', ghmsDepartureMgmtController);
+router.use('/v1/admin/ghmslostfound', ghmsLostFoundController);
 
 export default router;

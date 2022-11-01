@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth, requestValidator } from '../../middlewares';
-import { roomAllotmentService } from "../../../services";
+import { ghmsLostFoundService } from "../../../services";
 import { formatFormError } from '../../../utils/helper';
 import logger from "../../../loaders/logger";
 import Joi from 'joi';
@@ -9,30 +9,33 @@ const router = new Router();
 
 router.get('', auth, async(req, res) => {
     try {
-        const { status, ...data} = await roomAllotmentService.read();
+        const { status, ...data} = await ghmsLostFoundService.read();
         res.status(status).send(data);
     } catch (error) {
-        logger('ADMIN_ROOMALLOTMENT-READALL-CONTROLLER').error(error);
+        logger('ADMIN_GHMSLOSTFOUND-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
 });
 
-const roomAllotmentValidation = Joi.object({
-    client_id: Joi.string().required(),
+const ghmsLostFoundValidation = Joi.object({
     sub_event_id: Joi.string().required(),
-    hotel_room_id: Joi.string().required(),
     guest_id: Joi.string().required(),
-    remarks: Joi.string().min(10).required(),
+    item_name: Joi.string().required(),
+    item_identification: Joi.string().required(),
+    lost_place: Joi.string().required(),
+    found_place: Joi.string().required(),
+    found_by: Joi.string().required(),
+    deliver_type: Joi.string().required(),
     id: Joi.string()
 });
 
-router.post('/create', auth, requestValidator(roomAllotmentValidation), async(req, res) => {
+router.post('/create', auth, requestValidator(ghmsLostFoundValidation), async(req, res) => {
     try {
-        const { status, ...data} = await roomAllotmentService.create(req.values);
+        const { status, ...data} = await ghmsLostFoundService.create(req.values);
         res.status(status).send(data);
     } catch (error) {
-        logger('ADMIN_ROOMALLOTMENT-CREATE-CONTROLLER').error(error);
+        logger('ADMIN_GHMSLOSTFOUND-CREATE-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -41,21 +44,21 @@ router.post('/create', auth, requestValidator(roomAllotmentValidation), async(re
 router.get('/read/:id', auth, async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await roomAllotmentService.read({_id});
+        const { status, ...data} = await ghmsLostFoundService.read({_id});
         res.status(status).send(data);
     } catch (error) {
-        logger('ADMIN_ROOMALLOTMENT-READ-CONTROLLER').error(error);
+        logger('ADMIN_GHMSLOSTFOUND-READ-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
 });
 
-router.post('/update/:id', auth, requestValidator(roomAllotmentValidation), async(req, res) => {
+router.post('/update/:id', auth, requestValidator(ghmsLostFoundValidation), async(req, res) => {
     try {
-        const { status, ...data} = await roomAllotmentService.update(req.params.id,req.values);
+        const { status, ...data} = await ghmsLostFoundService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
-        logger('ADMIN_ROOMALLOTMENT-UPDATE-CONTROLLER').error(error);
+        logger('ADMIN_GHMSLOSTFOUND-UPDATE-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
@@ -63,7 +66,7 @@ router.post('/update/:id', auth, requestValidator(roomAllotmentValidation), asyn
 
 router.post('/delete/:id', auth, async (req, res) => {
     try {
-        const { status, ...data} = await roomAllotmentService.remove(req.params.id);
+        const { status, ...data} = await ghmsLostFoundService.remove(req.params.id);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})
