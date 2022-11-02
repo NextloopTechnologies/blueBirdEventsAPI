@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { offerBannerService , fileService, assignedPermissionService } from "../../../services";
+import { offerBannerService , fileService } from "../../../services";
 import { formatFormError } from '../../../utils/helper';
 import logger from "../../../loaders/logger";
 import Joi from 'joi';
