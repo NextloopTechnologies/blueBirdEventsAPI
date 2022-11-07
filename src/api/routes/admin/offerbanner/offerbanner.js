@@ -55,8 +55,6 @@ router.post('/create', auth, fileUploads('banner_img', 1), requestValidator(offe
 
 router.get('/read/:id', auth, async (req, res)=> {
     try {
-        const roleId = mongoose.Types.ObjectId('634feb844a6799669e161a81');
-        await assignedPermissionService.checkPermission(roleId,'update-offerbanner');
         const _id = req.params.id;
         const { status, ...data} = await offerBannerService.read({_id});
         data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
