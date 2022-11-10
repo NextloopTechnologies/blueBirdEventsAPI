@@ -6,23 +6,26 @@ import * as assignedPermissionService from './admin/roleandpermission/checkpermi
 import * as triviaService from './admin/trivia/trivia';
 import * as eventService from './admin/event/event';
 import * as eventPhotoService from './admin/event/eventphoto';
+import * as subEventService from './admin/event/subevent';
 import * as enquiryService from './admin/enquiry/enquiry';
 import * as offerBannerService from './admin/offerbanner/offerbanner'
 import * as fileService from './admin/fileupload/fileuploads';
 import * as freelancerService from './admin/freelancer/freelancer';
-import * as subEventService from './admin/event/subevent';
 import * as hotelService from './admin/hotel/hotel';
 import * as hotelRoomService from './admin/hotel/hotel_room';
 import * as hotelRoomTypeService from './admin/hotel/hotel_room_type';
 import * as hotelRoomChecklistService from './admin/hotel/hotel_room_checklist';
-import * as ghmsGuestlistService from './admin/ghms/ghms_guestlist';
 import * as roomAllotmentService from './admin/hotel/room_allotment';
+import * as hospitalityChecklistService from './admin/hospitalitychecklist/hospitality_checklist';
+import * as ghmsGuestlistService from './admin/ghms/ghms_guestlist';
 import * as ghmsArrivalMgmtService from './admin/ghms/ghms_arrival_mgmt';
+import * as ghmsDepartureMgmtService from './admin/ghms/ghms_departure_mgmt';
+import * as ghmsLostFoundService from './admin/ghms/ghms_lost_found';
 import * as vendorService from './admin/vendor/vendor';
 import * as vendorCarService from './admin/vendor/vendor_car';
 import * as vendorDriverService from './admin/vendor/vendor_driver';
-import * as ghmsDepartureMgmtService from './admin/ghms/ghms_departure_mgmt';
-import * as ghmsLostFoundService from './admin/ghms/ghms_lost_found';
+import * as vendorProdDecorService from './admin/vendor/vendor_prod_decor';
+import * as vendorProdDecorChecklistService from './admin/vendor/vendor_proddecor_checklist';
 
 export {
     userService,
@@ -42,12 +45,15 @@ export {
     hotelRoomService,
     hotelRoomTypeService,
     hotelRoomChecklistService,
-    ghmsGuestlistService,
     roomAllotmentService,
+    hospitalityChecklistService,
+    ghmsGuestlistService,
     ghmsArrivalMgmtService,
+    ghmsDepartureMgmtService,
+    ghmsLostFoundService,
     vendorService,
     vendorCarService,
     vendorDriverService,
-    ghmsDepartureMgmtService,
-    ghmsLostFoundService
+    vendorProdDecorService,
+    vendorProdDecorChecklistService
 }

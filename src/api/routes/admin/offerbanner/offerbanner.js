@@ -4,13 +4,14 @@ import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 import { auth, requestValidator, fileUploads } from "../../../middlewares";
-import mongoose from "mongoose";
 const router = new Router();
 
 router.get('', async(req, res) => {
     try {
         let { status, ...data} = await offerBannerService.read();
-        data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
+        if(data.offerbanner){
+            data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
+        }
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_OFFERBANNER-READALL-CONTROLLER').error(error);
@@ -57,7 +58,9 @@ router.get('/read/:id', auth, async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await offerBannerService.read({_id});
-        data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
+        if(data.offerbanner){
+            data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
+        }
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_OFFERBANNER-READ-CONTROLLER').error(error);

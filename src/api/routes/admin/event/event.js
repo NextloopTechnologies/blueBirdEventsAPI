@@ -10,7 +10,9 @@ const router = new Router();
 router.get('', async(req, res) => {
     try {
         const { status, ...data} = await eventService.read();
-        data.event = await fileService.getFileUrl(data.event,'event_img',1);
+        if(data.event) {
+            data.event = await fileService.getFileUrl(data.event,'event_img',1);
+        }
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
@@ -46,7 +48,9 @@ router.get('/read/:id', auth, async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await eventService.read({_id});
-        data.event = await fileService.getFileUrl(data.event,'event_img',1);
+        if(data.event){
+            data.event = await fileService.getFileUrl(data.event,'event_img',1);
+        }
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);

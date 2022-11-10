@@ -10,7 +10,9 @@ const router = new Router();
 router.get('', auth, async(req, res) => {
     try {
         const { status, ...data} = await freelancerService.read();
-        data.freelancer = await fileService.getFileUrl(data.freelancer,'pass_size_pic',1);
+        if(data.freelancer) {
+            data.freelancer = await fileService.getFileUrl(data.freelancer,'pass_size_pic',1);
+        }
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_FREELANCER-READALL-CONTROLLER').error(error);
@@ -57,6 +59,9 @@ router.get('/read/:id', auth, async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await freelancerService.read({_id});
+        if(data.freelancer) {
+            data.freelancer = await fileService.getFileUrl(data.freelancer,'pass_size_pic',1);
+        }
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_FREELANCER-READ-CONTROLLER').error(error);
