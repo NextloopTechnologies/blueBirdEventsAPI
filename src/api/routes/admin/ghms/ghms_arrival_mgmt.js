@@ -19,6 +19,7 @@ router.get('', auth, async(req, res) => {
 });
 
 const ghmsArrivalMgmtValidation = Joi.object({
+    client_id: Joi.string().required(),
     sub_event_id: Joi.string().required(),
     guest_id: Joi.string().required(),
     vendor_id: Joi.string().required(),

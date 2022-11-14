@@ -1,6 +1,11 @@
 import { model, Schema } from "mongoose";
 
 const ghmsLostFoundSchema = new Schema({
+    client_id: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    },
     sub_event_id: {
       type: Schema.Types.ObjectId,
       required: true,

@@ -18,7 +18,8 @@ export const read = async(whereClause={}) => {
         {path: 'guest_id', select: 'guest_name'},
         {path: 'vendor_id', select: 'vendor_name'},
         {path: 'car_id', select: ['car_name','car_model','car_number']},
-        {path: 'driver_id', select: 'driver_name'}])
+        {path: 'driver_id', select: 'driver_name'},
+        {path: 'client_id', select: 'name'}])
         .sort({ _id: -1 });
         if(!ghmsdeparutremgmt.length > 0) {
             return { status: 404 , msgText: "GHMSDepartureMgmt does not exists!" ,success: false }

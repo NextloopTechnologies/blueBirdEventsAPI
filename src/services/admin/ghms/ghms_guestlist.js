@@ -14,7 +14,8 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const ghmsguestlist = await GHMSGuestList.find(whereClause)
-        .populate({path: 'sub_event_id', select: 'subevent_title'})
+        .populate([{path: 'sub_event_id', select: 'subevent_title'},
+        {path: 'client_id', select: 'name'}])
         .sort({ _id: -1 });
         if(!ghmsguestlist.length > 0) {
             return { status: 404 , msgText: "GHMSGuestList does not exists!" ,success: false }

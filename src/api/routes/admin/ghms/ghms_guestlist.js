@@ -19,17 +19,18 @@ router.get('', auth, async(req, res) => {
 });
 
 const ghmsGuestlistValidation = Joi.object({
+    client_id: Joi.string().required(),
     sub_event_id: Joi.string().required(),
     guest_name: Joi.string().min(3).max(30).required().trim(),
     guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
     guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
     guest_add: Joi.string().min(10).required(),
-    guest_invited: Joi.string().valid('Individual','Family').required(),
     guest_outstation: Joi.string().valid('Local','Outstation').required(),
-    guest_expected_nos: Joi.number().required(),
-    guest_invitation_type: Joi.valid('Courier','Personally','Digitally').required(),
-    guest_date_of_arrival: Joi.date().greater('now').required().messages({
+    guest_invited: Joi.string().valid('Individual','Family'),
+    guest_expected_nos: Joi.number(),
+    guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
+    guest_date_of_arrival: Joi.date().greater('now').messages({
       'date.greater': `"guest_date_arrival" should be greater than todays date`
     }),
     id: Joi.string()

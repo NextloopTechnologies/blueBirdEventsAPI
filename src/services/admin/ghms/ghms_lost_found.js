@@ -15,7 +15,8 @@ export const read = async(whereClause={}) => {
     try {
         const ghmslostfound = await GHMSLostFound.find(whereClause)
         .populate([{path: 'sub_event_id', select: 'subevent_title'},
-        {path: 'guest_id', select: 'guest_name'}])
+        {path: 'guest_id', select: 'guest_name'},
+        {path: 'client_id', select: 'name'}])
         .sort({ _id: -1 });
         if(!ghmslostfound.length > 0) {
             return { status: 404 , msgText: "GHMSLostFound does not exists!" ,success: false }
