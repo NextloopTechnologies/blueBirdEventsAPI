@@ -19,13 +19,12 @@ router.get('', auth, async(req, res) => {
 });
 
 const vendorValidation = Joi.object({
-  vendor_name: Joi.string().min(3).max(30).required().trim(),
-  vendor_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
-  vendor_add: Joi.string().min(5).required().trim(),
-  vendor_type: Joi.string().required().trim(),
-  vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
-  .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-  id: Joi.string()
+    vendor_name: Joi.string().min(3).max(30).required().trim(),
+    vendor_work: Joi.string().required(),
+    vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
+    .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+    vendor_scope_of_work: Joi.string().min(5).required().trim(),
+    id: Joi.string()
 });
 
 router.post('/create', auth, requestValidator(vendorValidation), async(req, res) => {

@@ -48,7 +48,7 @@ router.post('/create', auth, fileUploads('ep_img'), requestValidator(eventPhotoV
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await eventPhotoService.read({_id});

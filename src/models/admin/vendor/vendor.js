@@ -8,22 +8,15 @@ const vendorSchema = Schema({
     minlenght: 3,
     maxlength: 30
   },
-  vendor_mobile: {
-      type: Number,
-      required: true
-  },
-  vendor_email: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-      lowercase: true
-  },
-  vendor_add: {
+  vendor_work: {
     type: String,
-    required: true
+    required: true,
   },
-  vendor_type: {
+  vendor_mobile: {
+    type: Number,
+    required: true  
+  },
+  vendor_scope_of_work: {
     type: String,
     required: true
   },

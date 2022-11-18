@@ -35,12 +35,13 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const trivia = await Trivia.findByIdAndDelete(id);  
-        if(!trivia) {
-            return { status: 404, msgText: "Trivia does not exists!", success:false}
-        }
+        // const trivia = await Trivia.findByIdAndDelete(id);  
+        const trivia = await Trivia.deleteMany({"_id": { "$in": ids }}); 
+        // if(trivia.deletedCount === 0) {
+        //     return { status: 404, msgText: "Trivia does not exists!", success:false}
+        // }
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;
