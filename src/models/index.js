@@ -9,6 +9,7 @@ import EventPhoto from './admin/event/eventphoto';
 import Enquiry from './admin/enquiry/enquiry';
 import OfferBanner from './admin/offerbanner/offerbanner';
 import Freelancer from './admin/freelancer/freelancer';
+import FreelancerAssignedEvent from './admin/freelancer/freelancer_assigned_event';
 import Hotel from './admin/hotel/hotel';
 import HotelRoom from './admin/hotel/hotel_room';
 import HotelRoomType from './admin/hotel/hote_room_type';
@@ -37,6 +38,7 @@ export {
     Enquiry,
     OfferBanner,
     Freelancer,
+    FreelancerAssignedEvent,
     Hotel,
     HotelRoom,
     HotelRoomType,

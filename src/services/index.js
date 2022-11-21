@@ -11,6 +11,7 @@ import * as enquiryService from './admin/enquiry/enquiry';
 import * as offerBannerService from './admin/offerbanner/offerbanner'
 import * as fileService from './admin/fileupload/fileuploads';
 import * as freelancerService from './admin/freelancer/freelancer';
+import * as freelancerAssignedEventService from './admin/freelancer/freelancer_assigned_event';
 import * as hotelService from './admin/hotel/hotel';
 import * as hotelRoomService from './admin/hotel/hotel_room';
 import * as hotelRoomTypeService from './admin/hotel/hotel_room_type';
@@ -41,6 +42,7 @@ export {
     enquiryService,
     offerBannerService,
     freelancerService,
+    freelancerAssignedEventService,
     hotelService,
     hotelRoomService,
     hotelRoomTypeService,

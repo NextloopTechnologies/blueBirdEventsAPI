@@ -1,10 +1,9 @@
-import { string } from "joi";
-import { model, Schema, trusted } from "mongoose";
+import { model, Schema } from "mongoose";
 
 const freelancerSchema = new Schema({
     dept_id: {
       type: String,
-      required: trusted
+      required: true
     },
     wa_contact_no : {
       type: Number
