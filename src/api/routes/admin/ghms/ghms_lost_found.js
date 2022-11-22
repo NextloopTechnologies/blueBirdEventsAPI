@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth, requestValidator } from '../../../middlewares';
-import { ghmsLostFoundService } from "../../../../services";
+import { ghmsLostFoundService, filterService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
@@ -9,7 +9,8 @@ const router = new Router();
 
 router.get('', auth, async(req, res) => {
     try {
-        const { status, ...data} = await ghmsLostFoundService.read();
+        const filterData = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await ghmsLostFoundService.read(filterData);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_GHMSLOSTFOUND-READALL-CONTROLLER').error(error);

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth, requestValidator } from '../../../middlewares';
-import { ghmsDepartureMgmtService } from "../../../../services";
+import { ghmsDepartureMgmtService, filterService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
@@ -9,7 +9,8 @@ const router = new Router();
 
 router.get('', auth, async(req, res) => {
     try {
-        const { status, ...data} = await ghmsDepartureMgmtService.read();
+        const filterData = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await ghmsDepartureMgmtService.read(filterData);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_GHMSDEPARTUREMGMT-READALL-CONTROLLER').error(error);

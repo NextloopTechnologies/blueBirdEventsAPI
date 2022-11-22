@@ -24,6 +24,8 @@ const vendorValidation = Joi.object({
     vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
     vendor_scope_of_work: Joi.string().min(5).required().trim(),
+    client_id: Joi.string().required(),
+    sub_event_id: Joi.string().required(),
     id: Joi.string()
 });
 
