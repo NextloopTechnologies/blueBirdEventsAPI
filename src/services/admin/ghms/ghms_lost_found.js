@@ -39,12 +39,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const ghmslostfound = await GHMSLostFound.findByIdAndDelete(id);  
-        if(!ghmslostfound) {
-            return { status: 404, msgText: "GHMSLostFound does not exists!", success:false}
-        }
+        await GHMSLostFound.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

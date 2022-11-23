@@ -68,9 +68,9 @@ router.get('/read/:id', auth, async (req, res)=> {
 //     }
 // });
 
-router.post('/delete/:id', auth, async (req, res) => {
+router.post('/delete', auth, async (req, res) => {
     try {
-        const { status, ...data} = await enquiryService.remove(req.params.id);
+        const { status, ...data} = await enquiryService.remove(req.body.ids);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})

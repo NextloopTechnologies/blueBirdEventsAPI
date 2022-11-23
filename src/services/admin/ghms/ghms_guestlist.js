@@ -38,12 +38,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const ghmsguestlist = await GHMSGuestList.findByIdAndDelete(id);  
-        if(!ghmsguestlist) {
-            return { status: 404, msgText: "GHMSGuestList does not exists!", success:false}
-        }
+        await GHMSGuestList.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

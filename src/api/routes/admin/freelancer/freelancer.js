@@ -85,9 +85,9 @@ router.post('/update/:id', auth, fileUploads('pass_size_pic',1), requestValidato
     }
 });
 
-router.post('/delete/:id', auth, async (req, res) => {
+router.post('/delete', auth, async (req, res) => {
     try {
-        const { status, ...data} = await freelancerService.remove(req.params.id);
+        const { status, ...data} = await freelancerService.remove(req.body.ids);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})

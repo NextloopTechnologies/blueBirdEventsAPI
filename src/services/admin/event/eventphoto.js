@@ -38,12 +38,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const eventphoto = await EventPhoto.findByIdAndDelete(id);  
-        if(!eventphoto) {
-            return { status: 404, msgText: "EventPhoto does not exists!", success:false}
-        }
+        await EventPhoto.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

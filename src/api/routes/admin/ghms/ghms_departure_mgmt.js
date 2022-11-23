@@ -72,7 +72,7 @@ router.post('/update/:id', auth, requestValidator(ghmsDepartureMgmtValidation), 
 
 router.post('/delete/:id', auth, async (req, res) => {
     try {
-        const { status, ...data} = await ghmsDepartureMgmtService.remove(req.params.id);
+        const { status, ...data} = await ghmsDepartureMgmtService.remove(req.body.ids);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})

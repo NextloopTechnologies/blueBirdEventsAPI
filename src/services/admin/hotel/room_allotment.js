@@ -41,12 +41,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const roomallotment = await RoomAllotment.findByIdAndDelete(id);  
-        if(!roomallotment) {
-            return { status: 404, msgText: "RoomAllotment does not exists!", success:false}
-        }
+        await RoomAllotment.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

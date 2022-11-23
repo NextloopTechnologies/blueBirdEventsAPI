@@ -35,12 +35,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const role = await Role.findByIdAndDelete(id);  
-        if(!role) {
-            return { status: 404, msgText: "Role does not exists!", success:false}
-        }
+        await Role.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

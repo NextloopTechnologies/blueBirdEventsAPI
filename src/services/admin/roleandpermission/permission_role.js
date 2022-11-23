@@ -38,12 +38,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const permrole = await PermRole.findByIdAndDelete(id);  
-        if(!permrole) {
-            return { status: 404, msgText: "Permission Role does not exists!", success:false}
-        }
+        await PermRole.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

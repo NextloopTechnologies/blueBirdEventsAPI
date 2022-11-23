@@ -62,9 +62,9 @@ router.post('/update/:id', auth, requestValidator(roomAllotmentValidation), asyn
     }
 });
 
-router.post('/delete/:id', auth, async (req, res) => {
+router.post('/delete', auth, async (req, res) => {
     try {
-        const { status, ...data} = await roomAllotmentService.remove(req.params.id);
+        const { status, ...data} = await roomAllotmentService.remove(req.body.ids);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})

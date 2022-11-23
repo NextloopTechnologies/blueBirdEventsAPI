@@ -14,8 +14,8 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const enquiry = await Enquiry.find(whereClause)
-                                    .populate({path: 'event_id', select: 'event_title'})
-                                    .sort({ _id: -1 });
+        .populate({path: 'event_id', select: 'event_title'})
+        .sort({ _id: -1 });
         if(!enquiry.length > 0) {
             return { status: 404 , msgText: "Enquiry does not exists!" ,success: false }
         }
@@ -25,12 +25,9 @@ export const read = async(whereClause={}) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const enquiry = await Enquiry.findByIdAndDelete(id);  
-        if(!enquiry) {
-            return { status: 404, msgText: "Enquiry does not exists!", success:false}
-        }
+        await Enquiry.deleteMany({"_id": { "$in" : ids}});  
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

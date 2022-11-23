@@ -35,12 +35,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const event = await Event.findByIdAndDelete(id);  
-        if(!event) {
-            return { status: 404, msgText: "Event does not exists!", success:false}
-        }
+        await Event.deleteMany({"_id": { "$in" : ids}}); 
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

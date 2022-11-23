@@ -35,12 +35,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const freelancer = await Freelancer.findByIdAndDelete(id);  
-        if(!freelancer) {
-            return { status: 404, msgText: "Freelancer does not exists!", success:false}
-        }
+        await Freelancer.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

@@ -38,12 +38,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const vendordriver = await VendorDriver.findByIdAndDelete(id);  
-        if(!vendordriver) {
-            return { status: 404, msgText: "VendorDriver does not exists!", success:false}
-        }
+        await VendorDriver.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;
