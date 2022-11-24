@@ -23,8 +23,10 @@ export default ({app}) => {
         credentials: true,
         origin: function (origin, callback) {
             if (!origin || whitelist.indexOf(origin) !== -1) {
+                console.log("success", origin);
                 callback(null, true)
             } else {
+                console.log("Error Found this ", origin);
                 callback(new Error('Not allowed by CORS'))
             }
         }
