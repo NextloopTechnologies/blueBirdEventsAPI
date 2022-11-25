@@ -17,7 +17,7 @@ export default ({app}) => {
         };
     }
 
-    const whitelist = [config.clientbaseUrl,'http://localhost:3000','http://localhost:3001'];
+    const whitelist = [config.clientbaseUrl,'http://localhost:3000','http://localhost:3001','https://eloquent-sorbet-863364.netlify.app'];
     
     var corsOptions = {
         credentials: true,
