@@ -24,6 +24,10 @@ const subEventValidation = Joi.object({
     subevent_date: Joi.date().required(),
     event_id: Joi.string().required(),
     hotel_id: Joi.string().required(),
+    hotel_rooms_required: Joi.array().items({
+        floor_no: Joi.number().required(),
+        room_nos: Joi.array().required()
+    }),  
     client_id: Joi.string().required(),
     prod_decor_id: Joi.string(),
     id: Joi.string()

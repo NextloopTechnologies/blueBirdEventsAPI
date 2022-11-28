@@ -10,7 +10,15 @@ const subEventSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'Hotel'
-    }, 
+    },
+    hotel_rooms_required:[{
+        _id: false,
+        floor_no: Number,
+        room_nos: [{
+            _id: false,
+            type: String
+        }]
+    }], 
     client_id: {
         type: Schema.Types.ObjectId,
         required: true,
