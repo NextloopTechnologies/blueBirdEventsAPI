@@ -25,6 +25,7 @@ import VendorProdDecor from './admin/vendor/vendor_prod_decor';
 import VendorProdDecorChecklist from './admin/vendor/vendor_proddecor_checklist';
 import GHMSDepartureMgmt from './admin/ghms/ghms_departure_mgmt';
 import GHMSLostFound from './admin/ghms/ghms_lost_found';
+import GeneralChecklist from './admin/general_checklist/general_checklist';
 
 export {
     User,
@@ -53,5 +54,6 @@ export {
     VendorCar,
     VendorDriver,
     VendorProdDecorChecklist,
-    VendorProdDecor
+    VendorProdDecor,
+    GeneralChecklist
 }

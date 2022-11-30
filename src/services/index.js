@@ -28,6 +28,7 @@ import * as vendorCarService from './admin/vendor/vendor_car';
 import * as vendorDriverService from './admin/vendor/vendor_driver';
 import * as vendorProdDecorService from './admin/vendor/vendor_prod_decor';
 import * as vendorProdDecorChecklistService from './admin/vendor/vendor_proddecor_checklist';
+import * as generalChecklistService from './admin/general_checklist/general_checklist';
 
 export {
     userService,
@@ -59,5 +60,6 @@ export {
     vendorCarService,
     vendorDriverService,
     vendorProdDecorService,
-    vendorProdDecorChecklistService
+    vendorProdDecorChecklistService,
+    generalChecklistService
 }
