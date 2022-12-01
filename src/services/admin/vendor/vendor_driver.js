@@ -14,7 +14,8 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const vendordriver = await VendorDriver.find(whereClause)
-        .populate({path: 'vendor_id', select: ['vendor_name','vendor_type']})
+        .populate([{path: 'client_id', select: ['name']},
+        {path: 'sub_event_id', select: ['subevent_title']}])
         .sort({ _id: -1 });
         if(!vendordriver.length > 0) {
             return { status: 404 , msgText: "VendorDriver does not exists!" ,success: false }

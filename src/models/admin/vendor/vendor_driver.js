@@ -1,11 +1,16 @@
 import { Schema, model } from "mongoose";
 
 const vendorDriverSchema = Schema({
-  vendor_id: {
+  client_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Vendor'
+    ref: 'User'
   },
+  sub_event_id: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'SubEvent'
+  },  
   driver_name: {
     type: String,
     required: true,
@@ -18,15 +23,11 @@ const vendorDriverSchema = Schema({
       required: true
   },
   driver_email: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-      lowercase: true
-  },
-  driver_add: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    unique: true,
+    lowercase: true
   },
   active: {
     type: Boolean,

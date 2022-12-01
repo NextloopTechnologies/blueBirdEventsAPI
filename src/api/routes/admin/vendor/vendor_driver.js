@@ -19,13 +19,13 @@ router.get('', auth, async(req, res) => {
 });
 
 const vendorDriverValidation = Joi.object({
-  vendor_id: Joi.string().required(),
-  driver_name: Joi.string().min(3).max(30).required().trim(),
-  driver_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
-  driver_add: Joi.string().min(5).required().trim(),
-  driver_mobile: Joi.string().regex(/^[0-9]{10}$/)
-  .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-  id: Joi.string()
+    client_id: Joi.string().required(),
+    sub_event_id: Joi.string().required(),
+    driver_name: Joi.string().min(3).max(30).required().trim(),
+    driver_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
+    driver_mobile: Joi.string().regex(/^[0-9]{10}$/)
+    .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+    id: Joi.string()
 });
 
 router.post('/create', auth, requestValidator(vendorDriverValidation), async(req, res) => {
