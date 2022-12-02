@@ -19,13 +19,16 @@ router.get('', auth, async(req, res) => {
 });
 
 const vendorCarValidation = Joi.object({
-  client_id: Joi.string().required(),
-  sub_event_id: Joi.string().required(),
-  car_name: Joi.string().min(3).max(20).trim().required(),
-  car_model: Joi.string().required(),
-  car_number: Joi.string().required(),
-  car_type: Joi.string().valid('Rental','Private').required(),
-  id: Joi.string()
+    client_id: Joi.string().required(),
+    sub_event_id: Joi.string().required(),
+    car_name: Joi.string().min(3).max(20).trim().required(),
+    car_model: Joi.string().required(),
+    car_number: Joi.string().required(),
+    car_type: Joi.string().valid('Rental','Private').required(),
+    driver_name: Joi.string().min(3).max(30).required().trim(),
+    driver_mobile: Joi.string().regex(/^[0-9]{10}$/)
+    .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
+    id: Joi.string()
 });
 
 router.post('/create', auth, requestValidator(vendorCarValidation), async(req, res) => {

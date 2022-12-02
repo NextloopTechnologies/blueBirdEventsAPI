@@ -24,7 +24,6 @@ const roomAllotmentValidation = Joi.object({
     sub_event_id: Joi.string().required(),
     hotel_room_id: Joi.string().required(),
     guest_id: Joi.string().required(),
-    remarks: Joi.string().min(10).required(),
     id: Joi.string()
 });
 
@@ -57,6 +56,17 @@ router.post('/update/:id', auth, requestValidator(roomAllotmentValidation), asyn
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_ROOMALLOTMENT-UPDATE-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
+router.post('/update-roomallotment-checklist/:id', auth, async(req, res) => {
+    try {
+        const { status, ...data} = await roomAllotmentService.update(req.params.id,req.body);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_ROOMALLOTMENTCHECKLIST-UPDATE-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }

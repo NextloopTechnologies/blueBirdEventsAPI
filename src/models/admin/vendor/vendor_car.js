@@ -30,6 +30,17 @@ const vendorCarSchema = Schema({
     type: String,
     required: true
   },
+  driver_name: {
+    type: String,
+    required: true,
+    trim: true,
+    minlenght: 3,
+    maxlength: 30
+  },
+  driver_mobile: {
+      type: Number,
+      required: true
+  },
   active: {
     type: Boolean,
     default: true

@@ -21,10 +21,11 @@ const roomAllotmentSchema = new Schema({
       required: true,
       ref: 'GHMSGuestList'
     },
-    remarks: {
-      type: String,
-      required: true
-    },
+    hospitality_checklist: [{
+      _id: false,
+      check_id: Number,
+      check_name: String
+    }],
     active: {
       type: Boolean,
       default: true
