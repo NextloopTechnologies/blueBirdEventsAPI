@@ -24,9 +24,6 @@ const subEventSchema = new Schema({
         required: true,
         ref: 'User'
     }, 
-    prod_decor_id: {
-        type: String
-    },
     subevent_date: {
         type: Date,
         required: true,
@@ -39,6 +36,9 @@ const subEventSchema = new Schema({
     subevent_descp: {
         type: String,
         required: true
+    },
+    prod_decor_note: {
+        type: String
     },
     active: {
         type: Boolean,

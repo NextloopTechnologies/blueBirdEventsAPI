@@ -43,6 +43,10 @@ const enquirySchema = new Schema({
     },
     ref_from: {
         type: String,
+    }, 
+    wedding_of: {
+        type: String,
+        required: true
     }
 },{timestamps : true})
 

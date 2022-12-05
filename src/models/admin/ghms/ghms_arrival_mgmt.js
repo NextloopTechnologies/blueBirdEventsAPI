@@ -36,21 +36,10 @@ const ghmsArrivalMgmtSchema = new Schema({
         type: String,
         required: true
     },
-    picked_by: {
-      type: String,
-      required: true
-    },
-    vendor_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Vendor'
-    },
     car_id: {
       type: Schema.Types.ObjectId,
+      required: true,
       ref: 'VendorCar'
-    },
-    driver_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'VendorDriver'
     },
     welcome_checklist: {
       type: String,

@@ -22,7 +22,7 @@ router.get('', auth, async(req, res) => {
 });
 
 const freelancerValidation = Joi.object({
-    name: Joi.string().min(3).max(30).trim().alphanum().required(),
+    name: Joi.string().min(3).max(30).trim().required(),
     wa_contact_no: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
     alt_contact_no: Joi.string().regex(/^[0-9]{10}$/)

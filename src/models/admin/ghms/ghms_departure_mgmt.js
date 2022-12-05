@@ -32,21 +32,10 @@ const ghmsDepartureMgmtSchema = new Schema({
         type: String,
         required: true
     },
-    dropped_by: {
-      type: String,
-      required: true
-    },
-    vendor_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Vendor'
-    },
     car_id: {
       type: Schema.Types.ObjectId,
+      required: true,
       ref: 'VendorCar'
-    },
-    driver_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'VendorDriver'
     },
     return_checklist: {
       type: String,
@@ -60,7 +49,7 @@ const ghmsDepartureMgmtSchema = new Schema({
       type: Boolean,
       default: true
     }
-}, { timestamps: true});
+}, { timestamps: true });
 
 const GHMSDepartureMgmt = model('GHMSDepartureMgmt', ghmsDepartureMgmtSchema);
 

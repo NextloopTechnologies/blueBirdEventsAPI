@@ -16,9 +16,7 @@ export const read = async(whereClause={}) => {
         const ghmsdeparutremgmt = await GHMSDepartureMgmt.find(whereClause)
         .populate([{path: 'sub_event_id', select: 'subevent_title'},
         {path: 'guest_id', select: 'guest_name'},
-        {path: 'vendor_id', select: 'vendor_name'},
-        {path: 'car_id', select: ['car_name','car_model','car_number']},
-        {path: 'driver_id', select: 'driver_name'},
+        {path: 'car_id', select: ['car_name','car_model','car_number','driver_name']},
         {path: 'client_id', select: 'name'}])
         .sort({ _id: -1 });
         if(!ghmsdeparutremgmt.length > 0) {

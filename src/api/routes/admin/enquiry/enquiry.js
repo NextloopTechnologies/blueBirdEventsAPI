@@ -21,6 +21,7 @@ router.get('', auth, async(req, res) => {
 const enquiryValidation = Joi.object({
     first_name: Joi.string().min(3).max(30).trim().required(),
     second_name: Joi.string().min(3).max(30).trim().required(),
+    wedding_of: Joi.string().required(),
     event_id: Joi.string().required(),
     event_date: Joi.date().greater('now').required().messages({
         'date.greater': `"event_date" should be greater than todays date`

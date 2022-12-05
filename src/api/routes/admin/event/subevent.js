@@ -29,7 +29,7 @@ const subEventValidation = Joi.object({
         room_nos: Joi.array().required()
     }),  
     client_id: Joi.string().required(),
-    prod_decor_id: Joi.string(),
+    prod_decor_note: Joi.string(),
     id: Joi.string()
 });
 
