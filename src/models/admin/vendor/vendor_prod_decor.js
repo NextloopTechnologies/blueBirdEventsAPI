@@ -1,22 +1,31 @@
 import { Schema, model } from "mongoose";
 
 const vendorProdDecorSchema = Schema({
-  vendor_id: {
+  client_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Vendor'
+    ref: 'User'
   },
-  prod_decor_checklist_id: {
+  sub_event_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'VendorProdDecorChecklist'
+    ref: 'SubEvent'
   },
   prod_decor_img: [{
     _id: false,
     file: String
   }],
-  note: {
-    type: String
+  img_title: {
+    type: String,
+    required: true
+  },
+  decor_date: {
+    type: Date,
+    required: true
+  },
+  expected_decor_time: {
+    type: String,
+    required: true
   },
   active: {
     type: Boolean,
