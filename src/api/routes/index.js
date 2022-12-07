@@ -23,6 +23,7 @@ import vendorCarController from './admin/vendor/vendor_car';
 import vendorDriverController from './admin/vendor/vendor_driver';
 import vendorProdDecorController from './admin/vendor/vendor_prod_decor';
 import vendorProdDecorChecklistController from './admin/vendor/vendor_proddecor_checklist';
+import vendorFoodBevController from './admin/vendor/vendor_food_bev';
 import ghmsArrivalMgmtController from './admin/ghms/ghms_arrival_mgmt';
 import ghmsDepartureMgmtController from './admin/ghms/ghms_departure_mgmt';
 import ghmsLostFoundController from './admin/ghms/ghms_lost_found';
@@ -58,6 +59,7 @@ router.use('/v1/admin/vendorcar', vendorCarController);
 router.use('/v1/admin/vendordriver', vendorDriverController);
 router.use('/v1/admin/vendorproddecor', vendorProdDecorController);
 router.use('/v1/admin/vendorproddecorchecklist', vendorProdDecorChecklistController);
+router.use('/v1/admin/vendorfoodbev', vendorFoodBevController);
 router.use('/v1/admin/generalchecklist', generalChecklistController);
 
 export default router;

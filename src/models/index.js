@@ -23,6 +23,7 @@ import VendorCar from './admin/vendor/vendor_car';
 import VendorDriver from './admin/vendor/vendor_driver';
 import VendorProdDecor from './admin/vendor/vendor_prod_decor';
 import VendorProdDecorChecklist from './admin/vendor/vendor_proddecor_checklist';
+import VendorFoodBev from './admin/vendor/vendor_food_bev';
 import GHMSDepartureMgmt from './admin/ghms/ghms_departure_mgmt';
 import GHMSLostFound from './admin/ghms/ghms_lost_found';
 import GeneralChecklist from './admin/general_checklist/general_checklist';
@@ -54,6 +55,7 @@ export {
     VendorCar,
     VendorDriver,
     VendorProdDecorChecklist,
+    VendorFoodBev,
     VendorProdDecor,
     GeneralChecklist
 }
