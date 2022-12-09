@@ -11,14 +11,21 @@ const vendorCarSchema = Schema({
     required: true,
     ref: 'SubEvent'
   },  
-  car_name: {
+  car_model: {
     type: String,
     required: true,
     trim: true,
     minlenght: 3,
     maxlength: 30
   },
-  car_model: {
+  owner_name: {
+    type: String,
+    required: true,
+    trim: true,
+    minlenght: 3,
+    maxlength: 30
+  },
+  car_reg: {
       type: String,
       required: true
   },

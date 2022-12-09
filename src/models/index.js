@@ -27,6 +27,7 @@ import VendorFoodBev from './admin/vendor/vendor_food_bev';
 import GHMSDepartureMgmt from './admin/ghms/ghms_departure_mgmt';
 import GHMSLostFound from './admin/ghms/ghms_lost_found';
 import GeneralChecklist from './admin/general_checklist/general_checklist';
+import PriortizationList from './admin/priortizationlist/priortizationlist';
 
 export {
     User,
@@ -57,5 +58,6 @@ export {
     VendorProdDecorChecklist,
     VendorFoodBev,
     VendorProdDecor,
-    GeneralChecklist
+    GeneralChecklist,
+    PriortizationList
 }

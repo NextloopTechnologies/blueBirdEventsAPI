@@ -30,6 +30,7 @@ import * as vendorProdDecorService from './admin/vendor/vendor_prod_decor';
 import * as vendorProdDecorChecklistService from './admin/vendor/vendor_proddecor_checklist';
 import * as vendorFoodBevService from './admin/vendor/vendor_food_bev';
 import * as generalChecklistService from './admin/general_checklist/general_checklist';
+import * as priortizationListService from './admin/priortizationlist/priortizationlist';
 
 export {
     userService,
@@ -63,5 +64,6 @@ export {
     vendorProdDecorService,
     vendorProdDecorChecklistService,
     vendorFoodBevService,
-    generalChecklistService
+    generalChecklistService,
+    priortizationListService
 }

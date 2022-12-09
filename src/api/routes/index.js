@@ -28,6 +28,7 @@ import ghmsArrivalMgmtController from './admin/ghms/ghms_arrival_mgmt';
 import ghmsDepartureMgmtController from './admin/ghms/ghms_departure_mgmt';
 import ghmsLostFoundController from './admin/ghms/ghms_lost_found';
 import generalChecklistController from './admin/general_checklist/general_checklist';
+import priortizationListController from './admin/priortizationlist/priortizationlist';
 
 
 const router = new Router()
@@ -61,5 +62,6 @@ router.use('/v1/admin/vendorproddecor', vendorProdDecorController);
 router.use('/v1/admin/vendorproddecorchecklist', vendorProdDecorChecklistController);
 router.use('/v1/admin/vendorfoodbev', vendorFoodBevController);
 router.use('/v1/admin/generalchecklist', generalChecklistController);
+router.use('/v1/admin/priortizationlist', priortizationListController);
 
 export default router;
