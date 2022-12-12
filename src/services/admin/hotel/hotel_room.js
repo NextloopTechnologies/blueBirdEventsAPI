@@ -14,8 +14,7 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const hotelroom = await HotelRoom.find(whereClause)
-        .populate([{path: 'hotel_id', select: 'hotel_name'}, 
-        {path: 'room_type_id', select: 'room_type_name'}])
+        .populate({path: 'hotel_id', select: 'hotel_name'})
         .sort({ _id: -1 });
         if(!hotelroom.length > 0) {
             return { status: 404 , msgText: "HotelRoom does not exists!" ,success: false }
@@ -38,12 +37,9 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(id)=> {
+export const remove = async(ids)=> {
     try {
-        const hotelroom = await HotelRoom.findByIdAndDelete(id);  
-        if(!hotelroom) {
-            return { status: 404, msgText: "HotelRoom does not exists!", success:false}
-        }
+        await HotelRoom.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

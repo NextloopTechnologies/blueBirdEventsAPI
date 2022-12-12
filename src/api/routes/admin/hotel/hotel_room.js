@@ -22,7 +22,7 @@ const hotelRoomValidation = Joi.object({
     hotel_id: Joi.string().required(),
     room_no: Joi.number().required(),
     floor_no: Joi.number().required(),
-    room_type_id: Joi.string().required(),
+    room_type: Joi.string().required(),
     booked_from: Joi.date().greater('now').required().messages({
       'date.greater': `"booked_from" should be greater than todays date`
     }),
@@ -64,9 +64,9 @@ router.post('/update/:id', auth, requestValidator(hotelRoomValidation), async(re
     }
 });
 
-router.post('/delete/:id', auth, async (req, res) => {
+router.post('/delete', auth, async (req, res) => {
     try {
-        const { status, ...data} = await hotelRoomService.remove(req.params.id);
+        const { status, ...data} = await hotelRoomService.remove(req.body.ids);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})

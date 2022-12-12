@@ -14,10 +14,9 @@ const hotelRoomSchema = new Schema({
       type: Number,
       required: true
     },
-    room_type_id: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'HotelRoomType'
+    room_type: {
+      type: String,
+      required: true
     },
     booked_from: {
       type: Date,
