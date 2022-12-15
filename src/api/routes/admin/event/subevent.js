@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator } from '../../../middlewares';
+import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { subEventService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -33,7 +33,7 @@ const subEventValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, requestValidator(subEventValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-subevent'), requestValidator(subEventValidation), async(req, res) => {
     try {
         const { status, ...data} = await subEventService.create(req.values);
         res.status(status).send(data);
@@ -44,7 +44,7 @@ router.post('/create', auth, requestValidator(subEventValidation), async(req, re
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-subevent'), async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await subEventService.read({_id});
@@ -56,7 +56,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, requestValidator(subEventValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-subevent'), requestValidator(subEventValidation), async(req, res) => {
     try {
         const { status, ...data} = await subEventService.update(req.params.id,req.values);
         res.status(status).send(data);
@@ -67,7 +67,7 @@ router.post('/update/:id', auth, requestValidator(subEventValidation), async(req
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-subevent'), async (req, res) => {
     try {
         const { status, ...data} = await subEventService.remove(req.body.ids);
         res.status(status).send(data);

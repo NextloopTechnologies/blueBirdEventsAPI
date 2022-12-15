@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator, fileUploads } from '../../../middlewares';
+import { auth, requestValidator, fileUploads, checkPermission } from '../../../middlewares';
 import { eventService, fileService} from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -28,7 +28,7 @@ const eventValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-event'), fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
     try {
         if(!req.file) {
             throw {status: 401, msgText: 'File is required', success:false}
@@ -44,7 +44,7 @@ router.post('/create', auth, fileUploads('event_img',1), requestValidator(eventV
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await eventService.read({_id});
@@ -59,7 +59,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-event'),fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
     try {
         if(req.file) {
             const { fileName } = await fileService.uploadSingle(req.file);
@@ -74,7 +74,7 @@ router.post('/update/:id', auth, fileUploads('event_img',1), requestValidator(ev
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-event'),async (req, res) => {
     try {
         const { status, ...data} = await eventService.remove(req.body.ids);
         res.status(status).send(data);

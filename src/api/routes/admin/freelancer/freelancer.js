@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator, fileUploads } from '../../../middlewares';
+import { auth, requestValidator, fileUploads,checkPermission } from '../../../middlewares';
 import { freelancerService , fileService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -7,7 +7,7 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', auth, checkPermission('manage-freelancer'), async(req, res) => {
     try {
         const { status, ...data} = await freelancerService.read();
         if(data.freelancer) {
@@ -55,7 +55,7 @@ router.post('/create', fileUploads('pass_size_pic',1), requestValidator(freelanc
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-freelancer'), async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await freelancerService.read({_id});
@@ -70,7 +70,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, fileUploads('pass_size_pic',1), requestValidator(freelancerValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-freelancer'), fileUploads('pass_size_pic',1), requestValidator(freelancerValidation), async(req, res) => {
     try {
         if(req.file) {
             const { fileName } = await fileService.uploadSingle(req.file);
@@ -85,7 +85,7 @@ router.post('/update/:id', auth, fileUploads('pass_size_pic',1), requestValidato
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-freelancer'), async (req, res) => {
     try {
         const { status, ...data} = await freelancerService.remove(req.body.ids);
         res.status(status).send(data);

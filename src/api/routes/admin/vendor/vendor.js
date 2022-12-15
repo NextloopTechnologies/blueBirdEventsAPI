@@ -26,6 +26,9 @@ const vendorValidation = Joi.object({
     vendor_scope_of_work: Joi.string().min(5).required().trim(),
     client_id: Joi.string().required(),
     sub_event_id: Joi.string().required(),
+    total_package: Joi.string(),
+    paid_amount: Joi.string(),
+    due_amount: Joi.string(),
     id: Joi.string()
 });
 

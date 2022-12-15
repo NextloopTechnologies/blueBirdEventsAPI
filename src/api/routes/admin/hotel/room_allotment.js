@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator } from '../../../middlewares';
+import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { roomAllotmentService, filterService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -7,7 +7,7 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', auth, checkPermission('manage-roomallotment'), async(req, res) => {
     try {
         const filterData = await filterService.clientOrCoordinatorPanel(req.body);
         const { status, ...data} = await roomAllotmentService.read(filterData);
@@ -27,7 +27,7 @@ const roomAllotmentValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, requestValidator(roomAllotmentValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-roomallotment'), requestValidator(roomAllotmentValidation), async(req, res) => {
     try {
         const { status, ...data} = await roomAllotmentService.create(req.values);
         res.status(status).send(data);
@@ -38,7 +38,7 @@ router.post('/create', auth, requestValidator(roomAllotmentValidation), async(re
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-roomallotment'), async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await roomAllotmentService.read({_id});
@@ -50,7 +50,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, requestValidator(roomAllotmentValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-roomallotment'), requestValidator(roomAllotmentValidation), async(req, res) => {
     try {
         const { status, ...data} = await roomAllotmentService.update(req.params.id,req.values);
         res.status(status).send(data);
@@ -61,7 +61,7 @@ router.post('/update/:id', auth, requestValidator(roomAllotmentValidation), asyn
     }
 });
 
-router.post('/update-roomallotment-checklist/:id', auth, async(req, res) => {
+router.post('/update-roomallotment-checklist/:id', auth, checkPermission('update-roomallotment'), async(req, res) => {
     try {
         const { status, ...data} = await roomAllotmentService.update(req.params.id,req.body);
         res.status(status).send(data);
@@ -72,7 +72,7 @@ router.post('/update-roomallotment-checklist/:id', auth, async(req, res) => {
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-roomallotment'), async (req, res) => {
     try {
         const { status, ...data} = await roomAllotmentService.remove(req.body.ids);
         res.status(status).send(data);

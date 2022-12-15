@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator } from '../../../middlewares';
+import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { ghmsArrivalMgmtService, filterService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -7,7 +7,7 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', auth, checkPermission('manage-ghmsarrival'), async(req, res) => {
     try {
         const filterData = await filterService.clientOrCoordinatorPanel(req.body);
         const { status, ...data} = await ghmsArrivalMgmtService.read(filterData);
@@ -34,7 +34,7 @@ const ghmsArrivalMgmtValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, requestValidator(ghmsArrivalMgmtValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-ghmsarrival'), requestValidator(ghmsArrivalMgmtValidation), async(req, res) => {
     try {
         const { status, ...data} = await ghmsArrivalMgmtService.create(req.values);
         res.status(status).send(data);
@@ -45,7 +45,7 @@ router.post('/create', auth, requestValidator(ghmsArrivalMgmtValidation), async(
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-ghmsarrival'), async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await ghmsArrivalMgmtService.read({_id});
@@ -57,7 +57,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, requestValidator(ghmsArrivalMgmtValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-ghmsarrival'), requestValidator(ghmsArrivalMgmtValidation), async(req, res) => {
     try {
         const { status, ...data} = await ghmsArrivalMgmtService.update(req.params.id,req.values);
         res.status(status).send(data);
@@ -68,7 +68,7 @@ router.post('/update/:id', auth, requestValidator(ghmsArrivalMgmtValidation), as
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-ghmsarrival'), async (req, res) => {
     try {
         const { status, ...data} = await ghmsArrivalMgmtService.remove(req.body.ids);
         res.status(status).send(data);

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator, fileUploads } from '../../../middlewares';
+import { auth, requestValidator, fileUploads, checkPermission } from '../../../middlewares';
 import { eventPhotoService, fileService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -32,7 +32,7 @@ const eventPhotoValidation = Joi.object({
     active: Joi.boolean()
 });
 
-router.post('/create', auth, fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-eventphoto'),fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
     try {
         if(req.files.length === 0) {
             throw {status: 401, msgText: 'File is required', success:false}
@@ -63,7 +63,7 @@ router.get('/read/:id', async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-eventphoto'),fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
     try {
         if(req.files.length > 0) {
             const files = await fileService.uploadMultiple(req.files);
@@ -78,7 +78,7 @@ router.post('/update/:id', auth, fileUploads('ep_img'), requestValidator(eventPh
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-eventphoto'), async (req, res) => {
     try {
         const { status, ...data} = await eventPhotoService.remove(req.body.ids);
         res.status(status).send(data);

@@ -30,6 +30,16 @@ const vendorSchema = Schema({
     type: String,
     required: true
   },
+  total_package: {
+    type: String,
+    required: true
+  },
+  paid_amount: {
+    type: String
+  },
+  due_amount: {
+    type: String
+  },
   active: {
     type: Boolean,
     default: true

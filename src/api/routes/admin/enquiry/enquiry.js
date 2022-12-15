@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator } from '../../../middlewares';
+import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { enquiryService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -7,7 +7,7 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', auth, checkPermission('manage-enquiry'),async(req, res) => {
     try {
         const { status, ...data} = await enquiryService.read();
         res.status(status).send(data);
@@ -46,7 +46,7 @@ router.post('/create', requestValidator(enquiryValidation), async(req, res) => {
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-enquiry'), async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await enquiryService.read({_id});
@@ -69,7 +69,7 @@ router.get('/read/:id', auth, async (req, res)=> {
 //     }
 // });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-enquiry'), async (req, res) => {
     try {
         const { status, ...data} = await enquiryService.remove(req.body.ids);
         res.status(status).send(data);
