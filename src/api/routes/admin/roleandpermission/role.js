@@ -7,7 +7,7 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, checkPermission('manage-role'),  async(req, res) => {
+router.get('', auth, checkPermission('manage-roles'),  async(req, res) => {
     try {
         const { status, ...data} = await roleService.read();
         res.status(status).send(data);
