@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator } from '../../../middlewares';
+import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { vendorCarService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -7,7 +7,7 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', auth, checkPermission('manage-vendorcar'),  async(req, res) => {
     try {
         const { status, ...data} = await vendorCarService.read();
         res.status(status).send(data);
@@ -32,7 +32,7 @@ const vendorCarValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, requestValidator(vendorCarValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-vendorcar'),  requestValidator(vendorCarValidation), async(req, res) => {
     try {
         const { status, ...data} = await vendorCarService.create(req.values);
         res.status(status).send(data);
@@ -43,7 +43,7 @@ router.post('/create', auth, requestValidator(vendorCarValidation), async(req, r
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-vendorcar'),  async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await vendorCarService.read({_id});
@@ -55,7 +55,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, requestValidator(vendorCarValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-vendorcar'),  requestValidator(vendorCarValidation), async(req, res) => {
     try {
         const { status, ...data} = await vendorCarService.update(req.params.id,req.values);
         res.status(status).send(data);
@@ -66,7 +66,7 @@ router.post('/update/:id', auth, requestValidator(vendorCarValidation), async(re
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-vendorcar'),  async (req, res) => {
     try {
         const { status, ...data} = await vendorCarService.remove(req.body.ids);
         res.status(status).send(data);

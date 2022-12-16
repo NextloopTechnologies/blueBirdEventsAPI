@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { auth, requestValidator, fileUploads } from '../../../middlewares';
+import { auth, requestValidator, fileUploads, checkPermission } from '../../../middlewares';
 import { vendorProdDecorService, fileService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', auth, checkPermission('manage-vendorproddecor'),  async(req, res) => {
     try {
         const { status, ...data} = await vendorProdDecorService.read();
         if(data.vendorproddecor){
@@ -33,7 +33,7 @@ const vendorProdDecorValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, fileUploads('prod_decor_img'), requestValidator(vendorProdDecorValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-vendorproddecor'),  fileUploads('prod_decor_img'), requestValidator(vendorProdDecorValidation), async(req, res) => {
     try {
         if(req.files.length === 0) {
             throw {status: 401, msgText: 'File is required', success:false}
@@ -49,7 +49,7 @@ router.post('/create', auth, fileUploads('prod_decor_img'), requestValidator(ven
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-vendorproddecor'),  async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await vendorProdDecorService.read({_id});
@@ -64,7 +64,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, fileUploads('prod_decor_img'), requestValidator(vendorProdDecorValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-vendorproddecor'),  fileUploads('prod_decor_img'), requestValidator(vendorProdDecorValidation), async(req, res) => {
     try {
         if(req.files.length > 0) {
             const files = await fileService.uploadMultiple(req.files);
@@ -79,7 +79,7 @@ router.post('/update/:id', auth, fileUploads('prod_decor_img'), requestValidator
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-vendorproddecor'),  async (req, res) => {
     try {
         const { status, ...data} = await vendorProdDecorService.remove(req.body.ids);
         res.status(status).send(data);

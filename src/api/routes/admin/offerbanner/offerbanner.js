@@ -3,7 +3,7 @@ import { offerBannerService , fileService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
-import { auth, requestValidator, fileUploads } from "../../../middlewares";
+import { auth, requestValidator, fileUploads, checkPermission } from "../../../middlewares";
 const router = new Router();
 
 router.get('', async(req, res) => {
@@ -37,7 +37,7 @@ const offerBannerValidation = Joi.object({
     active: Joi.boolean()
 });
 
-router.post('/create', auth, fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-offerbanner'),  fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
     try {
         
         if(!req.file) {
@@ -54,7 +54,7 @@ router.post('/create', auth, fileUploads('banner_img', 1), requestValidator(offe
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-offerbanner'),  async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await offerBannerService.read({_id});
@@ -69,7 +69,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-offerbanner'),  fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
     try {
         if(req.file) {
             const { imageName } = await fileService.upload(req.file);
@@ -84,7 +84,7 @@ router.post('/update/:id', auth, fileUploads('banner_img', 1), requestValidator(
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-offerbanner'),  async (req, res) => {
     try {
         const { status, ...data} = await offerBannerService.remove(req.body.ids);
         res.status(status).send(data);

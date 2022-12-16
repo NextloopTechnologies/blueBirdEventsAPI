@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator } from '../../../middlewares';
+import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { triviaService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -24,7 +24,7 @@ const triviaValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, requestValidator(triviaValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-trivia'),  requestValidator(triviaValidation), async(req, res) => {
     try {
         const { status, ...data} = await triviaService.create(req.values);
         res.status(status).send(data);
@@ -35,7 +35,7 @@ router.post('/create', auth, requestValidator(triviaValidation), async(req, res)
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-trivia'),  async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await triviaService.read({_id});
@@ -47,7 +47,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, requestValidator(triviaValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-trivia'),  requestValidator(triviaValidation), async(req, res) => {
     try {
         const { status, ...data} = await triviaService.update(req.params.id,req.values);
         res.status(status).send(data);
@@ -58,7 +58,7 @@ router.post('/update/:id', auth, requestValidator(triviaValidation), async(req, 
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-trivia'),  async (req, res) => {
     try {
         const { status, ...data} = await triviaService.remove(req.body.ids);
         res.status(status).send(data);

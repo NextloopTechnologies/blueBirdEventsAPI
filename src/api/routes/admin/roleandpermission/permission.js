@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { auth, requestValidator } from '../../../middlewares';
+import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { permissionService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
@@ -7,7 +7,7 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, async(req, res) => {
+router.get('', auth, checkPermission('manage-permission'),  async(req, res) => {
     try {
         const { status, ...data} = await permissionService.read();
         res.status(status).send(data);
@@ -23,7 +23,7 @@ const permValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, requestValidator(permValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-permission'),  requestValidator(permValidation), async(req, res) => {
     try {
         const { status, ...data} = await permissionService.create(req.values);
         res.status(status).send(data);
@@ -34,7 +34,7 @@ router.post('/create', auth, requestValidator(permValidation), async(req, res) =
     }
 });
 
-router.get('/read/:id', auth, async (req, res)=> {
+router.get('/read/:id', auth, checkPermission('read-permission'),  async (req, res)=> {
     try {
         const _id = req.params.id;
         const { status, ...data} = await permissionService.read({_id});
@@ -46,7 +46,7 @@ router.get('/read/:id', auth, async (req, res)=> {
     }
 });
 
-router.post('/update/:id', auth, requestValidator(permValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-permission'),  requestValidator(permValidation), async(req, res) => {
     try {
         const { status, ...data} = await permissionService.update(req.params.id,req.values);
         res.status(status).send(data);
@@ -57,7 +57,7 @@ router.post('/update/:id', auth, requestValidator(permValidation), async(req, re
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-permission'),  async (req, res) => {
     try {
         const { status, ...data} = await permissionService.remove(req.body.ids);
         res.status(status).send(data);
