@@ -30,6 +30,10 @@ const vendorSchema = Schema({
     type: String,
     required: true
   },
+  arriving_time: {
+    type: String,
+    required: true
+  },
   total_package: {
     type: String,
     required: true
@@ -39,6 +43,13 @@ const vendorSchema = Schema({
   },
   due_amount: {
     type: String
+  },
+  reason_for_blacklist: {
+    type: String
+  },
+  blacklisted: {
+    type: Boolean,
+    default: false
   },
   active: {
     type: Boolean,

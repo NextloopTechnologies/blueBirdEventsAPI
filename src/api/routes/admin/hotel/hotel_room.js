@@ -64,6 +64,17 @@ router.post('/update/:id', auth, checkPermission('update-hotelroom'), requestVal
     }
 });
 
+router.post('/update-hotelroom-checklist/:id', auth, checkPermission('update-hotelroom'), async(req, res) => {
+    try {
+        const { status, ...data} = await hotelRoomService.update(req.params.id,req.body);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_HOTELROOMCHECKLIST-UPDATE-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
 router.post('/delete', auth, checkPermission('delete-hotelroom'), async (req, res) => {
     try {
         const { status, ...data} = await hotelRoomService.remove(req.body.ids);

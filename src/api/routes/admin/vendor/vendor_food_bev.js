@@ -24,6 +24,10 @@ const vendorFoodBevValidation = Joi.object({
     food_type: Joi.string().trim().required(),
     food_sub_type: Joi.string().trim().required(),
     dish_name: Joi.string().trim().required(),
+    plates_guaranteed: Joi.string().trim(),
+    plates_added: Joi.string().trim(),
+    plates_remaining: Joi.string().trim(),
+    plates_used: Joi.string().trim(),
     serve_date: Joi.date().greater('now').required().messages({
       'date.greater': `"serve_date" should be greater than todays date`
     }).required(),

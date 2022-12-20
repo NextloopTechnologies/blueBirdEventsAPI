@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth, requestValidator, checkPermission } from '../../../middlewares';
-import { vendorService } from "../../../../services";
+import { vendorService, filterService } from "../../../../services";
 import { formatFormError } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
@@ -9,7 +9,8 @@ const router = new Router();
 
 router.get('', auth, checkPermission('manage-vendor'),  async(req, res) => {
     try {
-        const { status, ...data} = await vendorService.read();
+        const filterData = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await vendorService.read(filterData);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_VENDOR-READALL-CONTROLLER').error(error);
@@ -27,8 +28,11 @@ const vendorValidation = Joi.object({
     client_id: Joi.string().required(),
     sub_event_id: Joi.string().required(),
     total_package: Joi.string(),
+    arriving_time: Joi.string(),
     paid_amount: Joi.string(),
     due_amount: Joi.string(),
+    reason_for_blacklist: Joi.string(),
+    blacklisted: Joi.boolean(),
     id: Joi.string()
 });
 

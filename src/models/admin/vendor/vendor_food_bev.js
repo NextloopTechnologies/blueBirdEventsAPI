@@ -35,6 +35,22 @@ const vendorFodBevSchema = Schema({
     type: String,
     required: true
   },
+  plates_guaranteed: {
+    type: String,
+    required: true
+  },
+  plated_added: {
+    type: String,
+    required: true
+  },
+  plated_remaining: {
+    type: String,
+    required: true
+  },
+  plates_used: {
+    type: String,
+    required: true
+  },
   active: {
     type: Boolean,
     default: true

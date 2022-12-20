@@ -26,6 +26,11 @@ const hotelRoomSchema = new Schema({
       type: Date,
       required: true
     },
+    hospitality_checklist: [{
+      _id: false,
+      check_id: Number,
+      check_name: String
+    }],
     active: {
       type: Boolean,
       default: true

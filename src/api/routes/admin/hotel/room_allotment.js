@@ -61,17 +61,6 @@ router.post('/update/:id', auth, checkPermission('update-roomallotment'), reques
     }
 });
 
-router.post('/update-roomallotment-checklist/:id', auth, checkPermission('update-roomallotment'), async(req, res) => {
-    try {
-        const { status, ...data} = await roomAllotmentService.update(req.params.id,req.body);
-        res.status(status).send(data);
-    } catch (error) {
-        logger('ADMIN_ROOMALLOTMENTCHECKLIST-UPDATE-CONTROLLER').error(error);
-        const { status, ...data } = formatFormError(error);
-        res.status(status).send(data);
-    }
-});
-
 router.post('/delete', auth, checkPermission('delete-roomallotment'), async (req, res) => {
     try {
         const { status, ...data} = await roomAllotmentService.remove(req.body.ids);
