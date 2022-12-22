@@ -26,6 +26,10 @@ const generalChecklistValidation = Joi.object({
       check_name: Joi.string().required()
     }),  
     checklist_type: Joi.string().valid('Prod','Food','L&C').required(),
+    generalchecklist_text: Joi.string(),
+    generalchecklist_date: Joi.date().greater('now').messages({
+        'date.greater': `"date" should be greater than todays date`
+      }),
     id: Joi.string()
 });
 
