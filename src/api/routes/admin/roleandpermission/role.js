@@ -19,7 +19,7 @@ router.get('', auth, checkPermission('manage-roles'),  async(req, res) => {
 });
 
 const roleValidation = Joi.object({
-    role_name: Joi.string().min(4).max(60).trim().required(),
+    role_name: Joi.string().min(3).max(60).trim().required(),
     id: Joi.string()
 });
 

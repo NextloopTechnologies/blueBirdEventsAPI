@@ -38,7 +38,6 @@ export const login = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const user = await User.find(whereClause).sort({ _id: -1 });
-        console.log("fro service ",user)
         if(!user.length > 0) {
             return { status: 404 , msgText: "User does not exists!" ,success: false }
         }
@@ -50,6 +49,9 @@ export const read = async(whereClause={}) => {
 
 export const update = async(id, values) => {
     try {
+        if(values.password) {
+            values.password = await bcrypt.hash(values.password, 8);
+        }
         const user = await User.findByIdAndUpdate(id, values);
         if(!user) {
             return { status: 404 , msgText: "User does not exists!" ,success: false }

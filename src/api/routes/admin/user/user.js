@@ -4,7 +4,7 @@ import { formatFormError } from '../../../../utils/helper';
 import Joi from 'joi';
 import logger from "../../../../loaders/logger";
 const router = new Router();
-import { auth, fileUploads, requestValidator } from '../../../middlewares';
+import { auth, fileUploads, requestValidator, passwordValidator } from '../../../middlewares';
 
 router.get('', auth, async (req,res) => {
     try {
@@ -108,6 +108,26 @@ router.post('/delete', auth, async (req, res) => {
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})
+    }
+});
+
+const changePasswordValidator = Joi.object({
+    oldPassword: Joi.string().min(6).max(16).required().trim(),
+    newPassword: Joi.string().min(6).max(16).required().trim(),
+    confirmPassword: Joi.string().min(6).max(16).required().trim(),
+});
+
+router.post('/changepassword', auth, requestValidator(changePasswordValidator), passwordValidator, async(req, res) => {
+    try {
+        if(req.values.newPassword !== req.values.confirmPassword) {
+            return res.status(401).send({ msgText: "Password mismatch for new and confirm password!", success: false})
+        }
+        const { status, ...data} = await userService.update(req.user._id,{password: req.values.newPassword});
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_USER-CHANGEPASSWORD-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
     }
 });
 
