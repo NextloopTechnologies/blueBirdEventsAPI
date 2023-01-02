@@ -32,6 +32,12 @@ const userSchema = new Schema({
         required: true,
         ref: 'Role'
     },
+    otp: {
+        type: Number
+    },
+    otp_timeout: {
+        type: Date
+    },
     tokens: [{
         token: {
             type: String,

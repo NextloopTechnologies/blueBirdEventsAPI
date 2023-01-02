@@ -9,5 +9,6 @@ export default {
     AWS_RN: process.env.AWS_REGION_NAME,
     AWS_BN: process.env.AWS_BUCKET_NAME,
     AWS_AK: process.env.AWS_ACCESS_KEY,
-    AWS_SK: process.env.AWS_SECRET_KEY
+    AWS_SK: process.env.AWS_SECRET_KEY,
+    SG_KEY: process.env.SENDGRID_ACCESS
 };

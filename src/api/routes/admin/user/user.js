@@ -113,19 +113,50 @@ router.post('/delete', auth, async (req, res) => {
 
 const changePasswordValidator = Joi.object({
     oldPassword: Joi.string().min(6).max(16).required().trim(),
-    newPassword: Joi.string().min(6).max(16).required().trim(),
-    confirmPassword: Joi.string().min(6).max(16).required().trim(),
+    password: Joi.string().min(6).max(16).required().trim(),
+    confirmPassword: Joi.string().min(6).max(16).required().trim()
 });
 
 router.post('/changepassword', auth, requestValidator(changePasswordValidator), passwordValidator, async(req, res) => {
     try {
-        if(req.values.newPassword !== req.values.confirmPassword) {
-            return res.status(401).send({ msgText: "Password mismatch for new and confirm password!", success: false})
-        }
-        const { status, ...data} = await userService.update(req.user._id,{password: req.values.newPassword});
+        await userService.passwordVerify(req.values);
+        const { status, ...data} = await userService.update(req.user._id,{password: req.values.password});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_USER-CHANGEPASSWORD-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
+const forgotPasswordRequestValidation = Joi.object({
+    email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim()
+});
+
+router.post('/forgotpasswordrequest', requestValidator(forgotPasswordRequestValidation), async(req, res) => {
+    try {
+        const { status, ...data} = await userService.forgotPasswordRequest(req.values.email);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_USER-FORGOTPASSWORDREQUEST-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
+const updateForgotPasswordValidation = Joi.object({
+    resetToken: Joi.string().required(),
+    password: Joi.string().min(6).max(16).required().trim(),
+    confirmPassword: Joi.string().min(6).max(16).required().trim()
+});
+
+router.post('/updateforgotpassword', requestValidator(updateForgotPasswordValidation), async(req, res) => {
+    try {
+        await userService.passwordVerify(req.values);
+        const { status, ...data} = await userService.updateForgotPassword(req.values);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_USER-UPDATEFORGOTPASSWORD-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }

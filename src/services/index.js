@@ -11,6 +11,7 @@ import * as enquiryService from './admin/enquiry/enquiry';
 import * as offerBannerService from './admin/offerbanner/offerbanner'
 import * as fileService from './admin/generalservice/fileuploads';
 import * as filterService from './admin/generalservice/filter';
+import * as emailService from './admin/generalservice/email';
 import * as freelancerService from './admin/freelancer/freelancer';
 import * as freelancerAssignedEventService from './admin/freelancer/freelancer_assigned_event';
 import * as hotelService from './admin/hotel/hotel';
@@ -40,6 +41,7 @@ export {
     assignedPermissionService,
     fileService,
     filterService,
+    emailService,
     triviaService,
     eventService,
     subEventService,
