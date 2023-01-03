@@ -16,15 +16,19 @@ export const sendWelcomeEmail = (email, name, password) => {
   });
 }
 
-export const sendForgotPasswordEmail = (email, name, resetToken) => {
+export const sendForgotPasswordEmail = (id, name, email, resetToken) => {
   sgMail.send({
     from: 'skhan@nextlooptechnologies.com',
     to: 'skhan@nextlooptechnologies.com',  // replace with email
-    subject: 'Forgot Password OTP',
+    subject: 'Forgot Password Request',
     html: `<p>Hi ${name}, </p>
           <p>You requested to reset password</p>
           <p> Please, click the link below to reset password </p>
-          <a href="https://blue-bird-events-blue-bird-events.vercel.app/passwordReset?token=${resetToken}">Reset Password</a>` 
+          <a href="https://blue-bird-events-blue-bird-events.vercel.app/passwordReset?token=${resetToken}&id=${id}">Reset Password</a>` 
+  }).then(() => {
+    console.log("Email Sent", config.SG_KEY);
+  }).catch((error) => {
+    console.log("From email service ",error)
   });
 }
 

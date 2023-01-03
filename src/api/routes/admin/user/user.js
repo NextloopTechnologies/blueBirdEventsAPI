@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { userService } from '../../../../services';
 import { formatFormError } from '../../../../utils/helper';
+import config from '../../../../config';
 import Joi from 'joi';
 import logger from "../../../../loaders/logger";
+import { verify } from 'jsonwebtoken';
 const router = new Router();
 import { auth, fileUploads, requestValidator, passwordValidator } from '../../../middlewares';
 
@@ -102,15 +104,6 @@ router.post('/update/:id', auth, requestValidator(userUpdateValidation), async(r
     }
 });
 
-router.post('/delete', auth, async (req, res) => {
-    try {
-        const { status, ...data} = await userService.remove(req.body.ids);
-        res.status(status).send(data);
-    } catch (error) {
-        res.status(500).send({ msgText: 'Something went wrong!'})
-    }
-});
-
 const changePasswordValidator = Joi.object({
     oldPassword: Joi.string().min(6).max(16).required().trim(),
     password: Joi.string().min(6).max(16).required().trim(),
@@ -119,7 +112,9 @@ const changePasswordValidator = Joi.object({
 
 router.post('/changepassword', auth, requestValidator(changePasswordValidator), passwordValidator, async(req, res) => {
     try {
-        await userService.passwordVerify(req.values);
+        if(req.values.password !== req.values.confirmPassword) {
+            throw { status: 401, msgText: "Password mismatch for new and confirm password!", success: false}
+        }
         const { status, ...data} = await userService.update(req.user._id,{password: req.values.password});
         res.status(status).send(data);
     } catch (error) {
@@ -146,14 +141,26 @@ router.post('/forgotpasswordrequest', requestValidator(forgotPasswordRequestVali
 
 const updateForgotPasswordValidation = Joi.object({
     resetToken: Joi.string().required(),
+    id: Joi.string().required(),
     password: Joi.string().min(6).max(16).required().trim(),
     confirmPassword: Joi.string().min(6).max(16).required().trim()
 });
 
 router.post('/updateforgotpassword', requestValidator(updateForgotPasswordValidation), async(req, res) => {
     try {
-        await userService.passwordVerify(req.values);
-        const { status, ...data} = await userService.updateForgotPassword(req.values);
+        verify (req.values.resetToken, config.JWT, (decoded, err)=> {
+            if(err) {
+                throw { status: 400, msgText: err , success: false }
+            } else if(decoded.name === "JsonWebTokenError"){
+                throw { status: 401, msgText: 'Invalid Token', success: false }
+            } else if (decoded.name === "TokenExpiredError") {
+                throw { status: 410, msgText: 'Token Expired', success: false }
+            }
+        });
+        if(req.values.password !== req.values.confirmPassword) {
+            throw { status: 401, msgText: "Password mismatch for new and confirm password!", success: false}
+        }
+        const { status, ...data} = await userService.update(req.values.id, {password: req.values.password});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_USER-UPDATEFORGOTPASSWORD-CONTROLLER').error(error);
@@ -173,6 +180,15 @@ router.post('/logout', auth, async (req, res) => {
         logger('ADMIN_USER-LOGOUT-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
+    }
+});
+
+router.post('/delete', auth, async (req, res) => {
+    try {
+        const { status, ...data} = await userService.remove(req.body.ids);
+        res.status(status).send(data);
+    } catch (error) {
+        res.status(500).send({ msgText: 'Something went wrong!'})
     }
 });
 

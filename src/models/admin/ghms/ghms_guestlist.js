@@ -32,29 +32,24 @@ const ghmsGuestlistSchema = new Schema({
     type: String,
     required: true
   },
-  guest_invited: {
-    type: String,
-    required: true
-  },
   guest_outstation: {
     type: String,
     required: true
   },
+  guest_invited: {
+    type: String
+  },
   guest_expected_nos: {
-    type: Number,
-    required: true
+    type: Number
   },
   guest_invitation_type: {
-    type: String,
-    required: true
+    type: String
   },
   guest_date_of_arrival: {
-    type: Date,
-    required: true
+    type: Date
   },
   active: {
-    type: Boolean,
-    default: true
+    type: Boolean
   }
 }, { timestamps: true});
 
