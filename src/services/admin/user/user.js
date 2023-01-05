@@ -75,7 +75,7 @@ export const forgotPasswordRequest = async(email) => {
         const resetToken = sign ({email: user.email}, config.JWT, { expiresIn: '5m'} );
         emailService.sendForgotPasswordEmail(user._id, user.name, email, resetToken);
         console.log("form service ", resetToken);
-        return { status: 200, msgText: 'OTP sent your mail!',success: true}
+        return { status: 200, msgText: 'Reset password request sent to your mail!',success: true}
     } catch (error) {
         throw error;
     }

@@ -32,6 +32,7 @@ import * as vendorProdDecorChecklistService from './admin/vendor/vendor_proddeco
 import * as vendorFoodBevService from './admin/vendor/vendor_food_bev';
 import * as generalChecklistService from './admin/general_checklist/general_checklist';
 import * as priortizationListService from './admin/priortizationlist/priortizationlist';
+import * as whatsappService from './admin/whatsapp/whatsapp';
 
 export {
     userService,
@@ -67,5 +68,6 @@ export {
     vendorProdDecorChecklistService,
     vendorFoodBevService,
     generalChecklistService,
-    priortizationListService
+    priortizationListService,
+    whatsappService
 }
