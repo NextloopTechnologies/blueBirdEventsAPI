@@ -20,7 +20,7 @@ router.get('', auth, async (req,res) => {
 });
 
 const userRegisterValidation = Joi.object({
-    name: Joi.string().alphanum().min(3).max(30).required().trim(),
+    name: Joi.string().min(3).max(30).required().trim(),
     email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
     password: Joi.string().min(6).max(16).required().trim(),
     mobile: Joi.string().regex(/^[0-9]{10}$/)
@@ -86,7 +86,7 @@ router.post('/account/profile', auth, fileUploads('profile',1),(req, res) => {
 });
 
 const userUpdateValidation = Joi.object({
-    name: Joi.string().alphanum().min(3).max(30).required().trim(),
+    name: Joi.string().min(3).max(30).required().trim(),
     mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
     role_id: Joi.string().required(),
