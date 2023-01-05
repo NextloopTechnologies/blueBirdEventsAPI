@@ -1,14 +1,23 @@
-const express = require('express')
-const routes = require('./api/routes/index')
-const config = require('./config/index')
-const app = express()
+import express from 'express';
+import logger from './loaders/logger';
 
-const port = config.endPointBasePort
+const startServer = () => {
+    try{
+        const app = express();
+        require('./loaders').default({app});
+    
+        const PORT = process.env.PORT || 8000;
+        
+        app.listen(PORT, () => {
+            console.log(`
+            ################################################
+            Server listening on port: ${PORT}
+            ################################################
+            `);
+        });
+    } catch(error) {
+        logger('App').error(error);
+    }
+}
 
-app.use(express.json())
-app.use(routes)
-
-
-app.listen(port, () => {
-    console.log(`Server is up on port ${port}`)
-})
+startServer();  

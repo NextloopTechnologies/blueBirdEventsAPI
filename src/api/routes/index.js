@@ -1,10 +1,67 @@
-const express = require('express');
-const testController = require('./admin/test');
+import { Router } from 'express';
+import userController from './admin/user/user';
+import roleController from './admin/roleandpermission/role';
+import permissionController from './admin/roleandpermission/permission';
+import permissionRoleController from './admin/roleandpermission/permission_role';
+import triviaController from './admin/trivia/trivia';
+import eventController from './admin/event/event';
+import subEventController from './admin/event/subevent';
+import eventPhotoController from './admin/event/eventphoto';
+import enquiryController from './admin/enquiry/enquiry';
+import offerBannerController from './admin/offerbanner/offerbanner';
+import freelancerController from './admin/freelancer/freelancer';
+import freelancerAssignedEventController from './admin/freelancer/freelancer_assigned_event';
+import hotelController from './admin/hotel/hotel';
+import hotelRoomController from './admin/hotel/hotel_room';
+import hotelRoomTypeController from './admin/hotel/hotel_room_type';
+import hotelRoomChecklistController from './admin/hotel/room_checklist_name';
+import ghmsGuestlistController from './admin/ghms/ghms_guestlist';
+import roomAllotmentController from './admin/hotel/room_allotment';
+import hospitalityChecklistController from './admin/hospitalitychecklist/hospitality_checklist';
+import vendorController from './admin/vendor/vendor';
+import vendorCarController from './admin/vendor/vendor_car';
+import vendorDriverController from './admin/vendor/vendor_driver';
+import vendorProdDecorController from './admin/vendor/vendor_prod_decor';
+import vendorProdDecorChecklistController from './admin/vendor/vendor_proddecor_checklist';
+import vendorFoodBevController from './admin/vendor/vendor_food_bev';
+import ghmsArrivalMgmtController from './admin/ghms/ghms_arrival_mgmt';
+import ghmsDepartureMgmtController from './admin/ghms/ghms_departure_mgmt';
+import ghmsLostFoundController from './admin/ghms/ghms_lost_found';
+import generalChecklistController from './admin/general_checklist/general_checklist';
+import priortizationListController from './admin/priortizationlist/priortizationlist';
 
-const router = new express.Router()
 
-router.use('/v1/admin', testController)
+const router = new Router()
 
+router.use('/v1/admin/user', userController);
+router.use('/v1/admin/role', roleController);
+router.use('/v1/admin/permission', permissionController);
+router.use('/v1/admin/permissionrole', permissionRoleController);
+router.use('/v1/admin/trivia', triviaController);
+router.use('/v1/admin/event', eventController);
+router.use('/v1/admin/subEvent', subEventController);
+router.use('/v1/admin/eventPhoto', eventPhotoController);
+router.use('/v1/admin/enquiry', enquiryController);
+router.use('/v1/admin/offerBanner', offerBannerController);
+router.use('/v1/admin/freelancer', freelancerController);
+router.use('/v1/admin/freelancerassignedevent', freelancerAssignedEventController);
+router.use('/v1/admin/hotel', hotelController);
+router.use('/v1/admin/hotelroom', hotelRoomController);
+router.use('/v1/admin/hotelroomtype', hotelRoomTypeController);
+router.use('/v1/admin/hotelroomchecklist', hotelRoomChecklistController);
+router.use('/v1/admin/ghmsguestlist', ghmsGuestlistController);
+router.use('/v1/admin/ghmsarrival', ghmsArrivalMgmtController);
+router.use('/v1/admin/ghmsdeparture', ghmsDepartureMgmtController);
+router.use('/v1/admin/ghmslostfound', ghmsLostFoundController);
+router.use('/v1/admin/roomallotment', roomAllotmentController);
+router.use('/v1/admin/hospitalitychecklist', hospitalityChecklistController);
+router.use('/v1/admin/vendor', vendorController);
+router.use('/v1/admin/vendorcar', vendorCarController);
+router.use('/v1/admin/vendordriver', vendorDriverController);
+router.use('/v1/admin/vendorproddecor', vendorProdDecorController);
+router.use('/v1/admin/vendorproddecorchecklist', vendorProdDecorChecklistController);
+router.use('/v1/admin/vendorfoodbev', vendorFoodBevController);
+router.use('/v1/admin/generalchecklist', generalChecklistController);
+router.use('/v1/admin/priortizationlist', priortizationListController);
 
-
-module.exports = router
+export default router;
