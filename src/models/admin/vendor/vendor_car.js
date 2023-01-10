@@ -1,16 +1,11 @@
 import { Schema, model } from "mongoose";
 
 const vendorCarSchema = Schema({
-  client_id: {
+  vendor_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'User'
+    ref: 'Vendor'
   },
-  sub_event_id: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'SubEvent'
-  },  
   car_model: {
     type: String,
     required: true,

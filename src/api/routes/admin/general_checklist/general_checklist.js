@@ -19,17 +19,20 @@ router.get('', auth, checkPermission('manage-generalchecklist'), async(req, res)
 });
 
 const generalChecklistValidation = Joi.object({
-    sub_event_id: Joi.string().required(),
     client_id: Joi.string().required(),
-    checklist: Joi.array().items({
-      check_id: Joi.number().required(),
-      check_name: Joi.string().required()
+    event_id: Joi.string().required(),
+    general_checklist: Joi.array().items({
+        checklist_type: Joi.string().valid('Prod','Food','L&C').required(),
+        generalchecklist_text: Joi.string(),
+        generalchecklist_date: Joi.date().greater('now').messages({
+            'date.greater': `"date" should be greater than todays date`
+        }),
+        checklist: Joi.array().items({
+            check_id: Joi.number().required(),
+            check_name: Joi.string().required()
+        })
     }),  
-    checklist_type: Joi.string().valid('Prod','Food','L&C').required(),
-    generalchecklist_text: Joi.string(),
-    generalchecklist_date: Joi.date().greater('now').messages({
-        'date.greater': `"date" should be greater than todays date`
-      }),
+   
     id: Joi.string()
 });
 

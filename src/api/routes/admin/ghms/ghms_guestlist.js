@@ -21,7 +21,7 @@ router.get('', auth, checkPermission('manage-ghmsguestlist'),  async(req, res) =
 
 const ghmsGuestlistValidation = Joi.object({
     client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
+    event_id: Joi.string().required(),
     guest_name: Joi.string().min(3).max(30).required().trim(),
     guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
     guest_mobile: Joi.string().regex(/^[0-9]{10}$/)

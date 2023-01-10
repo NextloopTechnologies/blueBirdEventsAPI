@@ -15,16 +15,13 @@ const hotelRoomSchema = new Schema({
       required: true
     },
     room_type: {
-      type: String,
-      required: true
+      type: String
     },
     booked_from: {
-      type: Date,
-      required: true
+      type: Date
     },
     booked_to: {
-      type: Date,
-      required: true
+      type: Date
     },
     hospitality_checklist: [{
       _id: false,

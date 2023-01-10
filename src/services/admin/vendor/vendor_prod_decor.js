@@ -14,8 +14,7 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const vendorproddecor = await VendorProdDecor.find(whereClause)
-        .populate([{path: 'client_id', select: 'name'},
-        {path: 'sub_event_id', select: 'subevent_title'}])
+        .populate({ path: 'vendor_id', select: ['vendor_name']})
         .sort({ _id: -1 });
         if(!vendorproddecor.length > 0) {
             return { status: 404 , msgText: "VendorProdDecor does not exists!" ,success: false }

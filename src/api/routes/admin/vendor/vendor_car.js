@@ -19,8 +19,7 @@ router.get('', auth, checkPermission('manage-vendorcar'),  async(req, res) => {
 });
 
 const vendorCarValidation = Joi.object({
-    client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
+    vendor_id: Joi.string().required(),
     owner_name: Joi.string().min(3).max(30).trim().required(),
     car_model: Joi.string().required(),
     car_reg: Joi.string().required(),

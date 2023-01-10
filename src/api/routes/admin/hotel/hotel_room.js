@@ -22,11 +22,11 @@ const hotelRoomValidation = Joi.object({
     hotel_id: Joi.string().required(),
     room_no: Joi.number().required(),
     floor_no: Joi.number().required(),
-    room_type: Joi.string().required(),
-    booked_from: Joi.date().greater('now').required().messages({
+    room_type: Joi.string(),
+    booked_from: Joi.date().greater('now').messages({
       'date.greater': `"booked_from" should be greater than todays date`
     }),
-    booked_to: Joi.date().greater(Joi.ref('booked_from')).required(),
+    booked_to: Joi.date().greater(Joi.ref('booked_from')),
     id: Joi.string()
 });
 

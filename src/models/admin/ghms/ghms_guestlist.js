@@ -6,10 +6,10 @@ const ghmsGuestlistSchema = new Schema({
     required: true,
     ref: 'User'
   },
-  sub_event_id: {
+  event_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'SubEvent'
+    ref: 'Event'
   }, 
   guest_name: {
     type: String,
@@ -26,7 +26,6 @@ const ghmsGuestlistSchema = new Schema({
       type: String,
       required: true,
       trim: true,
-      unique: true,
   },
   guest_add: {
     type: String,
