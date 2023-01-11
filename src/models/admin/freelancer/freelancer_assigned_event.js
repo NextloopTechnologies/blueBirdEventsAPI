@@ -16,7 +16,7 @@ const freelancerAssignedEventSchema = new Schema({
       required: true,
       ref: 'Freelancer'
     },
-    department: {
+    department_type: {
       type: String,
       required: true
     },

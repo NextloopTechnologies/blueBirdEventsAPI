@@ -22,7 +22,7 @@ const freelancerAssignedEventValidation = Joi.object({
     client_id: Joi.string().required(),
     event_id: Joi.string().required(),
     freelancer_id: Joi.string().required(),
-    department: Joi.string().required(),
+    department_type: Joi.string().required(),
     expected_working_hours: Joi.number().required(),
     hours_worked: Joi.number().required(),
     id: Joi.string()

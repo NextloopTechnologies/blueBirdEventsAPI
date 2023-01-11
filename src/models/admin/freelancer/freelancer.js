@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 
 const freelancerSchema = new Schema({
-    dept_type: {
+    department_type: {
       type: String,
       required: true
     },
