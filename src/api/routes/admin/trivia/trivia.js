@@ -9,7 +9,9 @@ const router = new Router();
 
 router.get('', async(req, res) => {
     try {
-        const { status, ...data} = await triviaService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await triviaService.read({ page, perPage })
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_TRIVIA-READALL-CONTROLLER').error(error);

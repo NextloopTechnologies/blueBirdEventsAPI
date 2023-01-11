@@ -9,7 +9,9 @@ const router = new Router();
 
 router.get('', async(req, res) => {
     try {
-        const { status, ...data} = await eventService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await eventService.readAll({ page, perPage });
         // const defaultProdFiles =  data.event[0].event_proddecor[0].prod_decor_id;
         // const miscellaneousProdFiles = data.event[0].event_proddecor[0].decor_img;
         // console.log(data.event[0].event_proddecor);
@@ -77,7 +79,7 @@ const eventValidation = Joi.object({
        
         // vendor prod //
         event_proddecor: Joi.array().items({
-            prod_decor_id: Joi.string().required(), 
+            prod_decor_id: Joi.string(), 
             isMiscellaneous: Joi.boolean(),
             decor_title: Joi.string(),
             decor_img: Joi.string(),
@@ -174,7 +176,8 @@ router.post('/create', auth, checkPermission('create-event'), fileUploads('event
 router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await eventService.read({_id});
+        const { status, ...data} = await eventService.readSingle(_id);
+        
         // if(data.event){
         //     data.event = await fileService.getFileUrl(data.event,'event_img',1);
         // }

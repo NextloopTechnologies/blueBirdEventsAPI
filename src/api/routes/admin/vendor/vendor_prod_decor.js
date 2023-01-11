@@ -8,7 +8,9 @@ const router = new Router();
 
 router.get('', auth, checkPermission('manage-vendorproddecor'),  async(req, res) => {
     try {
-        const { status, ...data} = await vendorProdDecorService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await vendorProdDecorService.read({ page, perPage });
         if(data.vendorproddecor){
             data.vendorproddecor = await fileService.getFileUrl(data.vendorproddecor,'decor_img');
         }

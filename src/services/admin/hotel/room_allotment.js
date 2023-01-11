@@ -11,7 +11,7 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
         const roomallotment = await RoomAllotment.find(whereClause)
         .populate([
@@ -19,7 +19,8 @@ export const read = async(whereClause={}) => {
         {path: 'event_id', select: ['event_title']},
         {path: 'hotel_room_id', select: ['hotel_id','room_no','floor_no']},
         {path: 'guest_id', select: ['guest_name','guest_mobile','guest_add','guest_email']}])
-        .sort({ _id: -1 });
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!roomallotment.length > 0) {
             return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
         }

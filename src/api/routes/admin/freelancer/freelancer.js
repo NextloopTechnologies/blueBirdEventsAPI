@@ -9,7 +9,9 @@ const router = new Router();
 
 router.get('', auth, checkPermission('manage-freelancer'), async(req, res) => {
     try {
-        const { status, ...data} = await freelancerService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await freelancerService.read({ page, perPage });
         if(data.freelancer) {
             data.freelancer = await fileService.getFileUrl(data.freelancer,'pass_size_pic',1);
         }

@@ -11,14 +11,15 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
         const ghmsarrivalmgmt = await GHMSArrivalMgmt.find(whereClause)
         .populate([{path: 'event_id', select: 'event_title'},
         {path: 'guest_id', select: 'guest_name'},
         {path: 'car_id', select: ['car_name','car_model','car_number','driver_name']},
         {path: 'client_id', select: 'name'}])
-        .sort({ _id: -1 });
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!ghmsarrivalmgmt.length > 0) {
             return { status: 404 , msgText: "GHMSArrivalMgmt does not exists!" ,success: false }
         }

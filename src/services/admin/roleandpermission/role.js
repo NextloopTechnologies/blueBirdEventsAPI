@@ -11,9 +11,11 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
-        const role = await Role.find(whereClause).sort({ _id: -1 });
+        const role = await Role.find(whereClause)
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!role.length > 0) {
             return { status: 404 , msgText: "Role does not exists!" ,success: false }
         }

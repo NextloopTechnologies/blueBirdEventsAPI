@@ -9,7 +9,9 @@ const router = new Router();
 
 router.get('', auth, checkPermission('manage-generalchecklist'), async(req, res) => {
     try {
-        const { status, ...data} = await generalChecklistService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await generalChecklistService.read({ page, perPage });
         res.status(status).send(data);
     } catch (error) {
         logger('GENERALCHECKLIST-READALL-CONTROLLER').error(error);

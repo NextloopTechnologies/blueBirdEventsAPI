@@ -11,12 +11,13 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
         const priortizationlist = await PriortizationList.find(whereClause)
         .populate([{path: 'client_id', select: ['name']},
         {path: 'event_id', select: ['event_title']}])
-        .sort({ _id: -1 });
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!priortizationlist.length > 0) {
             return { status: 404 , msgText: "PriortizationList does not exists!" ,success: false }
         }

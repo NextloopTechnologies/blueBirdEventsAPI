@@ -9,8 +9,10 @@ const router = new Router();
 
 router.get('', auth, checkPermission('manage-ghmslostfound'),  async(req, res) => {
     try {
-        const filterData = await filterService.clientOrCoordinatorPanel(req.body);
-        const { status, ...data} = await ghmsLostFoundService.read(filterData);
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await ghmsLostFoundService.read({page, perPage, whereClause});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_GHMSLOSTFOUND-READALL-CONTROLLER').error(error);

@@ -39,9 +39,11 @@ export const login = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
-        const user = await User.find(whereClause).sort({ _id: -1 });
+        const user = await User.find(whereClause)
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!user.length > 0) {
             return { status: 404 , msgText: "User does not exists!" ,success: false }
         }

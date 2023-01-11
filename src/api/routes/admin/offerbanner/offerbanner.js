@@ -8,7 +8,9 @@ const router = new Router();
 
 router.get('', async(req, res) => {
     try {
-        let { status, ...data} = await offerBannerService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await offerBannerService.read({ page, perPage });
         if(data.offerbanner){
             data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
         }
