@@ -20,7 +20,7 @@ router.get('', auth, checkPermission('manage-ghmsdeparture'), async(req, res) =>
 });
 
 const ghmsDepartureMgmtValidation = Joi.object({
-    sub_event_id: Joi.string().required(),
+    event_id: Joi.string().required(),
     client_id: Joi.string().required(),
     car_id: Joi.string().required(),
     guest_id: Joi.string().required(),

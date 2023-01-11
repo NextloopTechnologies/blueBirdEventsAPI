@@ -21,7 +21,7 @@ router.get('', auth, checkPermission('manage-ghmslostfound'),  async(req, res) =
 
 const ghmsLostFoundValidation = Joi.object({
     client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
+    event_id: Joi.string().required(),
     guest_id: Joi.string().required(),
     item_name: Joi.string().required(),
     item_identification: Joi.string().required(),

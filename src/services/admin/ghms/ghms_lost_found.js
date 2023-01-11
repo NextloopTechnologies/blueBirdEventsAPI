@@ -14,7 +14,7 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const ghmslostfound = await GHMSLostFound.find(whereClause)
-        .populate([{path: 'sub_event_id', select: 'subevent_title'},
+        .populate([{path: 'event_id', select: 'event_title'},
         {path: 'guest_id', select: 'guest_name'},
         {path: 'client_id', select: 'name'}])
         .sort({ _id: -1 });

@@ -14,7 +14,6 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const enquiry = await Enquiry.find(whereClause)
-        .populate({path: 'event_id', select: 'event_title'})
         .sort({ _id: -1 });
         if(!enquiry.length > 0) {
             return { status: 404 , msgText: "Enquiry does not exists!" ,success: false }

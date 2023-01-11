@@ -15,7 +15,7 @@ export const read = async(whereClause={}) => {
     try {
         const priortizationlist = await PriortizationList.find(whereClause)
         .populate([{path: 'client_id', select: ['name']},
-        {path: 'sub_event_id', select: ['subevent_title']}])
+        {path: 'event_id', select: ['event_title']}])
         .sort({ _id: -1 });
         if(!priortizationlist.length > 0) {
             return { status: 404 , msgText: "PriortizationList does not exists!" ,success: false }

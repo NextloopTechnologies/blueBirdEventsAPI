@@ -16,7 +16,7 @@ export const read = async(whereClause={}) => {
         const roomallotment = await RoomAllotment.find(whereClause)
         .populate([
         {path: 'client_id', select: ['name']},
-        {path: 'sub_event_id', select: ['event_id','subevent_title']},
+        {path: 'event_id', select: ['event_title']},
         {path: 'hotel_room_id', select: ['hotel_id','room_no','floor_no']},
         {path: 'guest_id', select: ['guest_name','guest_mobile','guest_add','guest_email']}])
         .sort({ _id: -1 });

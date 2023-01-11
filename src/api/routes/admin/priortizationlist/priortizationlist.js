@@ -20,7 +20,7 @@ router.get('', auth, checkPermission('manage-priortizationlist'),  async(req, re
 
 const priortizationListValidation = Joi.object({
     client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
+    event_id: Joi.string().required(),
     title: Joi.string().trim().required(),
     descp: Joi.string().trim(),
     deadline_date: Joi.date().greater('now').required().messages({

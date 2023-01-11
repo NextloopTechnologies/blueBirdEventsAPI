@@ -6,10 +6,10 @@ const freelancerAssignedEventSchema = new Schema({
       required: true,
       ref: 'User'
     },
-    sub_event_id: {
+    event_id: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'SubEvent'
+      ref: 'Event'
     },
     freelancer_id: {
       type: Schema.Types.ObjectId,

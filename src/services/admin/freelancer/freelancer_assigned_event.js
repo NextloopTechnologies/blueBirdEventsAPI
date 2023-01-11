@@ -15,7 +15,7 @@ export const read = async(whereClause={}) => {
     try {
         const freelancerassignedevent = await FreelancerAssignedEvent.find(whereClause)
         .populate([{path: 'client_id', select: 'name'},
-        {path: 'sub_event_id', select: 'subevent_title'},
+        {path: 'event_id', select: 'event_title'},
         {path: 'freelancer_id', select: 'name'}])
         .sort({ _id: -1 });
         if(!freelancerassignedevent.length > 0) {

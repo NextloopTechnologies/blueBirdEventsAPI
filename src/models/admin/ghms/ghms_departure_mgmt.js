@@ -6,10 +6,10 @@ const ghmsDepartureMgmtSchema = new Schema({
       required: true,
       ref: 'User'
     },
-    sub_event_id: {
+    event_id: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'SubEvent'
+      ref: 'Event'
     },
     guest_id: {
       type: Schema.Types.ObjectId,

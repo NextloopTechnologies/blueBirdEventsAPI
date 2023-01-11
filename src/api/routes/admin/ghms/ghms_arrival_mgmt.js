@@ -21,7 +21,7 @@ router.get('', auth, checkPermission('manage-ghmsarrival'), async(req, res) => {
 
 const ghmsArrivalMgmtValidation = Joi.object({
     client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
+    event_id: Joi.string().required(),
     guest_id: Joi.string().required(),
     car_id: Joi.string().required(),
     arrived_at: Joi.string().required(),

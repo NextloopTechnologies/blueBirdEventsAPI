@@ -20,7 +20,7 @@ router.get('', auth, checkPermission('manage-vendorfoodbev'),  async(req, res) =
 
 const vendorFoodBevValidation = Joi.object({
     client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
+    event_id: Joi.string().required(),
     food_type: Joi.string().trim().required(),
     food_sub_type: Joi.string().trim().required(),
     dish_name: Joi.string().trim().required(),
