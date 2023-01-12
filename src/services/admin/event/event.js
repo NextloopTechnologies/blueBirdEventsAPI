@@ -10,24 +10,29 @@ import {
 
 export const create = async(values) => {
     try {
-        // console.log(values)
-        const event = new Event(values.event);
-        await event.save();
-
-        values.ghms.guestlist.forEach(guest => {
-            guest.client_id = event.client_id
-            guest.event_id = event._id
-        });
-
-        await GHMSGuestList.insertMany(values.ghms.guestlist);
-
-        values.checklist.client_id = event.client_id
-        values.checklist.event_id = event._id
-
-        await generalChecklistService.create(values.checklist);
+        let event;
+        if(values.event){
+            event = new Event(values.event);
+            await event.save();
+        }
+    
+        if(values.ghms && values.ghms.guestlist){
+            values.ghms.guestlist.forEach(guest => {
+                guest.client_id = event.client_id
+                guest.event_id = event._id
+            });
+            await GHMSGuestList.insertMany(values.ghms.guestlist);
+        }
         
+        if(values.checklist){
+            values.checklist.client_id = event.client_id
+            values.checklist.event_id = event._id
+            await generalChecklistService.create(values.checklist);
+        }
+    
         return { status: 201, msgText: 'Created Successfully! ',
         success: true }
+        
     } catch (error) {
         throw error;
     }
@@ -50,10 +55,8 @@ export const readAll = async({page, perPage, whereClause={}}) => {
     }
 };
 
-export const readSingle = async(_id) => {
+export const readSingle = async(page, perPage, _id) => {
     try {
-        const page = 1;
-        const perPage = 10;
         const whereClause = { event_id: _id };
         const event = await Event.find({ _id })
         .populate([{ path: 'client_id', select: 'name'},
@@ -65,12 +68,16 @@ export const readSingle = async(_id) => {
         ])
         .sort({ _id: -1 });
 
+        if(!event.length > 0) {
+            return { status: 404 , msgText: "Event does not exists!" ,success: false }
+        }
+
         const { ghmsguestlist: guestlist } = await ghmsGuestlistService.read({ page, perPage, whereClause });
         const { ghmsarrivalmgmt: arrival } = await ghmsArrivalMgmtService.read({ page, perPage, whereClause });
         const { status, ghmsdeparturemgmt: departure } = await ghmsDepartureMgmtService.read({ page, perPage, whereClause });
         const { ghmslostfound: lostandfound } = await ghmsLostFoundService.read({ page, perPage, whereClause });
         const { roomallotment } = await roomAllotmentService.read({ page, perPage, whereClause });  
-        const { generalchecklist } = await generalChecklistService.read({ page, perPage, whereClause });     
+        const { generalchecklist: checklist } = await generalChecklistService.read({ page, perPage, whereClause });     
         
         console.log(status, departure);
         const data = {
@@ -82,11 +89,9 @@ export const readSingle = async(_id) => {
                 lostandfound,
                 roomallotment
             },
-            generalchecklist
+            checklist
         }
-        if(!event.length > 0) {
-            return { status: 404 , msgText: "Event does not exists!" ,success: false }
-        }
+        
         return { status: 200, success: true, data}
        
     } catch (error) {
@@ -96,10 +101,50 @@ export const readSingle = async(_id) => {
 
 export const update = async(id, values) => {
     try {
-        const event = await Event.findByIdAndUpdate(id, values);
-        if(!event) {
-            return { status: 404 , msgText: "Event does not exists!" ,success: false }
-        }  
+
+        if(values.event){
+            const event = await Event.findByIdAndUpdate(id, values.event);
+            if(!event) {
+                return { status: 404 , msgText: "Event does not exists!" ,success: false }
+            }
+        } 
+        
+        if(values.ghms){
+            if(values.ghms.guestlist) {
+                const guestlist = await Promise.all(values.ghms.guestlist.map(guest => {
+                    return ghmsGuestlistService.update(guest._id, guest)
+                }));
+            } 
+            
+            if(values.ghms.arrival) {
+                const arrival = await Promise.all(values.ghms.arrival.map(arrival => {
+                    return ghmsArrivalMgmtService.update(arrival._id, arrival)
+                }));
+            } 
+            
+            if(values.ghms.departure) {
+                const departure = await Promise.all(values.ghms.departure.map(departure => {
+                    return ghmsDepartureMgmtService.update(departure._id, departure)
+                }));
+            } 
+            
+            if(values.ghms.lostandfound) {
+                const lostandfound = await Promise.all(values.ghms.lostandfound.map(lostandfound => {
+                    return ghmsLostFoundService.update(lostandfound._id, lostandfound)
+                }));
+            } 
+            
+            if(values.ghms.roomallotment) {
+                const roomallotment = await Promise.all(values.ghms.roomallotment.map(roomallotment => {
+                    return roomAllotmentService.update(roomallotment._id, roomallotment)
+                }));
+            } 
+        } 
+        
+        if(values.checklist) {
+            const generalchecklist = await generalChecklistService.update(values.checklist._id, values.checklist)
+        }
+
         return { status: 200, msgText: 'Updated Successfully! ',success: true}
     } catch (error) {
         throw error;

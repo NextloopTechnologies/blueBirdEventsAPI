@@ -29,6 +29,7 @@ router.get('', async(req, res) => {
 const eventValidation = Joi.object({
     // event //
     id: Joi.string(),
+
     event: Joi.object({
         client_id: Joi.string().required(),
         event_type: Joi.string().required(),
@@ -91,7 +92,9 @@ const eventValidation = Joi.object({
     }),
     ghms: Joi.object({
         guestlist: Joi.array().items({
-            guest_id: Joi.string(),
+            _id: Joi.string(),
+            client_id: Joi.string(),
+            event_id: Joi.string(),
             guest_name: Joi.string().min(3).max(30).required().trim(),
             guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
             guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
@@ -106,6 +109,9 @@ const eventValidation = Joi.object({
             }),
         }),
         arrival: Joi.array().items({
+            _id: Joi.string(),
+            client_id: Joi.string(),
+            event_id: Joi.string(),
             guest_id: Joi.string().required(),
             car_id: Joi.string().required(),
             arrived_at: Joi.string().required(),
@@ -117,8 +123,11 @@ const eventValidation = Joi.object({
             date_of_arrival: Joi.date().required(),
         }),
         departure: Joi.array().items({
-            car_id: Joi.string().required(),
+            _id: Joi.string(),
+            client_id: Joi.string(),
+            event_id: Joi.string(),
             guest_id: Joi.string().required(),
+            car_id: Joi.string().required(),
             departure_time: Joi.string().required(),
             mode_of_departure: Joi.string().required(),
             return_checklist: Joi.string().required(),
@@ -127,10 +136,16 @@ const eventValidation = Joi.object({
             date_of_departure: Joi.date().required(),
         }),
         roomallotment: Joi.array().items({
+            _id: Joi.string(),
+            client_id: Joi.string(),
+            event_id: Joi.string(),
             hotel_room_id: Joi.string().required(),
             guest_id: Joi.string().required(), 
         }),
         lostandfound: Joi.array().items({
+            _id: Joi.string(),
+            client_id: Joi.string(),
+            event_id: Joi.string(),
             guest_id: Joi.string().required(),
             item_name: Joi.string().required(),
             item_identification: Joi.string().required(),
@@ -141,6 +156,9 @@ const eventValidation = Joi.object({
         })
     }),
     checklist: Joi.object({
+        _id: Joi.string(),
+        client_id: Joi.string(),
+        event_id: Joi.string(),
         general_checklist: Joi.array().items({
             checklist: Joi.array().items({
                 check_id: Joi.number().required(),
@@ -155,9 +173,10 @@ const eventValidation = Joi.object({
     })
 });
 
-router.post('/create', auth, checkPermission('create-event'), fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-event'), requestValidator(eventValidation), fileUploads('decor_img'),async(req, res) => {
     try {
-        // console.log(req.values.event);
+        // console.log("from files ",req.files);
+        // console.log("from req", req.values.checklist)
         // if(!req.file) {
         //     throw {status: 401, msgText: 'File is required', success:false}
         // }
@@ -165,7 +184,7 @@ router.post('/create', auth, checkPermission('create-event'), fileUploads('event
         // req.values.event_img = fileName;
         const { status, ...data } = await eventService.create(req.values);
         res.status(status).send(data);
-        // res.send(req.values.ghms.guestlist);
+        // res.send('success');
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
@@ -176,7 +195,9 @@ router.post('/create', auth, checkPermission('create-event'), fileUploads('event
 router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await eventService.readSingle(_id);
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await eventService.readSingle(page, perPage, _id);
         
         // if(data.event){
         //     data.event = await fileService.getFileUrl(data.event,'event_img',1);
@@ -189,13 +210,13 @@ router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> 
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-event'),fileUploads('event_img',1), requestValidator(eventValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-event'),fileUploads('decor_img'), requestValidator(eventValidation), async(req, res) => {
     try {
         // if(req.file) {
         //     const { fileName } = await fileService.uploadSingle(req.file);
         //     req.values.event_img = fileName;
         // }
-        const { status, ...data} = await eventService.update(req.params.id,req.values.event);
+        const { status, ...data} = await eventService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
