@@ -14,7 +14,6 @@ export const create = async(values) => {
 export const read = async({page, perPage, whereClause={}}) => {
     try {
         const offerbanner = await OfferBanner.find(whereClause)
-        .populate({path: 'event_id', select: 'event_title'})
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
         if(!offerbanner.length > 0) {
