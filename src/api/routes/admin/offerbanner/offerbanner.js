@@ -23,11 +23,11 @@ router.get('', async(req, res) => {
 });
 
 const offerBannerValidation = Joi.object({
-    banner_title: Joi.string().min(6).trim().required(),
-    banner_descp: Joi.string().min(10).required(),
-    event_id: Joi.string().required(),
-    offer_starts: Joi.date().greater('now').required().messages({
-        'date.greater': `"offer_starts" should be greater than todays date`
+    banner_title: Joi.string().min(3).trim().required(),
+    banner_descp: Joi.string().min(3).required(),
+    event_type: Joi.string().required(),
+    offer_starts: Joi.date().min('now').required().messages({
+        'date.greater': `"offer_starts" should starts from todays date`
     }),
     offer_ends: Joi.date().greater(Joi.ref('offer_starts')).required().messages({
         'date.greater': `"offer_ends" should be greater than offer_starts date`
@@ -59,7 +59,7 @@ router.post('/create', auth, checkPermission('create-offerbanner'),  fileUploads
 router.get('/read/:id', auth, checkPermission('read-offerbanner'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await offerBannerService.read({_id});
+        const { status, ...data} = await offerBannerService.read({whereClause:{_id}});
         if(data.offerbanner){
             data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
         }

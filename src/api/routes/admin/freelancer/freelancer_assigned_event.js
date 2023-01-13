@@ -44,7 +44,7 @@ router.post('/create', auth, checkPermission('create-deployedfreelancer'), reque
 router.get('/read/:id', auth, checkPermission('read-deployedfreelancer'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await freelancerAssignedEventService.read({_id});
+        const { status, ...data} = await freelancerAssignedEventService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_FREELANCERASSIGNEDEVENTSERVICE-READ-CONTROLLER').error(error);

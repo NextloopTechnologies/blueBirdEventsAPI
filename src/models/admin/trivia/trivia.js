@@ -4,13 +4,12 @@ const triviaSchema = new Schema({
     title: {
         type: String,
         required: true,
-        minlenght: 6,
-        maxlength: 60
+        minlenght: 3
     },
     descp: {
         type: String,
         required: true,
-        minlenght: 10
+        minlenght: 3
     },
     active : {
         type: Boolean,

@@ -48,7 +48,7 @@ router.post('/create', auth, checkPermission('create-ghmslostfound'),  requestVa
 router.get('/read/:id', auth, checkPermission('read-ghmslostfound'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await ghmsLostFoundService.read({_id});
+        const { status, ...data} = await ghmsLostFoundService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_GHMSLOSTFOUND-READ-CONTROLLER').error(error);

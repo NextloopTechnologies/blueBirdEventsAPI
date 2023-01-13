@@ -48,7 +48,7 @@ router.post('/create', auth, checkPermission('create-vendorproddecor'),  fileUpl
 router.get('/read/:id', auth, checkPermission('read-vendorproddecor'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await vendorProdDecorService.read({_id});
+        const { status, ...data} = await vendorProdDecorService.read({whereClause:{_id}});
         if(data.vendorproddecor){
             data.vendorproddecor = await fileService.getFileUrl(data.vendorproddecor,'decor_img');
         }

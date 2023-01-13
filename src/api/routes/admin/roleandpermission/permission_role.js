@@ -40,7 +40,7 @@ router.post('/create', auth, checkPermission('create-permissionrole'), requestVa
 router.get('/read/:id', auth, checkPermission('read-permissionrole'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await permissionRoleService.read({_id});
+        const { status, ...data} = await permissionRoleService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PERMISSION_ROLE-READ-CONTROLLER').error(error);

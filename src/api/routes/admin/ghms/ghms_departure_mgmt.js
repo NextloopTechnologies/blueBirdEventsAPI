@@ -49,7 +49,7 @@ router.post('/create', auth, checkPermission('create-ghmsdeparture'), requestVal
 router.get('/read/:id', auth, checkPermission('read-ghmsdeparture'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await ghmsDepartureMgmtService.read({_id});
+        const { status, ...data} = await ghmsDepartureMgmtService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_GHMSDEPARTUREMGMT-READ-CONTROLLER').error(error);

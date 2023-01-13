@@ -50,7 +50,7 @@ router.post('/create', auth, checkPermission('create-ghmsarrival'), requestValid
 router.get('/read/:id', auth, checkPermission('read-ghmsarrival'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await ghmsArrivalMgmtService.read({_id});
+        const { status, ...data} = await ghmsArrivalMgmtService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_GHMSARRIVALMGMT-READ-CONTROLLER').error(error);

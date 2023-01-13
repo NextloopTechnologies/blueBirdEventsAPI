@@ -24,11 +24,11 @@ router.get('', auth, checkPermission('manage-ghmsguestlist'),  async(req, res) =
 const ghmsGuestlistValidation = Joi.object({
     client_id: Joi.string().required(),
     event_id: Joi.string().required(),
-    guest_name: Joi.string().min(3).max(30).required().trim(),
+    guest_name: Joi.string().min(3).required().trim(),
     guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
     guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    guest_add: Joi.string().min(10).required(),
+    guest_add: Joi.string().min(3).required(),
     guest_outstation: Joi.string().valid('Local','Outstation').required(),
     guest_invited: Joi.string().valid('Individual','Family'),
     guest_expected_nos: Joi.number(),
@@ -53,7 +53,7 @@ router.post('/create', auth, checkPermission('create-ghmsguestlist'),  requestVa
 router.get('/read/:id', auth, checkPermission('read-ghmsguestlist'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await ghmsGuestlistService.read({_id});
+        const { status, ...data} = await ghmsGuestlistService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_GHMSGUESTLIST-READ-CONTROLLER').error(error);

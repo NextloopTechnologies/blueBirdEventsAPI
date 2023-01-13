@@ -43,7 +43,7 @@ router.post('/create', auth, checkPermission('create-roomallotment'), requestVal
 router.get('/read/:id', auth, checkPermission('read-roomallotment'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await roomAllotmentService.read({_id});
+        const { status, ...data} = await roomAllotmentService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_ROOMALLOTMENT-READ-CONTROLLER').error(error);

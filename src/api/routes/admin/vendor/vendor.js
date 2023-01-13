@@ -22,7 +22,7 @@ router.get('', auth, checkPermission('manage-vendor'),  async(req, res) => {
 });
 
 const vendorValidation = Joi.object({
-    vendor_name: Joi.string().min(3).max(30).required().trim(),
+    vendor_name: Joi.string().min(3).required().trim(),
     vendor_work: Joi.string().required(),
     vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
@@ -45,7 +45,7 @@ router.post('/create', auth, checkPermission('create-vendor'),  requestValidator
 router.get('/read/:id', auth, checkPermission('read-vendor'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await vendorService.read({_id});
+        const { status, ...data} = await vendorService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_VENDOR-READ-CONTROLLER').error(error);

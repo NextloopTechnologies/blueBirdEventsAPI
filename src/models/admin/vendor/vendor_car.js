@@ -10,15 +10,13 @@ const vendorCarSchema = Schema({
     type: String,
     required: true,
     trim: true,
-    minlenght: 3,
-    maxlength: 30
+    minlength: 3
   },
   owner_name: {
     type: String,
     required: true,
     trim: true,
-    minlenght: 3,
-    maxlength: 30
+    minlength: 3
   },
   car_reg: {
       type: String,
@@ -36,8 +34,7 @@ const vendorCarSchema = Schema({
     type: String,
     required: true,
     trim: true,
-    minlenght: 3,
-    maxlength: 30
+    minlength: 3
   },
   driver_mobile: {
       type: Number,

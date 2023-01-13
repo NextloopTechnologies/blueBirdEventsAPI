@@ -1,5 +1,6 @@
 import { Event,  GHMSGuestList, } from '../../../models';
 import { 
+    eventPhotoService,
     generalChecklistService, 
     ghmsArrivalMgmtService, 
     ghmsDepartureMgmtService, 
@@ -143,6 +144,13 @@ export const update = async(id, values) => {
         
         if(values.checklist) {
             const generalchecklist = await generalChecklistService.update(values.checklist._id, values.checklist)
+        }
+
+        if(values.gallery) {
+            if(values.gallery._id){
+                const gallery = await eventPhotoService.update(values.gallery._id, values.gallery)
+            }
+            const gallery = await eventPhotoService.create(values.gallery);
         }
 
         return { status: 200, msgText: 'Updated Successfully! ',success: true}

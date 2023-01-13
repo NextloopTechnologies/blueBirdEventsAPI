@@ -9,13 +9,11 @@ const enquirySchema = new Schema({
         type: String,
         required: true,
         minlength: 3,
-        maxlength: 30,
         trim: true
     },
     second_name:{
         type: String,
         minlength: 3,
-        maxlength: 30,
         trim: true
     },
     event_date:{
@@ -25,15 +23,11 @@ const enquirySchema = new Schema({
     venue:{
         type: String,
         required: true,
-        minlength: 3,
-        maxlength: 30,
         trim: true
     },
     city_town:{
         type: String,
         required: true,
-        minlength: 3,
-        maxlength: 30,
         trim: true
     },
     mobile: {

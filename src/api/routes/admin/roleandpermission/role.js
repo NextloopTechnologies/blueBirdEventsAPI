@@ -21,7 +21,7 @@ router.get('', auth, checkPermission('manage-roles'),  async(req, res) => {
 });
 
 const roleValidation = Joi.object({
-    role_name: Joi.string().min(3).max(60).trim().required(),
+    role_name: Joi.string().min(3).trim().required(),
     id: Joi.string()
 });
 
@@ -39,7 +39,7 @@ router.post('/create', auth, checkPermission('create-role'),  requestValidator(r
 router.get('/read/:id', auth, checkPermission('read-role'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await roleService.read({_id});
+        const { status, ...data} = await roleService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_ROLE-READ-CONTROLLER').error(error);

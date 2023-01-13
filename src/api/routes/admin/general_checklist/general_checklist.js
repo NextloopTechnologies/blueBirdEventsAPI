@@ -52,7 +52,7 @@ router.post('/create', auth, checkPermission('create-generalchecklist'), request
 router.get('/read/:id', auth, checkPermission('read-generalchecklist'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await generalChecklistService.read({_id});
+        const { status, ...data} = await generalChecklistService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('GENERALCHECKLIST-READALL-CONTROLLER').error(error);

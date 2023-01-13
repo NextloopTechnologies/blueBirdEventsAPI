@@ -33,8 +33,8 @@ const eventValidation = Joi.object({
     event: Joi.object({
         client_id: Joi.string().required(),
         event_type: Joi.string().required(),
-        event_title: Joi.string().min(6).max(60).trim().required(),
-        event_descp: Joi.string().min(10).required(),
+        event_title: Joi.string().min(3).trim().required(),
+        event_descp: Joi.string().min(3).required(),
         event_start_date: Joi.date().greater('now').required().messages({
             'date.greater': `"event_start_date" should be greater than todays date`
         }).required(),
@@ -83,7 +83,10 @@ const eventValidation = Joi.object({
             prod_decor_id: Joi.string(), 
             isMiscellaneous: Joi.boolean(),
             decor_title: Joi.string(),
-            decor_img: Joi.string(),
+            decor_img: Joi.array().items({
+                _id: false,
+                file: String
+            }),
             decor_date: Joi.date().greater('now').required().messages({
                 'date.greater': `"decor_date" should be greater than todays date`
             }),
@@ -95,7 +98,7 @@ const eventValidation = Joi.object({
             _id: Joi.string(),
             client_id: Joi.string(),
             event_id: Joi.string(),
-            guest_name: Joi.string().min(3).max(30).required().trim(),
+            guest_name: Joi.string().min(3).required().trim(),
             guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
             guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
             .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
@@ -173,7 +176,7 @@ const eventValidation = Joi.object({
     })
 });
 
-router.post('/create', auth, checkPermission('create-event'), requestValidator(eventValidation), fileUploads('decor_img'),async(req, res) => {
+router.post('/create', auth, checkPermission('create-event'), requestValidator(eventValidation), async(req, res) => {
     try {
         // console.log("from files ",req.files);
         // console.log("from req", req.values.checklist)
@@ -210,7 +213,7 @@ router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> 
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-event'),fileUploads('decor_img'), requestValidator(eventValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-event'), requestValidator(eventValidation), async(req, res) => {
     try {
         // if(req.file) {
         //     const { fileName } = await fileService.uploadSingle(req.file);
@@ -220,6 +223,23 @@ router.post('/update/:id', auth, checkPermission('update-event'),fileUploads('de
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
+router.post('/uploadfiles', auth, checkPermission('create-event'), fileUploads('img_files'), async(req, res) => {
+    try {
+        if(!req.files) {
+            return res.status(401).send({msgText: 'File is required', success:false})
+        }
+        const files = await fileService.uploadMultiple(req.files);
+        if(!files.length > 0 ){
+            return res.status(401).send({msgText: 'File key is incorrect', success:false})
+        }
+        res.status(201).send({ files, success: true });
+    } catch (error) {
+        logger('ADMIN_EVENT-DECORIMG-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }

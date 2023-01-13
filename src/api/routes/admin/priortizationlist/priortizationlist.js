@@ -47,7 +47,7 @@ router.post('/create', auth, checkPermission('create-priortizationlist'), reques
 router.get('/read/:id', auth, checkPermission('read-priortizationlist'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await priortizationListService.read({_id});
+        const { status, ...data} = await priortizationListService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PRIORTIZATIONLIST-READ-CONTROLLER').error(error);

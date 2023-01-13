@@ -15,17 +15,16 @@ const ghmsGuestlistSchema = new Schema({
     type: String,
     required: true,
     trim: true,
-    minlenght: 3,
-    maxlenght: 30
+    minlenght: 3
   },
   guest_mobile: {
-      type: String,
-      required: true
+    type: String,
+    required: true
   },
   guest_email: {
-      type: String,
-      required: true,
-      trim: true,
+    type: String,
+    required: true,
+    trim: true,
   },
   guest_add: {
     type: String,

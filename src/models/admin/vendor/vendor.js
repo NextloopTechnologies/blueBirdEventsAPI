@@ -5,8 +5,7 @@ const vendorSchema = Schema({
     type: String,
     required: true,
     trim: true,
-    minlenght: 3,
-    maxlength: 30
+    minlenght: 3
   },
   vendor_work: {
     type: String,

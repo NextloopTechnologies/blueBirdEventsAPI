@@ -54,7 +54,7 @@ router.post('/create', auth, checkPermission('create-vendorfoodbev'),  requestVa
 router.get('/read/:id', auth, checkPermission('read-vendorfoodbev'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await vendorFoodBevService.read({_id});
+        const { status, ...data} = await vendorFoodBevService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_VENDORFOODBEV-READ-CONTROLLER').error(error);

@@ -21,8 +21,8 @@ router.get('', async(req, res) => {
 });
 
 const eventPhotoValidation = Joi.object({
-    ep_title: Joi.string().min(6).max(60).trim().required(),
-    ep_descp: Joi.string().min(10).required(),
+    ep_title: Joi.string().min(3).trim().required(),
+    ep_descp: Joi.string().min(3).required(),
     event_id: Joi.string().required(),
     event_date: Joi.date().greater('now').required().messages({
         'date.greater': `"event_date" should be greater than todays date`

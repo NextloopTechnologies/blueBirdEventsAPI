@@ -21,8 +21,8 @@ router.get('', auth, checkPermission('manage-enquiry'),async(req, res) => {
 });
 
 const enquiryValidation = Joi.object({
-    first_name: Joi.string().min(3).max(30).trim().required(),
-    second_name: Joi.string().min(3).max(30).trim().required(),
+    first_name: Joi.string().min(3).trim().required(),
+    second_name: Joi.string().min(3).trim().required(),
     wedding_of: Joi.string().required(),
     event_type: Joi.string().required(),
     event_date: Joi.date().greater('now').required().messages({
@@ -51,7 +51,7 @@ router.post('/create', requestValidator(enquiryValidation), async(req, res) => {
 router.get('/read/:id', auth, checkPermission('read-enquiry'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await enquiryService.read({_id});
+        const { status, ...data} = await enquiryService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_ENQUIRY-READ-CONTROLLER').error(error);

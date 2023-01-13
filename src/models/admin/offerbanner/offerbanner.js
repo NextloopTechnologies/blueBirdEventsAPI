@@ -1,16 +1,15 @@
 import { model, Schema } from "mongoose";
 
 const offerBannerSchema = new Schema({
-    event_id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Event'
+    event_type: {
+        type: String,
+        required: true
     }, 
     banner_title: {
         type: String,
         required: true,
         trim: true,
-        minlength: 6
+        minlength: 3
     },
     banner_descp: {
         type: String,

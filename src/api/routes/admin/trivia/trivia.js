@@ -21,8 +21,8 @@ router.get('', async(req, res) => {
 });
 
 const triviaValidation = Joi.object({
-    title: Joi.string().min(6).max(60).trim().required(),
-    descp: Joi.string().min(10).required(),
+    title: Joi.string().min(3).trim().required(),
+    descp: Joi.string().min(3).required(),
     id: Joi.string()
 });
 
@@ -40,7 +40,7 @@ router.post('/create', auth, checkPermission('create-trivia'),  requestValidator
 router.get('/read/:id', auth, checkPermission('read-trivia'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await triviaService.read({_id});
+        const { status, ...data} = await triviaService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_TRIVIA-READ-CONTROLLER').error(error);

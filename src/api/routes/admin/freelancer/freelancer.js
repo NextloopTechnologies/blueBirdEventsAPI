@@ -24,7 +24,7 @@ router.get('', auth, checkPermission('manage-freelancer'), async(req, res) => {
 });
 
 const freelancerValidation = Joi.object({
-    name: Joi.string().min(3).max(30).trim().required(),
+    name: Joi.string().min(3).trim().required(),
     wa_contact_no: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
     alt_contact_no: Joi.string().regex(/^[0-9]{10}$/)
@@ -60,7 +60,7 @@ router.post('/create', fileUploads('pass_size_pic',1), requestValidator(freelanc
 router.get('/read/:id', auth, checkPermission('read-freelancer'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await freelancerService.read({_id});
+        const { status, ...data} = await freelancerService.read({whereClause:{_id}});
         if(data.freelancer) {
             data.freelancer = await fileService.getFileUrl(data.freelancer,'pass_size_pic',1);
         }

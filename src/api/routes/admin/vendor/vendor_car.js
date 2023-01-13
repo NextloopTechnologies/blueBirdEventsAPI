@@ -22,12 +22,12 @@ router.get('', auth, checkPermission('manage-vendorcar'),  async(req, res) => {
 
 const vendorCarValidation = Joi.object({
     vendor_id: Joi.string().required(),
-    owner_name: Joi.string().min(3).max(30).trim().required(),
+    owner_name: Joi.string().min(3).trim().required(),
     car_model: Joi.string().required(),
     car_reg: Joi.string().required(),
     car_number: Joi.string().required(),
     car_type: Joi.string().valid('Rental','Private').required(),
-    driver_name: Joi.string().min(3).max(30).required().trim(),
+    driver_name: Joi.string().min(3).required().trim(),
     driver_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
     id: Joi.string()
@@ -47,7 +47,7 @@ router.post('/create', auth, checkPermission('create-vendorcar'),  requestValida
 router.get('/read/:id', auth, checkPermission('read-vendorcar'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await vendorCarService.read({_id});
+        const { status, ...data} = await vendorCarService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_VENDORCAR-READ-CONTROLLER').error(error);
