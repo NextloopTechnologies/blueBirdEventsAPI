@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { offerBannerService , fileService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 import { auth, requestValidator, fileUploads, checkPermission } from "../../../middlewares";
@@ -26,12 +26,8 @@ const offerBannerValidation = Joi.object({
     banner_title: Joi.string().min(3).trim().required(),
     banner_descp: Joi.string().min(3).required(),
     event_type: Joi.string().required(),
-    offer_starts: Joi.date().min('now').required().messages({
-        'date.greater': `"offer_starts" should starts from todays date`
-    }),
-    offer_ends: Joi.date().greater(Joi.ref('offer_starts')).required().messages({
-        'date.greater': `"offer_ends" should be greater than offer_starts date`
-    }),
+    offer_starts: Joi.date().min(todaysDate).required(),
+    offer_ends: Joi.date().greater(Joi.ref('offer_starts')).required(),
     banner_img: Joi.string(),
     price: Joi.number().required(),
     discount: Joi.string().required(),
@@ -71,7 +67,7 @@ router.get('/read/:id', auth, checkPermission('read-offerbanner'),  async (req, 
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-offerbanner'),  fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
+router.post('/update/:id', auth, checkPermission('update-offerbanner'), fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
     try {
         if(req.file) {
             const { imageName } = await fileService.upload(req.file);

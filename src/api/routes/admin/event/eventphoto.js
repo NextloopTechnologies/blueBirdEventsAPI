@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth, requestValidator, fileUploads, checkPermission } from '../../../middlewares';
 import { eventPhotoService, fileService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 const router = new Router();
@@ -24,9 +24,7 @@ const eventPhotoValidation = Joi.object({
     ep_title: Joi.string().min(3).trim().required(),
     ep_descp: Joi.string().min(3).required(),
     event_id: Joi.string().required(),
-    event_date: Joi.date().greater('now').required().messages({
-        'date.greater': `"event_date" should be greater than todays date`
-    }),
+    event_date: Joi.date().min(todaysDate).required(),
     ep_img: Joi.string(),
     id: Joi.string(),
     active: Joi.boolean()

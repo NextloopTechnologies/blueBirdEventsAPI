@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { ghmsArrivalMgmtService, filterService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 
@@ -32,7 +32,7 @@ const ghmsArrivalMgmtValidation = Joi.object({
     welcome_checklist: Joi.string().required(),
     no_of_guest_arrived: Joi.number().required(),
     special_note: Joi.string().required(),
-    date_of_arrival: Joi.date().required(),
+    date_of_arrival: Joi.date().min(todaysDate).required(),
     id: Joi.string()
 });
 

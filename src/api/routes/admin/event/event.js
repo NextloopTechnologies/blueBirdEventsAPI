@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { auth, requestValidator, fileUploads, checkPermission } from '../../../middlewares';
 import { eventService, fileService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
-import Joi from 'joi';
+import Joi, { forbidden } from 'joi';
 
 const router = new Router();
 
@@ -35,11 +35,9 @@ const eventValidation = Joi.object({
         event_type: Joi.string().required(),
         event_title: Joi.string().min(3).trim().required(),
         event_descp: Joi.string().min(3).required(),
-        event_start_date: Joi.date().greater('now').required().messages({
-            'date.greater': `"event_start_date" should be greater than todays date`
-        }).required(),
+        event_start_date: Joi.date().min(todaysDate).required(),
         event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
-        event_remark: Joi.string(),
+        event_remark: Joi.string().min(3),
         prod_decor_note: Joi.string(),
         // hotel //
         hotel_id: Joi.string().required(),
@@ -62,12 +60,10 @@ const eventValidation = Joi.object({
         event_foodbev: Joi.array().items({
             food_type: Joi.string().required(),
             menu: Joi.array().items({
-                food_sub_type: Joi.string(),
-                dish_name: Joi.array()
+                _id: false,
+                file: String
             }),
-            serve_date: Joi.date().greater('now').required().messages({
-                'date.greater': `"serve_date" should be greater than todays date`
-            }).required(),
+            serve_date: Joi.date().min(todaysDate).required(),
             serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
             .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
             serve_end_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
@@ -80,16 +76,13 @@ const eventValidation = Joi.object({
        
         // vendor prod //
         event_proddecor: Joi.array().items({
-            prod_decor_id: Joi.string(), 
-            isMiscellaneous: Joi.boolean(),
-            decor_title: Joi.string(),
+            decor_title: Joi.string().min(3),
             decor_img: Joi.array().items({
                 _id: false,
                 file: String
             }),
-            decor_date: Joi.date().greater('now').required().messages({
-                'date.greater': `"decor_date" should be greater than todays date`
-            }),
+            decor_remark: Joi.string().min(3),
+            decor_date: Joi.date().min(todaysDate).required(),
             expected_decor_time: Joi.string()
         })
     }),
@@ -107,9 +100,7 @@ const eventValidation = Joi.object({
             guest_invited: Joi.string().valid('Individual','Family'),
             guest_expected_nos: Joi.number(),
             guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
-            guest_date_of_arrival: Joi.date().greater('now').messages({
-            'date.greater': `"guest_date_arrival" should be greater than todays date`
-            }),
+            guest_date_of_arrival: Joi.date().min(todaysDate),
         }),
         arrival: Joi.array().items({
             _id: Joi.string(),
@@ -123,7 +114,7 @@ const eventValidation = Joi.object({
             welcome_checklist: Joi.string().required(),
             no_of_guest_arrived: Joi.number().required(),
             special_note: Joi.string().required(),
-            date_of_arrival: Joi.date().required(),
+            date_of_arrival: Joi.date().min(todaysDate).required(),
         }),
         departure: Joi.array().items({
             _id: Joi.string(),
@@ -136,7 +127,7 @@ const eventValidation = Joi.object({
             return_checklist: Joi.string().required(),
             no_of_guest_arrived: Joi.number().required(),
             special_note: Joi.string().required(),
-            date_of_departure: Joi.date().required(),
+            date_of_departure: Joi.date().min(todaysDate).required(),
         }),
         roomallotment: Joi.array().items({
             _id: Joi.string(),
@@ -169,11 +160,21 @@ const eventValidation = Joi.object({
             }),  
             checklist_type: Joi.string().valid('Prod','Food','L&C').required(),
             generalchecklist_text: Joi.string(),
-            generalchecklist_date: Joi.date().greater('now').messages({
-                'date.greater': `"date" should be greater than todays date`
-            }),
+            generalchecklist_date: Joi.date().min(todaysDate),
         })
-    })
+    }),
+    gallery: Joi.object({
+        _id: Joi.string(),
+        client_id: Joi.string(),
+        event_id: Joi.string(),
+        event_date: Joi.date(),
+        ep_title: Joi.string().min(3),
+        ep_descp: Joi.string().min(3),
+        ep_img: Joi.array().items({
+            _id: false,
+            file: String
+        })
+    }),
 });
 
 router.post('/create', auth, checkPermission('create-event'), requestValidator(eventValidation), async(req, res) => {
@@ -201,10 +202,34 @@ router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> 
         const page = parseInt(req.query.p) || 1
         const perPage = parseInt (req.query.r) || 10
         const { status, ...data} = await eventService.readSingle(page, perPage, _id);
-        
-        // if(data.event){
-        //     data.event = await fileService.getFileUrl(data.event,'event_img',1);
+        // console.log("from routes", data.data.event[0].event_foodbev);
+        // console.log(foodbev);
+        // if(data.data.event[0].event_foodbev){
+        //     const filterFoodbev = fileService.fileFilterForList(data.data.event[0].event_foodbev, 'menu');
+        //     const urlFoodbev = await fileService.getFileUrl(filterFoodbev,'menu');
+        //     for(const food of data.data.event[0].event_foodbev){
+        //         for(const urlfood of urlFoodbev){
+        //             if(food.food_type === urlfood.food_type && food.serve_date === urlfood.serve_date){
+        //                 console.log(typeof urlfood.serve_date, typeof food.serve_date)
+        //                 food.menu = urlfood.menu
+        //             }
+        //         }
+        //     }
         // }
+        if(data.data){
+            if(data.data.event[0].event_foodbev){
+                data.data.event[0].event_foodbev = await fileService.getFileUrl(data.data.event[0].event_foodbev,'menu');
+            }
+    
+            if(data.data.event[0].event_proddecor){
+                data.data.event[0].event_proddecor = await fileService.getFileUrl(data.data.event[0].event_proddecor,'decor_img');
+            }
+    
+            if(data.data.gallery){
+                data.data.gallery = await fileService.getFileUrl(data.data.gallery,'ep_img');
+            }
+        }
+    
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
@@ -245,9 +270,9 @@ router.post('/uploadfiles', auth, checkPermission('create-event'), fileUploads('
     }
 });
 
-router.post('/delete', auth, checkPermission('delete-event'),async (req, res) => {
+router.post('/delete/:id', auth, checkPermission('delete-event'),async (req, res) => {
     try {
-        const { status, ...data} = await eventService.remove(req.body.ids);
+        const { status, ...data} = await eventService.remove(req.params.id);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})

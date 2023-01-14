@@ -75,11 +75,7 @@ const eventSchema = new Schema({
         },
         menu: [{
             _id: false,
-            food_sub_type: String,
-            dish_name: [{ 
-                _id: false, 
-                type: String 
-            }]
+            file: String
         }],
         serve_date: {
             type: Date,
@@ -100,15 +96,15 @@ const eventSchema = new Schema({
     }],
     event_proddecor: [{
         _id: false,
-        isMiscellaneous: { type: Boolean, default: false },
-        prod_decor_id: { type: Schema.Types.ObjectId, ref: 'VendorProdDecor'},
+        decor_title: String,
         decor_img: [{
             _id: false,
             file: String
         }],
         decor_title: String,
         decor_date: Date,
-        expected_decor_time: String
+        expected_decor_time: String,
+        decor_remarks: String
     }],
     active: {
         type: Boolean,

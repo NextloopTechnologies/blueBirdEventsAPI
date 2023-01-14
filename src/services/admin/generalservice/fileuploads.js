@@ -77,4 +77,8 @@ export const getFileUrl = async(files, imageKey, fileCount=2) => {
     } catch (error) {
         throw error;   
     }
+};
+
+export const fileFilterForList = (values, key) => {
+    return values.filter( value => value[key].length > 0)
 }

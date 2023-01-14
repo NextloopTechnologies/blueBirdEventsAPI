@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { generalChecklistService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 
@@ -26,9 +26,7 @@ const generalChecklistValidation = Joi.object({
     general_checklist: Joi.array().items({
         checklist_type: Joi.string().valid('Prod','Food','L&C').required(),
         generalchecklist_text: Joi.string(),
-        generalchecklist_date: Joi.date().greater('now').messages({
-            'date.greater': `"date" should be greater than todays date`
-        }),
+        generalchecklist_date: Joi.date().min(todaysDate),
         checklist: Joi.array().items({
             check_id: Joi.number().required(),
             check_name: Joi.string().required()

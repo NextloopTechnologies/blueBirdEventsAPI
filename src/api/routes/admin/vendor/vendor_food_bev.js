@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth, requestValidator,checkPermission } from '../../../middlewares';
 import { vendorFoodBevService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 
@@ -30,9 +30,7 @@ const vendorFoodBevValidation = Joi.object({
     plates_added: Joi.string().trim(),
     plates_remaining: Joi.string().trim(),
     plates_used: Joi.string().trim(),
-    serve_date: Joi.date().greater('now').required().messages({
-      'date.greater': `"serve_date" should be greater than todays date`
-    }).required(),
+    serve_date: Joi.date().min(todaysDate).required(),
     serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
     .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
     serve_end_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)

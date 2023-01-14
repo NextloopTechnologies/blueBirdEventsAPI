@@ -1,4 +1,4 @@
-import { Event,  GHMSGuestList, } from '../../../models';
+import { Event,  GeneralChecklist,  GHMSGuestList, } from '../../../models';
 import { 
     eventPhotoService,
     generalChecklistService, 
@@ -12,25 +12,29 @@ import {
 export const create = async(values) => {
     try {
         let event;
-        if(values.event){
-            event = new Event(values.event);
-            await event.save();
+        if(!values.event){
+            return { status: 400, msgText: 'Provide event detials!',
+            success: false }
         }
-    
-        if(values.ghms && values.ghms.guestlist){
-            values.ghms.guestlist.forEach(guest => {
-                guest.client_id = event.client_id
-                guest.event_id = event._id
-            });
-            await GHMSGuestList.insertMany(values.ghms.guestlist);
+        event = new Event(values.event);
+        await event.save();
+
+        if(event){
+            if(values.ghms && values.ghms.guestlist){
+                values.ghms.guestlist.forEach(guest => {
+                    guest.client_id = event.client_id
+                    guest.event_id = event._id
+                });
+                await GHMSGuestList.insertMany(values.ghms.guestlist);
+            }
+            
+            if(values.checklist){
+                values.checklist.client_id = event.client_id
+                values.checklist.event_id = event._id
+                await generalChecklistService.create(values.checklist);
+            }
         }
         
-        if(values.checklist){
-            values.checklist.client_id = event.client_id
-            values.checklist.event_id = event._id
-            await generalChecklistService.create(values.checklist);
-        }
-    
         return { status: 201, msgText: 'Created Successfully! ',
         success: true }
         
@@ -64,8 +68,7 @@ export const readSingle = async(page, perPage, _id) => {
         { path: 'hotel_id', select: 'hotel_name'},
         { path: 'event_vendors.vendor_id', select: ['vendor_name','vendor_work',
         'vendor_mobile','blacklisted','reason_for_blacklist']},
-        { path: 'event_car', select: ['car_model','car_number','driver_name','driver_mobile']},
-        { path: 'event_proddecor.prod_decor_id', select: ['decor_img','decor_title']}
+        { path: 'event_car', select: ['car_model','car_number','driver_name','driver_mobile']}
         ])
         .sort({ _id: -1 });
 
@@ -75,12 +78,12 @@ export const readSingle = async(page, perPage, _id) => {
 
         const { ghmsguestlist: guestlist } = await ghmsGuestlistService.read({ page, perPage, whereClause });
         const { ghmsarrivalmgmt: arrival } = await ghmsArrivalMgmtService.read({ page, perPage, whereClause });
-        const { status, ghmsdeparturemgmt: departure } = await ghmsDepartureMgmtService.read({ page, perPage, whereClause });
+        const { ghmsdeparturemgmt: departure } = await ghmsDepartureMgmtService.read({ page, perPage, whereClause });
         const { ghmslostfound: lostandfound } = await ghmsLostFoundService.read({ page, perPage, whereClause });
         const { roomallotment } = await roomAllotmentService.read({ page, perPage, whereClause });  
         const { generalchecklist: checklist } = await generalChecklistService.read({ page, perPage, whereClause });     
-        
-        console.log(status, departure);
+        const { eventphoto: gallery } = await eventPhotoService.read(whereClause);     
+    
         const data = {
             event,
             ghms: {
@@ -90,7 +93,8 @@ export const readSingle = async(page, perPage, _id) => {
                 lostandfound,
                 roomallotment
             },
-            checklist
+            checklist,
+            gallery
         }
         
         return { status: 200, success: true, data}
@@ -159,9 +163,20 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(ids)=> {
+export const remove = async(_id)=> {
     try {
-        await Event.deleteMany({"_id": { "$in" : ids}}); 
+        const event = await Event.findOneAndDelete({ _id }); 
+        if(!event) {
+            return { status: 404, msgText: 'Event does not exists!', success: false}
+        }
+        
+        await ghmsGuestlistService.removeMultiple(_id);
+        await ghmsArrivalMgmtService.removeMultiple(_id);
+        await ghmsDepartureMgmtService.removeMultiple(_id);
+        await ghmsLostFoundService.removeMultiple(_id);
+        await roomAllotmentService.removeMultiple(_id);
+        await GeneralChecklist.findOneAndDelete({event_id: _id });
+
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

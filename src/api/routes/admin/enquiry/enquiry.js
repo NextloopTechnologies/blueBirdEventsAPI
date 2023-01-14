@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { enquiryService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 
@@ -25,9 +25,7 @@ const enquiryValidation = Joi.object({
     second_name: Joi.string().min(3).trim().required(),
     wedding_of: Joi.string().required(),
     event_type: Joi.string().required(),
-    event_date: Joi.date().greater('now').required().messages({
-        'date.greater': `"event_date" should be greater than todays date`
-    }),
+    event_date: Joi.date().min(todaysDate).required(),
     venue: Joi.string().trim().required(),
     city_town: Joi.string().trim().required(),
     mobile: Joi.string().regex(/^[0-9]{10}$/)

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { ghmsGuestlistService, filterService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 
@@ -33,9 +33,7 @@ const ghmsGuestlistValidation = Joi.object({
     guest_invited: Joi.string().valid('Individual','Family'),
     guest_expected_nos: Joi.number(),
     guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
-    guest_date_of_arrival: Joi.date().greater('now').messages({
-      'date.greater': `"guest_date_arrival" should be greater than todays date`
-    }),
+    guest_date_of_arrival: Joi.date().min(todaysDate),
     id: Joi.string()
 });
 
