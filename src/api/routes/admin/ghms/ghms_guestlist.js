@@ -5,9 +5,9 @@ import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 
-const router = new Router();
+const router = new Router() ;
 
-router.get('', auth, checkPermission('manage-ghmsguestlist'),  async(req, res) => {
+router.post('', auth, checkPermission('manage-ghmsguestlist'),  async(req, res) => {
     try {
         const page = parseInt(req.query.p) || 1
         const perPage = parseInt (req.query.r) || 10
