@@ -48,3 +48,12 @@ export const remove = async(ids)=> {
         throw error;
     }
 };
+
+export const removeMultiple = async(event_id)=> {
+    try {
+        await PriortizationList.deleteMany({event_id});
+        return { status: 200, msgText: 'Deleted Successfully!', success: true}
+    } catch (error) {
+        throw error;
+    }
+};

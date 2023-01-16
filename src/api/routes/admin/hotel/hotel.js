@@ -24,7 +24,7 @@ const hotelValidation = Joi.object({
     hotel_name: Joi.string().min(3).trim().required(),
     hotel_mob: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
-    hotel_add : Joi.string().required(),
+    hotel_add : Joi.string().min(3).required(),
     id: Joi.string()
 });
 

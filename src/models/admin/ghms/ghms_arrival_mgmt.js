@@ -43,11 +43,11 @@ const ghmsArrivalMgmtSchema = new Schema({
     },
     welcome_checklist: {
       type: String,
-      required: true
+      minlength: 3
     },
     special_note: {
       type: String,
-      required: true
+      minlength: 3
     },
     active: {
       type: Boolean,

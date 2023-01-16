@@ -29,9 +29,9 @@ const ghmsArrivalMgmtValidation = Joi.object({
     arrived_at: Joi.string().required(),
     mode_of_arrival: Joi.string().required(),
     expected_arrival_time: Joi.string().required(),
-    welcome_checklist: Joi.string().required(),
+    welcome_checklist: Joi.string().min(3),
     no_of_guest_arrived: Joi.number().required(),
-    special_note: Joi.string().required(),
+    special_note: Joi.string().min(3),
     date_of_arrival: Joi.date().min(todaysDate).required(),
     id: Joi.string()
 });

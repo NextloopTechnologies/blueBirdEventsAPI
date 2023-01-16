@@ -13,10 +13,12 @@ const priortizationListSchema = Schema({
   },  
   title: {
     type: String,
+    minlength: 3,
     required: true,
   },
   descp: {
-    type: String
+    type: String,
+    minlength: 3
   },
   contact: {
     type: Number

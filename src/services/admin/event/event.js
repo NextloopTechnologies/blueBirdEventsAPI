@@ -6,6 +6,7 @@ import {
     ghmsDepartureMgmtService, 
     ghmsGuestlistService, 
     ghmsLostFoundService, 
+    priortizationListService, 
     roomAllotmentService 
 } from '../..';
 
@@ -175,6 +176,7 @@ export const remove = async(_id)=> {
         await ghmsDepartureMgmtService.removeMultiple(_id);
         await ghmsLostFoundService.removeMultiple(_id);
         await roomAllotmentService.removeMultiple(_id);
+        await priortizationListService.removeMultiple(_id);
         await GeneralChecklist.findOneAndDelete({event_id: _id });
 
         return { status: 200, msgText: 'Deleted Successfully!', success: true}

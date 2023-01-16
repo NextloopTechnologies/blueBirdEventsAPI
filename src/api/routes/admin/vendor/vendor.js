@@ -23,10 +23,10 @@ router.get('', auth, checkPermission('manage-vendor'),  async(req, res) => {
 
 const vendorValidation = Joi.object({
     vendor_name: Joi.string().min(3).required().trim(),
-    vendor_work: Joi.string().required(),
+    vendor_work: Joi.string().min(3).required(),
     vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    reason_for_blacklist: Joi.string(),
+    reason_for_blacklist: Joi.string().min(3),
     blacklisted: Joi.boolean(),
     id: Joi.string()
 });

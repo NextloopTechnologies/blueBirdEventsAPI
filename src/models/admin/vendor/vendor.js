@@ -10,13 +10,15 @@ const vendorSchema = Schema({
   vendor_work: {
     type: String,
     required: true,
+    minlenght: 3
   },
   vendor_mobile: {
     type: Number,
     required: true  
   },
   reason_for_blacklist: {
-    type: String
+    type: String,
+    minlenght: 3
   },
   blacklisted: {
     type: Boolean,

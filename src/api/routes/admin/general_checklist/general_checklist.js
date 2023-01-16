@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth, requestValidator, checkPermission } from '../../../middlewares';
-import { generalChecklistService } from "../../../../services";
+import { generalChecklistService, filterService } from "../../../../services";
 import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
@@ -11,7 +11,8 @@ router.get('', auth, checkPermission('manage-generalchecklist'), async(req, res)
     try {
         const page = parseInt(req.query.p) || 1
         const perPage = parseInt (req.query.r) || 10
-        const { status, ...data} = await generalChecklistService.read({ page, perPage });
+        const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await generalChecklistService.read({ page, perPage, whereClause });
         res.status(status).send(data);
     } catch (error) {
         logger('GENERALCHECKLIST-READALL-CONTROLLER').error(error);
@@ -25,14 +26,13 @@ const generalChecklistValidation = Joi.object({
     event_id: Joi.string().required(),
     general_checklist: Joi.array().items({
         checklist_type: Joi.string().valid('Prod','Food','L&C').required(),
-        generalchecklist_text: Joi.string(),
+        generalchecklist_text: Joi.string().min(3),
         generalchecklist_date: Joi.date().min(todaysDate),
         checklist: Joi.array().items({
             check_id: Joi.number().required(),
             check_name: Joi.string().required()
         })
     }),  
-   
     id: Joi.string()
 });
 

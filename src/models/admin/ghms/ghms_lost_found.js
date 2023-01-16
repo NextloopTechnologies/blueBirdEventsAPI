@@ -18,27 +18,33 @@ const ghmsLostFoundSchema = new Schema({
     },
     item_name: {
       type: String,
+      minlength: 3,
       required: true
     },
     item_identification: {
       type: String,
+      minlength: 3,
       required: true
     },
     lost_place: {
       type: String,
+      minlength: 3,
       required: true
     },
     found_place: {
       type: String,
+      minlength: 3,
       required: true
     },
     found_by: {
       type: String,
+      minlength: 3,
       required: true
     },
     deliver_type: {
       type: String,
-      ref: 'Vendor'
+      minlength: 3,
+      required: true
     },
     active: {
       type: Boolean,

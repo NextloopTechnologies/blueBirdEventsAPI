@@ -17,7 +17,7 @@ const generalChecklistSchema = new Schema({
         type: String,
         required: true
       },
-      generalchecklist_text: String,
+      generalchecklist_text: {type: String, minlength: 3},
       generalchecklist_date: Date,
       checklist: [{
         _id: false,

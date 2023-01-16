@@ -29,10 +29,10 @@ const freelancerValidation = Joi.object({
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
     alt_contact_no: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    department_type: Joi.string(),
+    department_type: Joi.string().required(),
     gender: Joi.string().valid('Male','Female').required(),
-    city: Joi.string().required(),
-    current_city: Joi.string(),
+    city: Joi.string().min(3).required(),
+    current_city: Joi.string().min(3).required(),
     experience: Joi.string().required(),
     tshirt_size: Joi.string().required(),
     course: Joi.string().valid('Yes','No').required(),

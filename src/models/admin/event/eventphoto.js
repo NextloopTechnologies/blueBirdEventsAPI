@@ -17,6 +17,7 @@ const eventPhotoSchema = new Schema({
     },
     ep_descp: {
         type: String,
+        minlength: 3,
         required: true
     },
     ep_img: [{

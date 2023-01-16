@@ -19,12 +19,14 @@ const vendorCarSchema = Schema({
     minlength: 3
   },
   car_reg: {
-      type: String,
-      required: true
+    type: String,
+    minlength: 3,
+    required: true
   },
   car_number: {
     type: String,
-    required: true
+    required: true,
+    minlength: 3
   },
   car_type: {
     type: String,
@@ -37,8 +39,8 @@ const vendorCarSchema = Schema({
     minlength: 3
   },
   driver_mobile: {
-      type: Number,
-      required: true
+    type: Number,
+    required: true
   },
   active: {
     type: Boolean,

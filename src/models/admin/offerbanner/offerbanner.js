@@ -13,6 +13,7 @@ const offerBannerSchema = new Schema({
     },
     banner_descp: {
         type: String,
+        minlength: 3,
         required: true
     },
     offer_starts: {

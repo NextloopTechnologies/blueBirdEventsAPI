@@ -13,11 +13,12 @@ const eventSchema = new Schema({
     },
     event_title: {
         type: String,
+        minlength: 3,
         required: true
     }, 
     event_descp: {
         type: String,
-        required: true,
+        minlength: 3
     }, 
     event_start_date: {
         type: Date,
@@ -27,7 +28,8 @@ const eventSchema = new Schema({
         type: Date
     }, 
     event_remark: {
-        type: String
+        type: String,
+        minlength: 3
     },
     prod_decor_note: {
         type: String
@@ -54,7 +56,7 @@ const eventSchema = new Schema({
             required: true,
             ref: 'Vendor'
         },
-        vendor_scope_of_work: String,
+        vendor_scope_of_work: {type: String, minlength: 3},
         arriving_time: String,
         total_package: String,
         paid_amount: String,
@@ -96,15 +98,14 @@ const eventSchema = new Schema({
     }],
     event_proddecor: [{
         _id: false,
-        decor_title: String,
+        decor_title: {type: String, minlength: 3},
         decor_img: [{
             _id: false,
             file: String
         }],
-        decor_title: String,
         decor_date: Date,
         expected_decor_time: String,
-        decor_remarks: String
+        decor_remark: {type: String, minlength: 3}
     }],
     active: {
         type: Boolean,

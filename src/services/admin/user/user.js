@@ -12,7 +12,7 @@ export const create = async(values) => {
             return { status: 400 , msgText: 'Email already taken',success: false}
         }
         await user.save();
-        emailService.sendWelcomeEmail(user.email, user.name, user.password);
+        emailService.sendWelcomeEmail(user.email, user.name, values.password);
         const token = await user.generateAuthToken();
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, user, token }

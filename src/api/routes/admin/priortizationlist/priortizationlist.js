@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth, checkPermission, requestValidator } from '../../../middlewares';
-import { priortizationListService } from "../../../../services";
+import { priortizationListService, filterService } from "../../../../services";
 import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
@@ -11,7 +11,8 @@ router.get('', auth, checkPermission('manage-priortizationlist'),  async(req, re
     try {
         const page = parseInt(req.query.p) || 1
         const perPage = parseInt (req.query.r) || 10
-        const { status, ...data} = await priortizationListService.read({ page, perPage });
+        const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await priortizationListService.read({ page, perPage, whereClause });
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PRIORTIZATIONLIST-READALL-CONTROLLER').error(error);
@@ -23,8 +24,8 @@ router.get('', auth, checkPermission('manage-priortizationlist'),  async(req, re
 const priortizationListValidation = Joi.object({
     client_id: Joi.string().required(),
     event_id: Joi.string().required(),
-    title: Joi.string().trim().required(),
-    descp: Joi.string().trim(),
+    title: Joi.string().min(3).trim().required(),
+    descp: Joi.string().min(3).trim(),
     deadline_date: Joi.date().min(todaysDate).required(),
     contact: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),

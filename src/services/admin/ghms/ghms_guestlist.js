@@ -11,6 +11,16 @@ export const create = async(values) => {
     }
 };
 
+export const createBulk = async(values) => {
+    try {
+        const ghmsguestlist = await GHMSGuestList.insertMany(values);;
+        return { status: 201, msgText: 'Created Successfully! ',
+        success: true, ghmsguestlist }
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const read = async({page, perPage, whereClause={}}) => {
     try {
         const ghmsguestlist = await GHMSGuestList.find(whereClause)

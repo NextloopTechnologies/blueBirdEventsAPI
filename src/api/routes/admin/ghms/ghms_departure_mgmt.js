@@ -28,9 +28,9 @@ const ghmsDepartureMgmtValidation = Joi.object({
     guest_id: Joi.string().required(),
     departure_time: Joi.string().required(),
     mode_of_departure: Joi.string().required(),
-    return_checklist: Joi.string().required(),
+    return_checklist: Joi.string().min(3),
     no_of_guest_arrived: Joi.number().required(),
-    special_note: Joi.string().required(),
+    special_note: Joi.string().min(3),
     date_of_departure: Joi.date().min(todaysDate).required(),
     id: Joi.string()
 });

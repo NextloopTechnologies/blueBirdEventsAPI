@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth, requestValidator, checkPermission } from '../../../middlewares';
 import { hotelRoomService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 
@@ -24,10 +24,8 @@ const hotelRoomValidation = Joi.object({
     hotel_id: Joi.string().required(),
     room_no: Joi.number().required(),
     floor_no: Joi.number().required(),
-    room_type: Joi.string(),
-    booked_from: Joi.date().greater('now').messages({
-      'date.greater': `"booked_from" should be greater than todays date`
-    }),
+    room_type: Joi.string().min(3),
+    booked_from: Joi.date().min(todaysDate),
     booked_to: Joi.date().greater(Joi.ref('booked_from')),
     id: Joi.string()
 });

@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { auth, requestValidator, fileUploads, checkPermission } from '../../../middlewares';
-import { eventService, fileService } from "../../../../services";
+import { eventService, fileService, filterService } from "../../../../services";
 import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
-import Joi, { forbidden } from 'joi';
+import Joi from 'joi';
 
 const router = new Router();
 
@@ -11,7 +11,8 @@ router.get('', async(req, res) => {
     try {
         const page = parseInt(req.query.p) || 1
         const perPage = parseInt (req.query.r) || 10
-        const { status, ...data} = await eventService.readAll({ page, perPage });
+        const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await eventService.readAll({ page, perPage, whereClause });
         // const defaultProdFiles =  data.event[0].event_proddecor[0].prod_decor_id;
         // const miscellaneousProdFiles = data.event[0].event_proddecor[0].decor_img;
         // console.log(data.event[0].event_proddecor);
@@ -34,7 +35,7 @@ const eventValidation = Joi.object({
         client_id: Joi.string().required(),
         event_type: Joi.string().required(),
         event_title: Joi.string().min(3).trim().required(),
-        event_descp: Joi.string().min(3).required(),
+        event_descp: Joi.string().min(3),
         event_start_date: Joi.date().min(todaysDate).required(),
         event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
         event_remark: Joi.string().min(3),
@@ -48,7 +49,7 @@ const eventValidation = Joi.object({
         // vendors //
         event_vendors : Joi.array().items({
             vendor_id: Joi.string().required(),
-            scope_of_work: Joi.string(),
+            scope_of_work: Joi.string().min(3),
             due_amount: Joi.string(),
             paid_amount: Joi.string(),
             total_package: Joi.string(),
@@ -94,13 +95,13 @@ const eventValidation = Joi.object({
             guest_name: Joi.string().min(3).required().trim(),
             guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
             guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
-            .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-            guest_add: Joi.string().required(),
+            .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
+            guest_add: Joi.string().min(3).required(),
             guest_outstation: Joi.string().valid('Local','Outstation').required(),
-            guest_invited: Joi.string().valid('Individual','Family'),
+            guest_invited: Joi.string().valid('Individual','Family').required(),
             guest_expected_nos: Joi.number(),
             guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
-            guest_date_of_arrival: Joi.date().min(todaysDate),
+            guest_date_of_arrival: Joi.date().min(todaysDate).required(),
         }),
         arrival: Joi.array().items({
             _id: Joi.string(),
@@ -111,9 +112,9 @@ const eventValidation = Joi.object({
             arrived_at: Joi.string().required(),
             mode_of_arrival: Joi.string().required(),
             expected_arrival_time: Joi.string().required(),
-            welcome_checklist: Joi.string().required(),
+            welcome_checklist: Joi.string().min(3),
             no_of_guest_arrived: Joi.number().required(),
-            special_note: Joi.string().required(),
+            special_note: Joi.string().min(3),
             date_of_arrival: Joi.date().min(todaysDate).required(),
         }),
         departure: Joi.array().items({
@@ -124,9 +125,9 @@ const eventValidation = Joi.object({
             car_id: Joi.string().required(),
             departure_time: Joi.string().required(),
             mode_of_departure: Joi.string().required(),
-            return_checklist: Joi.string().required(),
+            return_checklist: Joi.string().min(3),
             no_of_guest_arrived: Joi.number().required(),
-            special_note: Joi.string().required(),
+            special_note: Joi.string().min(3),
             date_of_departure: Joi.date().min(todaysDate).required(),
         }),
         roomallotment: Joi.array().items({
@@ -141,12 +142,12 @@ const eventValidation = Joi.object({
             client_id: Joi.string(),
             event_id: Joi.string(),
             guest_id: Joi.string().required(),
-            item_name: Joi.string().required(),
-            item_identification: Joi.string().required(),
-            lost_place: Joi.string().required(),
-            found_place: Joi.string().required(),
-            found_by: Joi.string().required(),
-            deliver_type: Joi.string().required(),
+            item_name: Joi.string().min(3).required(),
+            item_identification: Joi.string().min(3).required(),
+            lost_place: Joi.string().min(3).required(),
+            found_place: Joi.string().min(3).required(),
+            found_by: Joi.string().min(3).required(),
+            deliver_type: Joi.string().min(3).required(),
         })
     }),
     checklist: Joi.object({
@@ -159,7 +160,7 @@ const eventValidation = Joi.object({
                 check_name: Joi.string().required()
             }),  
             checklist_type: Joi.string().valid('Prod','Food','L&C').required(),
-            generalchecklist_text: Joi.string(),
+            generalchecklist_text: Joi.string().min(3),
             generalchecklist_date: Joi.date().min(todaysDate),
         })
     }),
@@ -168,8 +169,8 @@ const eventValidation = Joi.object({
         client_id: Joi.string(),
         event_id: Joi.string(),
         event_date: Joi.date(),
-        ep_title: Joi.string().min(3),
-        ep_descp: Joi.string().min(3),
+        ep_title: Joi.string().min(3).required(),
+        ep_descp: Joi.string().min(3).required(),
         ep_img: Joi.array().items({
             _id: false,
             file: String
