@@ -12,7 +12,7 @@ export const create = async(values) => {
             return { status: 400 , msgText: 'Email already taken',success: false}
         }
         await user.save();
-        emailService.sendWelcomeEmail(user.email, user.name, values.password);
+        // emailService.sendWelcomeEmail(user.email, user.name, values.password);
         const token = await user.generateAuthToken();
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, user, token }
@@ -76,7 +76,7 @@ export const forgotPasswordRequest = async(email) => {
             return { status: 401 , msgText: "User mail not found!", success: false }
         }
         const resetToken = sign ({email: user.email}, config.JWT, { expiresIn: '5m'} );
-        emailService.sendForgotPasswordEmail(user._id, user.name, email, resetToken);
+        // emailService.sendForgotPasswordEmail(user._id, user.name, email, resetToken);
         console.log("form service ", resetToken);
         return { status: 200, msgText: 'Reset password request sent to your mail!',success: true}
     } catch (error) {
