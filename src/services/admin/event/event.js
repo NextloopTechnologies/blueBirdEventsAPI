@@ -1,4 +1,4 @@
-import { Event,  GeneralChecklist,  GHMSGuestList, } from '../../../models';
+import { Event,  GeneralChecklist,  GHMSGuestList, PriortizationList, } from '../../../models';
 import { 
     eventPhotoService,
     generalChecklistService, 
@@ -28,6 +28,14 @@ export const create = async(values) => {
                 });
                 await GHMSGuestList.insertMany(values.ghms.guestlist);
             }
+
+            if(values.priortization){
+                values.priortization.forEach(prior => {
+                    prior.client_id = event.client_id
+                    prior.event_id = event._id
+                });
+                await PriortizationList.insertMany(values.priortization);
+            }
             
             if(values.checklist){
                 values.checklist.client_id = event.client_id
@@ -48,7 +56,7 @@ export const readAll = async({page, perPage, whereClause={}}) => {
     try {
         const event = await Event.find(whereClause)
         .populate([{ path: 'client_id', select: 'name'},
-        { path: 'hotel_id', select: 'hotel_name'}])
+        { path: 'hotels.hotel_id', select: 'hotel_name'}])
         .select(['event_type','event_title','event_start_date','event_end_date'])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
@@ -63,10 +71,9 @@ export const readAll = async({page, perPage, whereClause={}}) => {
 
 export const readSingle = async(page, perPage, _id) => {
     try {
-        const whereClause = { event_id: _id };
         const event = await Event.find({ _id })
         .populate([{ path: 'client_id', select: 'name'},
-        { path: 'hotel_id', select: 'hotel_name'},
+        { path: 'hotels.hotel_id', select: 'hotel_name'},
         { path: 'event_vendors.vendor_id', select: ['vendor_name','vendor_work',
         'vendor_mobile','blacklisted','reason_for_blacklist']},
         { path: 'event_car', select: ['car_model','car_number','driver_name','driver_mobile']}
@@ -76,12 +83,13 @@ export const readSingle = async(page, perPage, _id) => {
         if(!event.length > 0) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         }
-
+        const whereClause = { event_id: _id };
         const { ghmsguestlist: guestlist } = await ghmsGuestlistService.read({ page, perPage, whereClause });
         const { ghmsarrivalmgmt: arrival } = await ghmsArrivalMgmtService.read({ page, perPage, whereClause });
         const { ghmsdeparturemgmt: departure } = await ghmsDepartureMgmtService.read({ page, perPage, whereClause });
         const { ghmslostfound: lostandfound } = await ghmsLostFoundService.read({ page, perPage, whereClause });
         const { roomallotment } = await roomAllotmentService.read({ page, perPage, whereClause });  
+        const { priortizationlist: priortization } = await priortizationListService.read({ page, perPage, whereClause });     
         const { generalchecklist: checklist } = await generalChecklistService.read({ page, perPage, whereClause });     
         const { eventphoto: gallery } = await eventPhotoService.read(whereClause);     
     
@@ -94,6 +102,7 @@ export const readSingle = async(page, perPage, _id) => {
                 lostandfound,
                 roomallotment
             },
+            priortization,
             checklist,
             gallery
         }
@@ -147,6 +156,11 @@ export const update = async(id, values) => {
             } 
         } 
         
+        if(values.priortization) {
+            const priortization = await Promise.all(values.priortization.map(prior => {
+                return priortizationListService.update(prior._id, prior)
+            }));
+        } 
         if(values.checklist) {
             const generalchecklist = await generalChecklistService.update(values.checklist._id, values.checklist)
         }

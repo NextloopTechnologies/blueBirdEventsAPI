@@ -39,12 +39,13 @@ const eventValidation = Joi.object({
         event_start_date: Joi.date().min(todaysDate).required(),
         event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
         event_remark: Joi.string().min(3),
-        prod_decor_note: Joi.string(),
         // hotel //
-        hotel_id: Joi.string().required(),
-        hotel_rooms_required: Joi.array().items({
-            floor_no: Joi.number().required(),
-            room_nos: Joi.array().required()
+        hotels: Joi.array().items({
+            hotel_id: Joi.string(),
+            hotel_rooms_required: Joi.array().items({
+                floor_no: Joi.number().required(),
+                room_nos: Joi.array().required()
+            })
         }), 
         // vendors //
         event_vendors : Joi.array().items({
@@ -149,6 +150,16 @@ const eventValidation = Joi.object({
             found_by: Joi.string().min(3).required(),
             deliver_type: Joi.string().min(3).required(),
         })
+    }),
+    priortization: Joi.array().items({
+        _id: Joi.string(),
+        client_id: Joi.string(),
+        event_id: Joi.string(),
+        title: Joi.string().min(3).trim().required(),
+        descp: Joi.string().min(3).trim(),
+        deadline_date: Joi.date().min(todaysDate).required(),
+        contact: Joi.string().regex(/^[0-9]{10}$/)
+        .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
     }),
     checklist: Joi.object({
         _id: Joi.string(),

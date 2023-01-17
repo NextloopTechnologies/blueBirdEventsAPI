@@ -35,18 +35,21 @@ const eventSchema = new Schema({
         type: String
     },
     // hotel //
-    hotel_id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Hotel'
-    },
-    hotel_rooms_required:[{
+    hotels: [{
         _id: false,
-        floor_no: Number,
-        room_nos: [{
+        hotel_id: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: 'Hotel'
+        },
+        hotel_rooms_required:[{
             _id: false,
-            type: String
-        }]
+            floor_no: Number,
+            room_nos: [{
+                _id: false,
+                type: String
+            }]
+        }],
     }],
     // event vendor //
     event_vendors: [{
