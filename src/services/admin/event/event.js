@@ -75,8 +75,7 @@ export const readSingle = async(page, perPage, _id) => {
         .populate([{ path: 'client_id', select: 'name'},
         { path: 'hotels.hotel_id', select: 'hotel_name'},
         { path: 'event_vendors.vendor_id', select: ['vendor_name','vendor_work',
-        'vendor_mobile','blacklisted','reason_for_blacklist']},
-        { path: 'event_car', select: ['car_model','car_number','driver_name','driver_mobile']}
+        'vendor_mobile','blacklisted','reason_for_blacklist']}
         ])
         .sort({ _id: -1 });
 

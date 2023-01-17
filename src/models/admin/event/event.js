@@ -31,9 +31,6 @@ const eventSchema = new Schema({
         type: String,
         minlength: 3
     },
-    prod_decor_note: {
-        type: String
-    },
     // hotel //
     hotels: [{
         _id: false,
@@ -64,12 +61,6 @@ const eventSchema = new Schema({
         total_package: String,
         paid_amount: String,
         due_amount: String,
-    }],
-    // event car //
-    event_car: [{
-        _id: false,
-        type: Schema.Types.ObjectId,
-        ref: 'VendorCar'
     }],
     // event food bev //
     event_foodbev: [{

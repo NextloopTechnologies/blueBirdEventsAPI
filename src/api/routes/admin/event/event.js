@@ -56,8 +56,6 @@ const eventValidation = Joi.object({
             total_package: Joi.string(),
             arriving_time: Joi.string()
         }),
-        // vendor car //
-        event_car: Joi.array(),
         // food bev
         event_foodbev: Joi.array().items({
             food_type: Joi.string().required(),
