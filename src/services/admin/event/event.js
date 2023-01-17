@@ -89,11 +89,11 @@ export const readSingle = async(page, perPage, _id) => {
         const { ghmslostfound: lostandfound } = await ghmsLostFoundService.read({ page, perPage, whereClause });
         const { roomallotment } = await roomAllotmentService.read({ page, perPage, whereClause });  
         const { priortizationlist: priortization } = await priortizationListService.read({ page, perPage, whereClause });     
-        const { generalchecklist: checklist } = await generalChecklistService.read({ page, perPage, whereClause });     
-        const { eventphoto: gallery } = await eventPhotoService.read(whereClause);     
+        const { generalchecklist } = await generalChecklistService.read({ page, perPage, whereClause });     
+        const { eventphoto } = await eventPhotoService.read(whereClause);     
     
         const data = {
-            event,
+            event: event[0],
             ghms: {
                 guestlist,
                 arrival,
@@ -102,8 +102,8 @@ export const readSingle = async(page, perPage, _id) => {
                 roomallotment
             },
             priortization,
-            checklist,
-            gallery
+            checklist: generalchecklist[0],
+            gallery: eventphoto[0]
         }
         
         return { status: 200, success: true, data}

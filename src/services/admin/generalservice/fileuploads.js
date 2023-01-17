@@ -79,6 +79,33 @@ export const getFileUrl = async(files, imageKey, fileCount=2) => {
     }
 };
 
-export const fileFilterForList = (values, key) => {
-    return values.filter( value => value[key].length > 0)
-}
+export const getSingleObjFileUrl = async(files, imageKey, fileCount=2) => {
+    try {
+        if(fileCount === 1) {
+            const getObjectParams = {
+                Bucket: config.AWS_BN,
+                Key: files[imageKey]
+            }
+            const command = new GetObjectCommand(getObjectParams);
+            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+            files[imageKey] = url;
+        } else {
+            for(const innerFile of files[imageKey]) {
+                const getObjectParams = {
+                    Bucket: config.AWS_BN,
+                    Key: innerFile.file
+                }
+                const command = new GetObjectCommand(getObjectParams);
+                const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+                innerFile.file = url;
+            }   
+        }
+        return files 
+    } catch (error) {
+        throw error;   
+    }
+};
+
+// export const fileFilterForList = (values, key) => {
+//     return values.filter( value => value[key].length > 0)
+// }

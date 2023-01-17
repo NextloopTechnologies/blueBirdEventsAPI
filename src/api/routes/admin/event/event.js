@@ -13,12 +13,6 @@ router.post('', async(req, res) => {
         const perPage = parseInt (req.query.r) || 10
         const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
         const { status, ...data} = await eventService.readAll({ page, perPage, whereClause });
-        // const defaultProdFiles =  data.event[0].event_proddecor[0].prod_decor_id;
-        // const miscellaneousProdFiles = data.event[0].event_proddecor[0].decor_img;
-        // console.log(data.event[0].event_proddecor);
-        // if(defaultProdFiles.decor_img) {
-        //     defaultProdFiles = await fileService.getFileUrl(defaultProdFiles,'decor_img');
-        // }
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
@@ -189,13 +183,6 @@ const eventValidation = Joi.object({
 
 router.post('/create', auth, checkPermission('create-event'), requestValidator(eventValidation), async(req, res) => {
     try {
-        // console.log("from files ",req.files);
-        // console.log("from req", req.values.checklist)
-        // if(!req.file) {
-        //     throw {status: 401, msgText: 'File is required', success:false}
-        // }
-        // const { fileName } = await fileService.uploadSingle(req.file);
-        // req.values.event_img = fileName;
         const { status, ...data } = await eventService.create(req.values);
         res.status(status).send(data);
         // res.send('success');
@@ -227,16 +214,16 @@ router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> 
         //     }
         // }
         if(data.data){
-            if(data.data.event[0].event_foodbev){
-                data.data.event[0].event_foodbev = await fileService.getFileUrl(data.data.event[0].event_foodbev,'menu');
+            if(data.data.event.event_foodbev){
+                data.data.event.event_foodbev = await fileService.getFileUrl(data.data.event.event_foodbev,'menu');
             }
     
-            if(data.data.event[0].event_proddecor){
-                data.data.event[0].event_proddecor = await fileService.getFileUrl(data.data.event[0].event_proddecor,'decor_img');
+            if(data.data.event.event_proddecor){
+                data.data.event.event_proddecor = await fileService.getFileUrl(data.data.event.event_proddecor,'decor_img');
             }
     
             if(data.data.gallery){
-                data.data.gallery = await fileService.getFileUrl(data.data.gallery,'ep_img');
+                data.data.gallery = await fileService.getSingleObjFileUrl(data.data.gallery,'ep_img');
             }
         }
     
@@ -250,10 +237,6 @@ router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> 
 
 router.post('/update/:id', auth, checkPermission('update-event'), requestValidator(eventValidation), async(req, res) => {
     try {
-        // if(req.file) {
-        //     const { fileName } = await fileService.uploadSingle(req.file);
-        //     req.values.event_img = fileName;
-        // }
         const { status, ...data} = await eventService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
