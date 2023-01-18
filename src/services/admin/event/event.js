@@ -71,29 +71,30 @@ export const readAll = async({page, perPage, whereClause={}}) => {
 
 export const readSingle = async(page, perPage, _id) => {
     try {
-        const event = await Event.find({ _id })
-        .populate([{ path: 'client_id', select: 'name'},
-        { path: 'hotels.hotel_id', select: 'hotel_name'},
-        { path: 'event_vendors.vendor_id', select: ['vendor_name','vendor_work',
-        'vendor_mobile','blacklisted','reason_for_blacklist']}
-        ])
-        .sort({ _id: -1 });
+        const event = await Event.findById(_id)
+        .select(['-active','-createdAt','-updatedAt','-__v']);
+        // .populate([{ path: 'client_id', select: 'name'},
+        // { path: 'hotels.hotel_id', select: 'hotel_name'},
+        // { path: 'event_vendors.vendor_id', select: ['vendor_name','vendor_work',
+        // 'vendor_mobile','blacklisted','reason_for_blacklist']}
+        // ]);
 
-        if(!event.length > 0) {
+        if(!event) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         }
+
         const whereClause = { event_id: _id };
-        const { ghmsguestlist: guestlist } = await ghmsGuestlistService.read({ page, perPage, whereClause });
-        const { ghmsarrivalmgmt: arrival } = await ghmsArrivalMgmtService.read({ page, perPage, whereClause });
-        const { ghmsdeparturemgmt: departure } = await ghmsDepartureMgmtService.read({ page, perPage, whereClause });
-        const { ghmslostfound: lostandfound } = await ghmsLostFoundService.read({ page, perPage, whereClause });
-        const { roomallotment } = await roomAllotmentService.read({ page, perPage, whereClause });  
-        const { priortizationlist: priortization } = await priortizationListService.read({ page, perPage, whereClause });     
-        const { generalchecklist } = await generalChecklistService.read({ page, perPage, whereClause });     
-        const { eventphoto } = await eventPhotoService.read(whereClause);     
+        const { ghmsguestlist: guestlist } = await ghmsGuestlistService.readForEvent({ page, perPage, whereClause });
+        const { ghmsarrivalmgmt: arrival } = await ghmsArrivalMgmtService.readForEvent({ page, perPage, whereClause });
+        const { ghmsdeparturemgmt: departure } = await ghmsDepartureMgmtService.readForEvent({ page, perPage, whereClause });
+        const { ghmslostfound: lostandfound } = await ghmsLostFoundService.readForEvent({ page, perPage, whereClause });
+        const { roomallotment } = await roomAllotmentService.readForEvent({ page, perPage, whereClause });  
+        const { priortizationlist: priortization } = await priortizationListService.readForEvent({ page, perPage, whereClause });     
+        const { generalchecklist: checklist } = await generalChecklistService.readForEvent(_id);     
+        const { eventphoto: gallery } = await eventPhotoService.readForEvent(_id);     
     
         const data = {
-            event: event[0],
+            event,
             ghms: {
                 guestlist,
                 arrival,
@@ -102,8 +103,8 @@ export const readSingle = async(page, perPage, _id) => {
                 roomallotment
             },
             priortization,
-            checklist: generalchecklist[0],
-            gallery: eventphoto[0]
+            checklist,
+            gallery
         }
         
         return { status: 200, success: true, data}

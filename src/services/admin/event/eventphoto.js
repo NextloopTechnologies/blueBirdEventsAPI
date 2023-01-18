@@ -26,6 +26,19 @@ export const read = async(whereClause={}) => {
     }
 };
 
+export const readForEvent = async(id) => {
+    try {
+        const eventphoto = await EventPhoto.findById(id)
+        .select(['-active','-createdAt','-updatedAt','-__v']);
+        if(!eventphoto) {
+            return { status: 404 , msgText: "EventPhoto does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, eventphoto}
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const update = async(id, values) => {
     try {
         const eventphoto = await EventPhoto.findByIdAndUpdate(id, values);

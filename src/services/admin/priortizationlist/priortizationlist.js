@@ -28,6 +28,21 @@ export const read = async({page, perPage, whereClause={}}) => {
     }
 };
 
+export const readForEvent = async({page, perPage, whereClause={}}) => {
+    try {
+        const priortizationlist = await PriortizationList.find(whereClause)
+        .select(['-active','-createdAt','-updatedAt','-__v'])
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
+        if(!priortizationlist.length > 0) {
+            return { status: 404 , msgText: "PriortizationList does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, priortizationlist}
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const update = async(id, values) => {
     try {
         const priortizationlist = await PriortizationList.findByIdAndUpdate(id, values);
