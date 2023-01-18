@@ -57,7 +57,7 @@ const eventValidation = Joi.object({
             menu: Joi.array().items({
                 _id: false,
                 file: String
-            }),
+            }).required(),
             serve_date: Joi.date().min(todaysDate).required(),
             serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
             .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
@@ -75,12 +75,12 @@ const eventValidation = Joi.object({
             decor_img: Joi.array().items({
                 _id: false,
                 file: String
-            }),
+            }).required(),
             decor_remark: Joi.string().min(3),
             decor_date: Joi.date().min(todaysDate).required(),
             expected_decor_time: Joi.string()
         })
-    }),
+    }).required(),
     ghms: Joi.object({
         guestlist: Joi.array().items({
             _id: Joi.string(),
@@ -167,7 +167,7 @@ const eventValidation = Joi.object({
             generalchecklist_text: Joi.string().min(3),
             generalchecklist_date: Joi.date().min(todaysDate),
         })
-    }),
+    }).required(),
     gallery: Joi.object({
         _id: Joi.string(),
         event_id: Joi.string(),
@@ -177,7 +177,7 @@ const eventValidation = Joi.object({
         ep_img: Joi.array().items({
             _id: false,
             file: String
-        })
+        }).required()
     }),
 });
 
