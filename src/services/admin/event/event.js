@@ -90,9 +90,9 @@ export const readSingle = async(page, perPage, _id) => {
         const { ghmslostfound: lostandfound } = await ghmsLostFoundService.readForEvent({ page, perPage, whereClause });
         const { roomallotment } = await roomAllotmentService.readForEvent({ page, perPage, whereClause });  
         const { priortizationlist: priortization } = await priortizationListService.readForEvent({ page, perPage, whereClause });     
-        const { generalchecklist: checklist } = await generalChecklistService.readForEvent(_id);     
-        const { eventphoto: gallery } = await eventPhotoService.readForEvent(_id);     
-    
+        const { generalchecklist: checklist } = await generalChecklistService.readForEvent(whereClause);     
+        const { eventphoto: gallery } = await eventPhotoService.readForEvent(whereClause);     
+        
         const data = {
             event,
             ghms: {

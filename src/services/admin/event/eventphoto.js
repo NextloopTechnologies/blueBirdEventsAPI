@@ -26,9 +26,9 @@ export const read = async(whereClause={}) => {
     }
 };
 
-export const readForEvent = async(id) => {
+export const readForEvent = async(whereClause) => {
     try {
-        const eventphoto = await EventPhoto.findById(id)
+        const eventphoto = await EventPhoto.findOne(whereClause)
         .select(['-active','-createdAt','-updatedAt','-__v']);
         if(!eventphoto) {
             return { status: 404 , msgText: "EventPhoto does not exists!" ,success: false }

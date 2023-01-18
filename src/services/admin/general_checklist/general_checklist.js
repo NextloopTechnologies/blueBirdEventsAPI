@@ -27,9 +27,9 @@ export const read = async({page, perPage, whereClause={}}) => {
     }
 };
 
-export const readForEvent = async(id) => {
+export const readForEvent = async(whereClause) => {
     try {
-        const generalchecklist = await GeneralChecklist.findById(id)
+        const generalchecklist = await GeneralChecklist.findOne(whereClause)
         .select(['-active','-createdAt','-updatedAt','-__v']);
         if(!generalchecklist) {
             return { status: 404 , msgText: "GeneralChecklist does not exists!" ,success: false }
