@@ -21,7 +21,6 @@ router.get('', auth, checkPermission('manage-deployedfreelancer'), async(req, re
 });
 
 const freelancerAssignedEventValidation = Joi.object({
-    client_id: Joi.string().required(),
     event_id: Joi.string().required(),
     freelancer_id: Joi.string().required(),
     department_type: Joi.string().required(),

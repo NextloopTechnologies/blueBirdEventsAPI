@@ -14,7 +14,7 @@ export const create = async(values) => {
 export const read = async({page, perPage, whereClause={}}) => {
     try {
         const freelancerassignedevent = await FreelancerAssignedEvent.find(whereClause)
-        .populate([{path: 'client_id', select: 'name'},
+        .populate([
         {path: 'event_id', select: 'event_title'},
         {path: 'freelancer_id', select: 'name'}])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))

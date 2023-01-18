@@ -30,7 +30,7 @@ const ghmsGuestlistValidation = Joi.object({
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
     guest_add: Joi.string().min(3).required(),
     guest_outstation: Joi.string().valid('Local','Outstation').required(),
-    guest_invited: Joi.string().valid('Individual','Family'),
+    guest_invited: Joi.string().valid('Individual','Family').required(),
     guest_expected_nos: Joi.number(),
     guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
     guest_date_of_arrival: Joi.date().min(todaysDate),

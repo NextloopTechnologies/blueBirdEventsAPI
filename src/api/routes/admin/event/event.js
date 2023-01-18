@@ -95,7 +95,7 @@ const eventValidation = Joi.object({
             guest_invited: Joi.string().valid('Individual','Family').required(),
             guest_expected_nos: Joi.number(),
             guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
-            guest_date_of_arrival: Joi.date().min(todaysDate).required(),
+            guest_date_of_arrival: Joi.date().min(todaysDate)
         }),
         arrival: Joi.array().items({
             _id: Joi.string(),

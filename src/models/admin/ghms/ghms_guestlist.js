@@ -36,7 +36,8 @@ const ghmsGuestlistSchema = new Schema({
     required: true
   },
   guest_invited: {
-    type: String
+    type: String,
+    required: true
   },
   guest_expected_nos: {
     type: Number
