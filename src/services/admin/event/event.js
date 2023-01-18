@@ -195,6 +195,17 @@ export const update = async(id, values) => {
     }
 };
 
+export const updateSingleEvent = async(id, values) => {
+    try {
+        const event = await Event.findByIdAndUpdate(id, values);
+        if(!event) {
+            return { status: 404 , msgText: "Event does not exists!" ,success: false }
+        }  
+        return { status: 200, msgText: 'Updated Successfully! ',success: true}
+    } catch (error) {
+        throw error;
+    }
+};
 export const remove = async(_id)=> {
     try {
         const event = await Event.findOneAndDelete({ _id }); 

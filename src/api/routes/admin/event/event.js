@@ -245,6 +245,74 @@ router.post('/update/:id', auth, checkPermission('update-event'), requestValidat
     }
 });
 
+const singleEventValidation = Joi.object({
+    client_id: Joi.string().required(),
+    event_type: Joi.string().required(),
+    event_title: Joi.string().min(3).trim().required(),
+    event_descp: Joi.string().min(3),
+    event_start_date: Joi.date().min(todaysDate).required(),
+    event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
+    event_remark: Joi.string().min(3),
+    // hotel //
+    hotels: Joi.array().items({
+        hotel_id: Joi.string(),
+        hotel_rooms_required: Joi.array().items({
+            floor_no: Joi.number().required(),
+            room_nos: Joi.array().required()
+        })
+    }), 
+    // vendors //
+    event_vendors : Joi.array().items({
+        vendor_id: Joi.string().required(),
+        scope_of_work: Joi.string().min(3),
+        due_amount: Joi.string(),
+        paid_amount: Joi.string(),
+        total_package: Joi.string(),
+        arriving_time: Joi.string()
+    }),
+    // food bev
+    event_foodbev: Joi.array().items({
+        food_type: Joi.string().required(),
+        menu: Joi.array().items({
+            _id: false,
+            file: String
+        }).required(),
+        serve_date: Joi.date().min(todaysDate).required(),
+        serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
+        .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
+        serve_end_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
+        .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
+        plates_guaranteed: Joi.string().trim(),
+        plates_added: Joi.string().trim(),
+        plates_remaining: Joi.string().trim(),
+        plates_used: Joi.string().trim()
+    }),
+   
+    // vendor prod //
+    event_proddecor: Joi.array().items({
+        decor_title: Joi.string().min(3).required(),
+        decor_img: Joi.array().items({
+            _id: false,
+            file: String
+        }).required(),
+        decor_remark: Joi.string().min(3),
+        decor_date: Joi.date().min(todaysDate).required(),
+        expected_decor_time: Joi.string()
+    }),
+    id: Joi.string()
+})
+
+router.post('/update_single_event/:id', auth, checkPermission('update-event'), requestValidator(singleEventValidation), async(req, res) => {
+    try {
+        const { status, ...data} = await eventService.updateSingleEvent(req.params.id,req.values);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
 router.post('/uploadfiles', auth, checkPermission('create-event'), fileUploads('img_files'), async(req, res) => {
     try {
         if(!req.files) {

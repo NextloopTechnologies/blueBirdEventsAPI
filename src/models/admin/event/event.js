@@ -56,7 +56,7 @@ const eventSchema = new Schema({
             required: true,
             ref: 'Vendor'
         },
-        vendor_scope_of_work: {type: String, minlength: 3},
+        scope_of_work: {type: String, minlength: 3},
         arriving_time: String,
         total_package: String,
         paid_amount: String,
