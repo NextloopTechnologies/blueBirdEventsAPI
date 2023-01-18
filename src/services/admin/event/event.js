@@ -81,6 +81,16 @@ export const readSingle = async(page, perPage, _id) => {
 
         if(!event) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
+        } else {
+            if(event.event_vendors.length === 0){
+                event.event_vendors = undefined
+            }
+            if(event.event_foodbev.length === 0){
+                event.event_foodbev = undefined
+            }
+            if(event.event_proddecor.length === 0){
+                event.event_proddecor = undefined
+            }
         }
 
         const whereClause = { event_id: _id };
@@ -93,15 +103,22 @@ export const readSingle = async(page, perPage, _id) => {
         const { generalchecklist: checklist } = await generalChecklistService.readForEvent(whereClause);     
         const { eventphoto: gallery } = await eventPhotoService.readForEvent(whereClause);     
         
-        const data = {
-            event,
-            ghms: {
+        let ghms;
+        if(!guestlist && !arrival && !departure && !lostandfound && !roomallotment){
+            ghms = undefined;
+        } else {
+            ghms = {
                 guestlist,
                 arrival,
                 departure,
                 lostandfound,
                 roomallotment
-            },
+            }
+        }
+
+        const data = {
+            event,
+            ghms,
             priortization,
             checklist,
             gallery

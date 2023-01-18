@@ -26,6 +26,7 @@ const eventValidation = Joi.object({
     id: Joi.string(),
 
     event: Joi.object({
+        _id: Joi.string(),
         client_id: Joi.string().required(),
         event_type: Joi.string().required(),
         event_title: Joi.string().min(3).trim().required(),
@@ -70,7 +71,7 @@ const eventValidation = Joi.object({
        
         // vendor prod //
         event_proddecor: Joi.array().items({
-            decor_title: Joi.string().min(3),
+            decor_title: Joi.string().min(3).required(),
             decor_img: Joi.array().items({
                 _id: false,
                 file: String
@@ -169,7 +170,6 @@ const eventValidation = Joi.object({
     }),
     gallery: Joi.object({
         _id: Joi.string(),
-        client_id: Joi.string(),
         event_id: Joi.string(),
         event_date: Joi.date(),
         ep_title: Joi.string().min(3).required(),
@@ -185,7 +185,6 @@ router.post('/create', auth, checkPermission('create-event'), requestValidator(e
     try {
         const { status, ...data } = await eventService.create(req.values);
         res.status(status).send(data);
-        // res.send('success');
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
