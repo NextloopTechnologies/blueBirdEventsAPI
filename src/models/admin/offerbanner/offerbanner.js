@@ -32,6 +32,9 @@ const offerBannerSchema = new Schema({
         type: String,
         required: true
     },
+    filename : {
+        type: String
+    },
     discount: {
         type: String,
         required: true

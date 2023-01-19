@@ -106,16 +106,22 @@ export const getSingleObjFileUrl = async(files, imageKey, fileCount=2) => {
     }
 };
 
-export const getFilename = (values, imageKey) => {
-    if(values.length > 0){
-        for(const file of values){
-            for(const innerFile of file[imageKey]) {
+export const getFilename = (values, imageKey, fileCount=2) => {
+    if(fileCount === 2){
+        if(values.length > 0){
+            for(const file of values){
+                for(const innerFile of file[imageKey]) {
+                    innerFile.filename = innerFile.file;
+                }
+            }
+        } else {
+            for(const innerFile of values[imageKey]) {
                 innerFile.filename = innerFile.file;
             }
         }
     } else {
-        for(const innerFile of values[imageKey]) {
-            innerFile.filename = innerFile.file;
+        for(const innerFile of values) {
+            innerFile.filename = innerFile[imageKey];
         }
     }
     return values;

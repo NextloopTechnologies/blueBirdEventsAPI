@@ -57,6 +57,7 @@ router.get('/read/:id', auth, checkPermission('read-offerbanner'),  async (req, 
         const _id = req.params.id;
         const { status, ...data} = await offerBannerService.read({whereClause:{_id}});
         if(data.offerbanner){
+            data.offerbanner = fileService.getFilename(data.offerbanner,'banner_img',1);
             data.offerbanner = await fileService.getFileUrl(data.offerbanner,'banner_img',1);
         }
         res.status(status).send(data);

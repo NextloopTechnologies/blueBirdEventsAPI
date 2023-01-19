@@ -51,6 +51,7 @@ router.get('/read/:id', async (req, res)=> {
         const _id = req.params.id;
         const { status, ...data} = await eventPhotoService.read({_id});
         if(data.eventphoto){
+            data.eventphoto = fileService.getFilename(data.eventphoto,'ep_img');
             data.eventphoto = await fileService.getFileUrl(data.eventphoto,'ep_img');
         }
         res.status(status).send(data);

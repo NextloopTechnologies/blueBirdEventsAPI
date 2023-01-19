@@ -36,6 +36,9 @@ const freelancerSchema = new Schema({
       type: String,
       required: true
     },
+    filename : {
+      type: String
+    },
     tshirt_size: {
       type: String,
       required: true,

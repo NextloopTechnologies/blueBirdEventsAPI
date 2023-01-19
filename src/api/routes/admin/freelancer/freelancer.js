@@ -62,6 +62,7 @@ router.get('/read/:id', auth, checkPermission('read-freelancer'), async (req, re
         const _id = req.params.id;
         const { status, ...data} = await freelancerService.read({whereClause:{_id}});
         if(data.freelancer) {
+            data.freelancer = fileService.getFilename(data.freelancer,'pass_size_pic',1);
             data.freelancer = await fileService.getFileUrl(data.freelancer,'pass_size_pic',1);
         }
         res.status(status).send(data);
