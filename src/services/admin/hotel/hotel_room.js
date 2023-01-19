@@ -2,8 +2,10 @@ import { HotelRoom } from '../../../models';
 
 export const create = async(values) => {
     try {
-        const hotelroom = new HotelRoom(values);
-        await hotelroom.save();
+        // const hotelroom = new HotelRoom(values);
+        // await hotelroom.save();
+        const hotelroom =  await HotelRoom.insertMany(values);
+        // console.log(values);
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, hotelroom }
     } catch (error) {

@@ -16,7 +16,8 @@ const hotelRoomSchema = new Schema({
     },
     room_type: {
       type: String,
-      minlength: 3
+      minlength: 3,
+      default: 'Standard'
     },
     booked_from: {
       type: Date
