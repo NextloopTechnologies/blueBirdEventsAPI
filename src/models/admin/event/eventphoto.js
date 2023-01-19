@@ -22,7 +22,8 @@ const eventPhotoSchema = new Schema({
     },
     ep_img: [{
         _id: false,
-        file: String
+        file: String,
+        filename: String
     }],
     active: {
         type: Boolean,

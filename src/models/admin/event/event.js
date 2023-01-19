@@ -71,7 +71,8 @@ const eventSchema = new Schema({
         },
         menu: [{
             _id: false,
-            file: String
+            file: String,
+            filename: String
         }],
         serve_date: {
             type: Date,
@@ -95,7 +96,8 @@ const eventSchema = new Schema({
         decor_title: {type: String, minlength: 3},
         decor_img: [{
             _id: false,
-            file: String
+            file: String,
+            filename: String
         }],
         decor_date: Date,
         expected_decor_time: String,

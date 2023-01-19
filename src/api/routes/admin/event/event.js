@@ -214,18 +214,20 @@ router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> 
         // }
         if(data.data){
             if(data.data.event.event_foodbev){
+                data.data.event.event_foodbev = fileService.getFilename(data.data.event.event_foodbev, 'menu');
                 data.data.event.event_foodbev = await fileService.getFileUrl(data.data.event.event_foodbev,'menu');
             }
     
             if(data.data.event.event_proddecor){
+                data.data.event.event_proddecor = fileService.getFilename(data.data.event.event_proddecor,'decor_img');
                 data.data.event.event_proddecor = await fileService.getFileUrl(data.data.event.event_proddecor,'decor_img');
             }
     
             if(data.data.gallery){
+                data.data.gallery = fileService.getFilename(data.data.gallery,'ep_img');
                 data.data.gallery = await fileService.getSingleObjFileUrl(data.data.gallery,'ep_img');
             }
         }
-    
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
