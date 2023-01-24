@@ -44,7 +44,18 @@ const eventSchema = new Schema({
             floor_no: Number,
             room_nos: [{
                 _id: false,
-                type: String
+                room_no: {
+                    type: Number,
+                    required: true
+                },
+                hotel_room_id: {
+                    type: Number,
+                    required: true
+                },
+                isBooked: {
+                    type: Number,
+                    required: true
+                }
             }]
         }],
     }],

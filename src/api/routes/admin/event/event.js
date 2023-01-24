@@ -39,7 +39,11 @@ const eventValidation = Joi.object({
             hotel_id: Joi.string(),
             hotel_rooms_required: Joi.array().items({
                 floor_no: Joi.number().required(),
-                room_nos: Joi.array().required()
+                room_nos: Joi.array().items({
+                    room_no: Joi.number().required(),
+                    hotel_room_id: Joi.number().required(),
+                    isBooked: Joi.boolean().required()
+                })
             })
         }), 
         // vendors //
@@ -87,7 +91,7 @@ const eventValidation = Joi.object({
             client_id: Joi.string(),
             event_id: Joi.string(),
             guest_name: Joi.string().min(3).required().trim(),
-            guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
+            guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
             guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
             .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
             guest_add: Joi.string().min(3).required(),

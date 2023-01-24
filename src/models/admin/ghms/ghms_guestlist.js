@@ -23,7 +23,6 @@ const ghmsGuestlistSchema = new Schema({
   },
   guest_email: {
     type: String,
-    required: true,
     trim: true,
   },
   guest_add: {
