@@ -1,9 +1,27 @@
-import { RoomAllotment } from '../../../models';
+import { Event, RoomAllotment } from '../../../models';
 
 export const create = async(values) => {
     try {
         const roomallotment = new RoomAllotment(values);
         await roomallotment.save();
+        await Event.updateOne({
+            client_id: values.client_id,
+            _id: values.event_id,
+            'hotels.hotel_rooms_required.hotel_room_id': values.hotel_room_id
+        }, 
+        {
+            $set: {
+                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': true
+            },
+        },
+        {
+            arrayFilters: [
+                {
+                    "room.hotel_room_id": values.hotel_room_id
+                }
+            ]
+        }
+        )
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, roomallotment }
     } catch (error) {
@@ -48,6 +66,24 @@ export const readForEvent = async({page, perPage, whereClause={}}) => {
 export const update = async(id, values) => {
     try {
         const roomallotment = await RoomAllotment.findByIdAndUpdate(id, values);
+        await Event.updateOne({
+            client_id: values.client_id,
+            _id: values.event_id,
+            'hotels.hotel_rooms_required.hotel_room_id': values.hotel_room_id
+        }, 
+        {
+            $set: {
+                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': true
+            },
+        },
+        {
+            arrayFilters: [
+                {
+                    "room.hotel_room_id": values.hotel_room_id
+                }
+            ]
+        }
+        )
         if(!roomallotment) {
             return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
         }  
