@@ -49,7 +49,7 @@ const eventSchema = new Schema({
                     required: true
                 },
                 hotel_room_id: {
-                    type: Number,
+                    type: Schema.Types.ObjectId,
                     required: true
                 },
                 isBooked: {
