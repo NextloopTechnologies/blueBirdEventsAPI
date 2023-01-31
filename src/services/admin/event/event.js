@@ -65,6 +65,21 @@ export const readAll = async({page, perPage, whereClause={}}) => {
         .select(['event_type','event_title','event_start_date','event_end_date'])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
+        
+        if(!event.length > 0) {
+            return { status: 404 , msgText: "Event does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, event}
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const readCoordinator = async(id) => {
+    try {
+        let coordinator_ids = [];
+        coordinator_ids.push(id);
+        const event = await Event.find({ coordinator_ids: { $in: coordinator_ids }}) 
         if(!event.length > 0) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         }
@@ -83,7 +98,7 @@ export const readSingle = async(page, perPage, _id) => {
         // { path: 'event_vendors.vendor_id', select: ['vendor_name','vendor_work',
         // 'vendor_mobile','blacklisted','reason_for_blacklist']}
         // ]);
-
+        await roomAllotmentService.readGuest(event.hotels, event._id)
         if(!event) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         } else {

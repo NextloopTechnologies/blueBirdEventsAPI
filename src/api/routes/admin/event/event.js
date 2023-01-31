@@ -12,6 +12,7 @@ router.post('', async(req, res) => {
         const page = parseInt(req.query.p) || 1
         const perPage = parseInt (req.query.r) || 10
         const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
+        console.log(whereClause);
         const { status, ...data} = await eventService.readAll({ page, perPage, whereClause });
         res.status(status).send(data);
     } catch (error) {
@@ -233,6 +234,17 @@ router.get('/read/:id', auth, checkPermission('read-event'), async (req, res)=> 
                 data.data.gallery = await fileService.getSingleObjFileUrl(data.data.gallery,'ep_img');
             }
         }
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
+router.get('/coordinatorevent/:id', auth, checkPermission('read-event'), async (req, res)=> {
+    try {
+        const { status, ...data} = await eventService.readCoordinator(req.params.id);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);

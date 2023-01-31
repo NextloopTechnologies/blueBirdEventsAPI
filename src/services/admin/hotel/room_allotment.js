@@ -48,6 +48,26 @@ export const read = async({page, perPage, whereClause={}}) => {
     }
 };
 
+export const readGuest = async(hotels, event_id) => {
+    try {
+        
+        const roomallotment = await RoomAllotment.find(whereClause)
+        .populate([
+        {path: 'client_id', select: ['name']},
+        {path: 'event_id', select: ['event_title']},
+        {path: 'hotel_room_id', select: ['hotel_id','room_no','floor_no']},
+        {path: 'guest_id', select: ['guest_name','guest_mobile','guest_add','guest_email']}])
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
+        if(!roomallotment.length > 0) {
+            return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, roomallotment}
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const readForEvent = async({page, perPage, whereClause={}}) => {
     try {
         const roomallotment = await RoomAllotment.find(whereClause)
