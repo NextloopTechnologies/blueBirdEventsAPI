@@ -7,6 +7,11 @@ const eventSchema = new Schema({
         required: true,
         ref: 'User'
     }, 
+    coordinator_ids: [{
+        _id: false,
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }], 
     event_type: {
         type: String,
         required: true

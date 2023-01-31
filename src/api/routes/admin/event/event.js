@@ -28,6 +28,7 @@ const eventValidation = Joi.object({
     event: Joi.object({
         _id: Joi.string(),
         client_id: Joi.string().required(),
+        coordinator_ids: Joi.array(),
         event_type: Joi.string().required(),
         event_title: Joi.string().min(3).trim().required(),
         event_descp: Joi.string().min(3),
@@ -253,6 +254,7 @@ router.post('/update/:id', auth, checkPermission('update-event'), requestValidat
 
 const singleEventValidation = Joi.object({
     client_id: Joi.string().required(),
+    coordinator_ids: Joi.array(),
     event_type: Joi.string().required(),
     event_title: Joi.string().min(3).trim().required(),
     event_descp: Joi.string().min(3),
