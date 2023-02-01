@@ -50,19 +50,40 @@ export const read = async({page, perPage, whereClause={}}) => {
 
 export const readGuest = async(hotels, event_id) => {
     try {
-        
-        const roomallotment = await RoomAllotment.find(whereClause)
-        .populate([
-        {path: 'client_id', select: ['name']},
-        {path: 'event_id', select: ['event_title']},
-        {path: 'hotel_room_id', select: ['hotel_id','room_no','floor_no']},
-        {path: 'guest_id', select: ['guest_name','guest_mobile','guest_add','guest_email']}])
-        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
-        .limit(perPage);
-        if(!roomallotment.length > 0) {
-            return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
-        }
-        return { status: 200, success: true, roomallotment}
+        let hotel_room_ids=[];
+        for(const hotel of hotels) {
+            for (const hotelroom of hotel.hotel_rooms_required) {
+                for (const roomnos of hotelroom.room_nos) {
+                    if(roomnos.isBooked === 1){
+                        hotel_room_ids.push({'hotel_room_id': roomnos.hotel_room_id, event_id});
+                    } else {
+                        roomnos.guestDetails = undefined;
+                    }
+                }
+            }
+        };
+        if(hotel_room_ids.length > 0){
+            const guestDetails = await Promise.all(hotel_room_ids.map(async(hotel_room_id) => {
+                return await RoomAllotment.findOne(hotel_room_id)
+                .populate('guest_id','-_id -client_id -event_id -guest_outstation -guest_invited -guest_expected_nos -guest_invitation_type -__v -createdAt -updatedAt')
+            }));
+            if(guestDetails.length > 0){
+                for(const hotel of hotels) {
+                    for (const hotelroom of hotel.hotel_rooms_required) {
+                        for (const roomnos of hotelroom.room_nos) {
+                            for (const guest of guestDetails) {
+                                if(guest){
+                                    if(roomnos.hotel_room_id.equals(guest.hotel_room_id)){
+                                        roomnos.guestDetails = guest.guest_id;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+        };
+        return hotels;
     } catch (error) {
         throw error;
     }
