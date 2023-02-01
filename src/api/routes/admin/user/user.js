@@ -92,7 +92,6 @@ const userUpdateValidation = Joi.object({
     mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
     role_id: Joi.string().required(),
-    event_ids: Joi.array(),
     id: Joi.string()
 });
 

@@ -9,7 +9,6 @@ import {
     priortizationListService, 
     roomAllotmentService 
 } from '../..';
-import mongoose from 'mongoose';
 
 export const create = async(values) => {
     try {
@@ -28,10 +27,6 @@ export const create = async(values) => {
                     guest.event_id = event._id
                 });
                 await GHMSGuestList.insertMany(values.ghms.guestlist);
-            }
-
-            if(event.coordinator_ids.length > 0){
-                await updateEventIds(event.coordinator_ids, event._id);
             }
 
             if(values.priortization){
@@ -158,10 +153,7 @@ export const update = async(id, values) => {
     try {
 
         if(values.event){
-            const event = await Event.findByIdAndUpdate(id, values.event, { returnDocument: 'after' });
-            if(event.coordinator_ids.length > 0){
-                await updateEventIds(event.coordinator_ids, event._id);
-            }
+            const event = await Event.findByIdAndUpdate(id, values.event);
             if(!event) {
                 return { status: 404 , msgText: "Event does not exists!" ,success: false }
             }
@@ -224,9 +216,6 @@ export const update = async(id, values) => {
 export const updateSingleEvent = async(id, values) => {
     try {
         const event = await Event.findByIdAndUpdate(id, values, { returnDocument: 'after' });
-        if(event.coordinator_ids.length > 0){
-            await updateEventIds(event.coordinator_ids, event._id);
-        }
         if(!event) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         }  
@@ -236,15 +225,15 @@ export const updateSingleEvent = async(id, values) => {
     }
 };
 
-export const updateEventIds = async(ids, event_id) => {
-    const users = await Promise.all(ids.map(async(id) => await User.findById(id)))
-    const event_ids = mongoose.Types.ObjectId(event_id);
-    const updatedUsersEvents = await Promise.all(users.map(async(user) => {
-        user.event_ids.push(event_ids);
-        return await user.save();
-    }))
-    return updatedUsersEvents;
-};
+// export const updateEventIds = async(ids, event_id) => {
+//     const users = await Promise.all(ids.map(async(id) => await User.findById(id)))
+//     const event_ids = mongoose.Types.ObjectId(event_id);
+//     const updatedUsersEvents = await Promise.all(users.map(async(user) => {
+//         user.event_ids.push(event_ids);
+//         return await user.save();
+//     }))
+//     return updatedUsersEvents;
+// };
 
 export const remove = async(_id)=> {
     try {

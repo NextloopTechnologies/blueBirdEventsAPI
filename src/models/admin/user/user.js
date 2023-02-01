@@ -31,11 +31,6 @@ const userSchema = new Schema({
         required: true,
         ref: 'Role'
     },
-    event_ids: [{
-        _id: false,
-        type: Schema.Types.ObjectId,
-        ref: 'Event'
-    }], 
     tokens: [{
         token: {
             type: String,
