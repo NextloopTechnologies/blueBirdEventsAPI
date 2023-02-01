@@ -12,7 +12,6 @@ router.post('', async(req, res) => {
         const page = parseInt(req.query.p) || 1
         const perPage = parseInt (req.query.r) || 10
         const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
-        console.log(whereClause);
         const { status, ...data} = await eventService.readAll({ page, perPage, whereClause });
         res.status(status).send(data);
     } catch (error) {
