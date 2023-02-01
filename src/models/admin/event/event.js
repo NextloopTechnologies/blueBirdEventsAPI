@@ -60,7 +60,16 @@ const eventSchema = new Schema({
                 isBooked: {
                     type: Number,
                     required: true
-                }
+                },
+                guestDetails: [{
+                    _id: false,
+                    guest_name: String,
+                    guest_mobile: String,
+                    guest_email: String,
+                    guest_add: String,
+                    guest_date_of_arrival: Date,
+                    
+                }]
             }]
         }],
     }],

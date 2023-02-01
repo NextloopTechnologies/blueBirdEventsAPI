@@ -63,13 +63,15 @@ export const getFileUrl = async(files, imageKey, fileCount=2) => {
         } else {
             for(const file of files){
                 for(const innerFile of file[imageKey]) {
-                    const getObjectParams = {
-                        Bucket: config.AWS_BN,
-                        Key: innerFile.file
+                    if(innerFile.file){
+                        const getObjectParams = {
+                            Bucket: config.AWS_BN,
+                            Key: innerFile.file
+                        }
+                        const command = new GetObjectCommand(getObjectParams);
+                        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+                        innerFile.file = url;
                     }
-                    const command = new GetObjectCommand(getObjectParams);
-                    const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-                    innerFile.file = url;
                 }
             }
         }
@@ -91,13 +93,15 @@ export const getSingleObjFileUrl = async(files, imageKey, fileCount=2) => {
             files[imageKey] = url;
         } else {
             for(const innerFile of files[imageKey]) {
-                const getObjectParams = {
-                    Bucket: config.AWS_BN,
-                    Key: innerFile.file
+                if(innerFile.file){
+                    const getObjectParams = {
+                        Bucket: config.AWS_BN,
+                        Key: innerFile.file
+                    }
+                    const command = new GetObjectCommand(getObjectParams);
+                    const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+                    innerFile.file = url;
                 }
-                const command = new GetObjectCommand(getObjectParams);
-                const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-                innerFile.file = url;
             }   
         }
         return files 
