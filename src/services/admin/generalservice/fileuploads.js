@@ -112,15 +112,19 @@ export const getSingleObjFileUrl = async(files, imageKey, fileCount=2) => {
 
 export const getFilename = (values, imageKey, fileCount=2) => {
     if(fileCount === 2){
-        if(values.length > 0){
+        if(values.length > 0){                  // if files are nested in array of objects
             for(const file of values){
                 for(const innerFile of file[imageKey]) {
-                    innerFile.filename = innerFile.file;
+                    if(innerFile.file){
+                        innerFile.filename = innerFile.file;
+                    }
                 }
             }
-        } else {
+        } else {                                // if files are from single object i.e gallery
             for(const innerFile of values[imageKey]) {
-                innerFile.filename = innerFile.file;
+                if(innerFile.filename){
+                    innerFile.filename = innerFile.file;
+                }
             }
         }
     } else {
