@@ -19,14 +19,14 @@ export const sendWelcomeEmail = (email, name, password) => {
 export const sendForgotPasswordEmail = (id, name, email, resetToken) => {
   client.sendEmail({
     "From": 'skhan@nextlooptechnologies.com',
-    "To": 'skhan@nextlooptechnologies.com',  // replace with email
+    "To": email,  // replace with email
     "Subject": 'Forgot Password Request',
     "HtmlBody": `<p>Hi ${name}, </p>
           <p>You requested to reset password</p>
           <p> Please, click the link below to reset password </p>
-          <a href="https://blue-bird-events-blue-bird-events.vercel.app/passwordReset?token=${resetToken}&id=${id}">Reset Password</a>`
+          <a href="https://www.bluebirdevents.co.in/passwordReset?token=${resetToken}&id=${id}">Reset Password</a>`
   }).then(() => {
-    console.log("ForGot Password Email Sent");
+    console.log("ForGot Password Email Sent", email);
   }).catch((error) => {
     console.log("From forgot email service ",error)
   });

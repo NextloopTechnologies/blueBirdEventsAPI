@@ -77,8 +77,7 @@ export const forgotPasswordRequest = async(email) => {
             return { status: 401 , msgText: "User mail not found!", success: false }
         }
         const resetToken = sign ({email: user.email}, config.JWT, { expiresIn: '5m'} );
-        // emailService.sendForgotPasswordEmail(user._id, user.name, email, resetToken);
-        console.log("form service ", resetToken);
+        emailService.sendForgotPasswordEmail(user._id, user.name, email, resetToken);
         return { status: 200, msgText: 'Reset password request sent to your mail!',success: true}
     } catch (error) {
         throw error;
