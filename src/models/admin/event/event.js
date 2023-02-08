@@ -76,10 +76,28 @@ const eventSchema = new Schema({
     // event vendor //
     event_vendors: [{
         _id: false,
-        vendor_id: {
-            type: Schema.Types.ObjectId,
+        vendor_name: {
+            type: String,
             required: true,
-            ref: 'Vendor'
+            trim: true,
+            minlenght: 3
+        },
+        vendor_work: {
+            type: String,
+            required: true,
+            minlenght: 3
+        },
+        vendor_mobile: {
+            type: Number,
+            required: true  
+        },
+        reason_for_blacklist: {
+            type: String,
+            minlenght: 3
+        },
+        blacklisted: {
+            type: Boolean,
+            default: false
         },
         scope_of_work: {type: String, minlength: 3},
         arriving_time: String,
