@@ -287,7 +287,12 @@ const singleEventValidation = Joi.object({
     }), 
     // vendors //
     event_vendors : Joi.array().items({
-        vendor_id: Joi.string().required(),
+        vendor_name: Joi.string().min(3).required().trim(),
+        vendor_work: Joi.string().min(3).required(),
+        vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
+        .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+        reason_for_blacklist: Joi.string().min(3),
+        blacklisted: Joi.boolean(),
         scope_of_work: Joi.string().min(3),
         due_amount: Joi.string(),
         paid_amount: Joi.string(),
