@@ -17,16 +17,16 @@ export const prepareTextMessage = ({
   }
 }
 
-export const prepareTempTextMessage = ({recipientMobileNumber, message }) => {
+export const prepareTempTextMessage = ({ recipientMobileNumber }) => {
   return {
     messaging_product: "whatsapp",
     recipient_type: "individual",
     to: recipientMobileNumber,
     type: "template",
     template: {
-      name: "bbe-reminder-template",
+      name: "bluebirdevents_food",
       language: {
-        code: "en"
+        code: "en_US"
       },
       components: [
         {
@@ -34,7 +34,7 @@ export const prepareTempTextMessage = ({recipientMobileNumber, message }) => {
           parameters: [
             {
               type: "text",
-              text: message
+              text: "Dinner"
             }
           ] 
         }
@@ -48,7 +48,7 @@ export const sendMessage = async(body) => {
     method: 'post',
     body: JSON.stringify(body),
     headers: {
-      'Authorization': "Bearer EAALxx2nv6PYBAOX6vxxTmBRwFZBLnxJyLuUUuJ7877BPKAl4ArqKP8vuaJqbRjfWP1A6ZBnM0MdJDvYILxISuN2FoWJnUG1KC3GiLEtzfw5fVz7cGwDeMM2ZCSO4enL28f9RZBES8u9hp0mfXjGQ86mPrbapagtBJhVvRZBa9NmaYpfxwuIGMd6hXFF8XRtKZBo2Ie84kGbIlKNgvvzZCK9", 
+      'Authorization': "Bearer EAALxx2nv6PYBAELzW8wXXMFBJvv1ohpCuDTv5G92bk6Ke6DZBlVyeBf22JFs9hzYjE1nei8jkVTw0V1ykF7nGPYcYb1CH8r8glbewTOfgSn3OtWxJEpxcXGPZBUyuZAQbXmeCawT6EUcQoNJlQOtEZCfT6PWQqws3G3QQMmyKzROOFFCzEhzpbyYto5QZBiZCKf41Mmydlei1HfgN53qBI", 
       'Content-Type': 'application/json'
     }
   });

@@ -28,7 +28,7 @@ const ghmsGuestlistValidation = Joi.object({
     guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
     guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    guest_add: Joi.string().min(3).required(),
+    guest_add: Joi.string().min(3),
     guest_outstation: Joi.string().valid('Local','Outstation').required(),
     guest_invited: Joi.string().valid('Individual','Family').required(),
     guest_expected_nos: Joi.number(),
@@ -56,7 +56,7 @@ const ghmsBulkGuestlistValidation = Joi.object({
         guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
         guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
         .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-        guest_add: Joi.string().min(3).required(),
+        guest_add: Joi.string().min(3),
         guest_outstation: Joi.string().valid('Local','Outstation').required(),
         guest_invited: Joi.string().valid('Individual','Family'),
         guest_expected_nos: Joi.number(),

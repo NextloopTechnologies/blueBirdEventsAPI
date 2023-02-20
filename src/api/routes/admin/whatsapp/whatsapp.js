@@ -8,7 +8,7 @@ const router = new Router();
 router.post('/sendTextMessage', (req, res) => {
     const data = whatsappService.prepareTextMessage({
         messageType: "text",
-        recipientMobileNumber: '916389911001',
+        recipientMobileNumber: '919892252713',
         recipientType: "individual",
         message: 'Welcome to Blue Bird Event, Whatapps service node.js working'
     })
@@ -27,8 +27,7 @@ router.post('/sendTextMessage', (req, res) => {
 
 router.post('/sendTempTextMessage', (req, res) => {
     const data = whatsappService.prepareTempTextMessage({
-        recipientMobileNumber: '916389911001',
-        message: 'Welcome to Blue Bird Event, This is a template text message!'
+        recipientMobileNumber: '919892252713'
     })
     console.log('payload data: ', data);
     whatsappService.sendMessage(data).then(val => {

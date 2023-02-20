@@ -27,8 +27,7 @@ const ghmsGuestlistSchema = new Schema({
   },
   guest_add: {
     type: String,
-    minlength: 3,
-    required: true
+    minlength: 3
   },
   guest_outstation: {
     type: String,
