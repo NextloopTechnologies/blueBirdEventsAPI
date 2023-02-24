@@ -8,8 +8,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        minlenght: 3,
-        maxlength: 30
+        minlength: 3
     },
     mobile: {
         type: String
@@ -31,12 +30,6 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'Role'
-    },
-    otp: {
-        type: Number
-    },
-    otp_timeout: {
-        type: Date
     },
     tokens: [{
         token: {

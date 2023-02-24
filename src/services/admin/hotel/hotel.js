@@ -11,9 +11,11 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
-        const hotel = await Hotel.find(whereClause).sort({ _id: -1 });
+        const hotel = await Hotel.find(whereClause)
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!hotel.length > 0) {
             return { status: 404 , msgText: "Hotel does not exists!" ,success: false }
         }

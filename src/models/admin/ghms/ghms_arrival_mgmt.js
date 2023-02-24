@@ -6,10 +6,10 @@ const ghmsArrivalMgmtSchema = new Schema({
       required: true,
       ref: 'User'
     },
-    sub_event_id: {
+    event_id: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'SubEvent'
+      ref: 'Event'
     },
     guest_id: {
       type: Schema.Types.ObjectId,
@@ -43,11 +43,11 @@ const ghmsArrivalMgmtSchema = new Schema({
     },
     welcome_checklist: {
       type: String,
-      required: true
+      minlength: 3
     },
     special_note: {
       type: String,
-      required: true
+      minlength: 3
     },
     active: {
       type: Boolean,

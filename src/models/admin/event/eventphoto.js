@@ -1,10 +1,10 @@
 import { model, Schema } from "mongoose";
 
 const eventPhotoSchema = new Schema({
-    sub_event_id: {
+    event_id: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: 'SubEvent'
+        ref: 'Event'
     }, 
     event_date: {
         type: Date,
@@ -17,11 +17,13 @@ const eventPhotoSchema = new Schema({
     },
     ep_descp: {
         type: String,
+        minlength: 3,
         required: true
     },
     ep_img: [{
         _id: false,
-        file: String
+        file: String,
+        filename: String
     }],
     active: {
         type: Boolean,

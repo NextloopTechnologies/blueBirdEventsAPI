@@ -63,6 +63,37 @@ export const getFileUrl = async(files, imageKey, fileCount=2) => {
         } else {
             for(const file of files){
                 for(const innerFile of file[imageKey]) {
+                    if(innerFile.file){
+                        const getObjectParams = {
+                            Bucket: config.AWS_BN,
+                            Key: innerFile.file
+                        }
+                        const command = new GetObjectCommand(getObjectParams);
+                        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+                        innerFile.file = url;
+                    }
+                }
+            }
+        }
+        return files 
+    } catch (error) {
+        throw error;   
+    }
+};
+
+export const getSingleObjFileUrl = async(files, imageKey, fileCount=2) => {
+    try {
+        if(fileCount === 1) {
+            const getObjectParams = {
+                Bucket: config.AWS_BN,
+                Key: files[imageKey]
+            }
+            const command = new GetObjectCommand(getObjectParams);
+            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+            files[imageKey] = url;
+        } else {
+            for(const innerFile of files[imageKey]) {
+                if(innerFile.file){
                     const getObjectParams = {
                         Bucket: config.AWS_BN,
                         Key: innerFile.file
@@ -71,10 +102,36 @@ export const getFileUrl = async(files, imageKey, fileCount=2) => {
                     const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
                     innerFile.file = url;
                 }
-            }
+            }   
         }
         return files 
     } catch (error) {
         throw error;   
     }
-}
+};
+
+export const getFilename = (values, imageKey, fileCount=2) => {
+    if(fileCount === 2){
+        if(values.length > 0){                  // if files are nested in array of objects
+            for(const file of values){
+                for(const innerFile of file[imageKey]) {
+                    if(innerFile.file){
+                        innerFile.filename = innerFile.file;
+                    }
+                }
+            }
+        } else {                                // if files are from single object i.e gallery
+            for(const innerFile of values[imageKey]) {
+                if(innerFile.filename){
+                    innerFile.filename = innerFile.file;
+                }
+            }
+        }
+    } else {
+        for(const innerFile of values) {
+            innerFile.filename = innerFile[imageKey];
+        }
+    }
+    return values;
+};
+

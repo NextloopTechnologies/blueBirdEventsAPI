@@ -15,3 +15,10 @@ export const formatJoiData = (data) => {
     }, {});
     return { values: data.value, errors, isInValid };
 };
+
+const date = new Date();
+const curr_date = date.getDate().toString().padStart(2, "0");
+const curr_month = (date.getMonth() + 1).toString().padStart(2, "0");
+const curr_year = date.getFullYear();
+export const todaysDate = curr_year + "-" + curr_month + "-" + curr_date;;
+

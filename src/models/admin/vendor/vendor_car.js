@@ -1,37 +1,32 @@
 import { Schema, model } from "mongoose";
 
 const vendorCarSchema = Schema({
-  client_id: {
+  vendor_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'User'
+    ref: 'Vendor'
   },
-  sub_event_id: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'SubEvent'
-  },  
   car_model: {
     type: String,
     required: true,
     trim: true,
-    minlenght: 3,
-    maxlength: 30
+    minlength: 3
   },
   owner_name: {
     type: String,
     required: true,
     trim: true,
-    minlenght: 3,
-    maxlength: 30
+    minlength: 3
   },
   car_reg: {
-      type: String,
-      required: true
+    type: String,
+    minlength: 3,
+    required: true
   },
   car_number: {
     type: String,
-    required: true
+    required: true,
+    minlength: 3
   },
   car_type: {
     type: String,
@@ -41,12 +36,11 @@ const vendorCarSchema = Schema({
     type: String,
     required: true,
     trim: true,
-    minlenght: 3,
-    maxlength: 30
+    minlength: 3
   },
   driver_mobile: {
-      type: Number,
-      required: true
+    type: Number,
+    required: true
   },
   active: {
     type: Boolean,

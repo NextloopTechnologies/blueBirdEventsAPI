@@ -1,15 +1,18 @@
 import { Router } from "express";
 import { auth, checkPermission, requestValidator } from '../../../middlewares';
-import { priortizationListService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { priortizationListService, filterService } from "../../../../services";
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, checkPermission('manage-priortizationlist'),  async(req, res) => {
+router.post('', auth, checkPermission('manage-priortizationlist'),  async(req, res) => {
     try {
-        const { status, ...data} = await priortizationListService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await priortizationListService.read({ page, perPage, whereClause });
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PRIORTIZATIONLIST-READALL-CONTROLLER').error(error);
@@ -20,12 +23,10 @@ router.get('', auth, checkPermission('manage-priortizationlist'),  async(req, re
 
 const priortizationListValidation = Joi.object({
     client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
-    title: Joi.string().trim().required(),
-    descp: Joi.string().trim(),
-    deadline_date: Joi.date().greater('now').required().messages({
-      'date.greater': `"serve_date" should be greater than todays date`
-    }).required(),
+    event_id: Joi.string().required(),
+    title: Joi.string().min(3).trim().required(),
+    descp: Joi.string().min(3).trim(),
+    deadline_date: Joi.date().min(todaysDate).required(),
     contact: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
     id: Joi.string()
@@ -45,7 +46,7 @@ router.post('/create', auth, checkPermission('create-priortizationlist'), reques
 router.get('/read/:id', auth, checkPermission('read-priortizationlist'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await priortizationListService.read({_id});
+        const { status, ...data} = await priortizationListService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PRIORTIZATIONLIST-READ-CONTROLLER').error(error);

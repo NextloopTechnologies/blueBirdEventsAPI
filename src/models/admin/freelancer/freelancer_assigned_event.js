@@ -1,22 +1,17 @@
 import { model, Schema } from "mongoose";
 
 const freelancerAssignedEventSchema = new Schema({
-    client_id: {
+    event_id: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'User'
-    },
-    sub_event_id: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'SubEvent'
+      ref: 'Event'
     },
     freelancer_id: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'Freelancer'
     },
-    department: {
+    department_type: {
       type: String,
       required: true
     },

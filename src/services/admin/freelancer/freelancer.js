@@ -11,9 +11,11 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
-        const freelancer = await Freelancer.find(whereClause).sort({ _id: -1 });
+        const freelancer = await Freelancer.find(whereClause)
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!freelancer.length > 0) {
             return { status: 404 , msgText: "Freelancer does not exists!" ,success: false }
         }

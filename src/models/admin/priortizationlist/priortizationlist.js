@@ -6,20 +6,22 @@ const priortizationListSchema = Schema({
     required: true,
     ref: 'User'
   },
-  sub_event_id: {
+  event_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'SubEvent'
+    ref: 'Event'
   },  
   title: {
     type: String,
+    minlength: 3,
     required: true,
   },
   descp: {
-    type: String
+    type: String,
+    minlength: 3
   },
   contact: {
-    type: Number
+    type: String
   },
   deadline_date: {
     type: Date,

@@ -9,8 +9,10 @@ const router = new Router();
 
 router.get('', auth, checkPermission('manage-vendor'),  async(req, res) => {
     try {
-        const filterData = await filterService.clientOrCoordinatorPanel(req.body);
-        const { status, ...data} = await vendorService.read(filterData);
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await vendorService.read({page, perPage, whereClause});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_VENDOR-READALL-CONTROLLER').error(error);
@@ -20,18 +22,11 @@ router.get('', auth, checkPermission('manage-vendor'),  async(req, res) => {
 });
 
 const vendorValidation = Joi.object({
-    vendor_name: Joi.string().min(3).max(30).required().trim(),
-    vendor_work: Joi.string().required(),
+    vendor_name: Joi.string().min(3).required().trim(),
+    vendor_work: Joi.string().min(3).required(),
     vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    vendor_scope_of_work: Joi.string().min(5).required().trim(),
-    client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
-    total_package: Joi.string(),
-    arriving_time: Joi.string(),
-    paid_amount: Joi.string(),
-    due_amount: Joi.string(),
-    reason_for_blacklist: Joi.string(),
+    reason_for_blacklist: Joi.string().min(3),
     blacklisted: Joi.boolean(),
     id: Joi.string()
 });
@@ -50,7 +45,7 @@ router.post('/create', auth, checkPermission('create-vendor'),  requestValidator
 router.get('/read/:id', auth, checkPermission('read-vendor'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await vendorService.read({_id});
+        const { status, ...data} = await vendorService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_VENDOR-READ-CONTROLLER').error(error);

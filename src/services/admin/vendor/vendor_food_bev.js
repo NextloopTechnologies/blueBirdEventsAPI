@@ -11,12 +11,13 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
         const vendorfoodbev = await VendorFoodBev.find(whereClause)
         .populate([{path: 'client_id', select: ['name']},
-        {path: 'sub_event_id', select: ['subevent_title']}])
-        .sort({ _id: -1 });
+        {path: 'event_id', select: ['event_title']}])
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!vendorfoodbev.length > 0) {
             return { status: 404 , msgText: "VendorFoodBev does not exists!" ,success: false }
         }

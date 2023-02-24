@@ -11,13 +11,29 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
         const ghmslostfound = await GHMSLostFound.find(whereClause)
-        .populate([{path: 'sub_event_id', select: 'subevent_title'},
+        .populate([{path: 'event_id', select: 'event_title'},
         {path: 'guest_id', select: 'guest_name'},
         {path: 'client_id', select: 'name'}])
-        .sort({ _id: -1 });
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
+        if(!ghmslostfound.length > 0) {
+            return { status: 404 , msgText: "GHMSLostFound does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, ghmslostfound}
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const readForEvent = async({page, perPage, whereClause={}}) => {
+    try {
+        const ghmslostfound = await GHMSLostFound.find(whereClause)
+        .select(['-active','-createdAt','-updatedAt','-__v'])
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!ghmslostfound.length > 0) {
             return { status: 404 , msgText: "GHMSLostFound does not exists!" ,success: false }
         }
@@ -42,6 +58,15 @@ export const update = async(id, values) => {
 export const remove = async(ids)=> {
     try {
         await GHMSLostFound.deleteMany({"_id": { "$in" : ids}});
+        return { status: 200, msgText: 'Deleted Successfully!', success: true}
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const removeMultiple = async(event_id)=> {
+    try {
+        await GHMSLostFound.deleteMany({event_id});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

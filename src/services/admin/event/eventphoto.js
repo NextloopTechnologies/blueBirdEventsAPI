@@ -14,7 +14,7 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const eventphoto = await EventPhoto.find(whereClause)
-        .populate({path: 'sub_event_id', select: 'subevent_title'})
+        .populate({path: 'event_id', select: 'event_title'})
         .sort({ _id: -1 });
         if(!eventphoto.length > 0) {
             return { status: 404 , msgText: "EventPhoto does not exists!" ,success: false }
@@ -23,6 +23,19 @@ export const read = async(whereClause={}) => {
     } catch (error) {
         throw error;
 
+    }
+};
+
+export const readForEvent = async(whereClause) => {
+    try {
+        const eventphoto = await EventPhoto.findOne(whereClause)
+        .select(['-active','-createdAt','-updatedAt','-__v']);
+        if(!eventphoto) {
+            return { status: 404 , msgText: "EventPhoto does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, eventphoto}
+    } catch (error) {
+        throw error;
     }
 };
 

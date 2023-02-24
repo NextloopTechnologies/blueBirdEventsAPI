@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { auth, requestValidator,checkPermission } from '../../../middlewares';
 import { vendorFoodBevService } from "../../../../services";
-import { formatFormError } from '../../../../utils/helper';
+import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
 
@@ -9,7 +9,9 @@ const router = new Router();
 
 router.get('', auth, checkPermission('manage-vendorfoodbev'),  async(req, res) => {
     try {
-        const { status, ...data} = await vendorFoodBevService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await vendorFoodBevService.read({ page, perPage })
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_VENDORFOODBEV-READALL-CONTROLLER').error(error);
@@ -20,7 +22,7 @@ router.get('', auth, checkPermission('manage-vendorfoodbev'),  async(req, res) =
 
 const vendorFoodBevValidation = Joi.object({
     client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
+    event_id: Joi.string().required(),
     food_type: Joi.string().trim().required(),
     food_sub_type: Joi.string().trim().required(),
     dish_name: Joi.string().trim().required(),
@@ -28,9 +30,7 @@ const vendorFoodBevValidation = Joi.object({
     plates_added: Joi.string().trim(),
     plates_remaining: Joi.string().trim(),
     plates_used: Joi.string().trim(),
-    serve_date: Joi.date().greater('now').required().messages({
-      'date.greater': `"serve_date" should be greater than todays date`
-    }).required(),
+    serve_date: Joi.date().min(todaysDate).required(),
     serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
     .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
     serve_end_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
@@ -52,7 +52,7 @@ router.post('/create', auth, checkPermission('create-vendorfoodbev'),  requestVa
 router.get('/read/:id', auth, checkPermission('read-vendorfoodbev'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await vendorFoodBevService.read({_id});
+        const { status, ...data} = await vendorFoodBevService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_VENDORFOODBEV-READ-CONTROLLER').error(error);

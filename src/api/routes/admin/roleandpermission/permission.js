@@ -9,7 +9,9 @@ const router = new Router();
 
 router.get('', auth, checkPermission('manage-permission'),  async(req, res) => {
     try {
-        const { status, ...data} = await permissionService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await permissionService.read({ page, perPage });
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PERMISSION-READALL-CONTROLLER').error(error);
@@ -19,7 +21,7 @@ router.get('', auth, checkPermission('manage-permission'),  async(req, res) => {
 });
 
 const permValidation = Joi.object({
-    perm_name: Joi.string().min(4).max(60).trim().required(),
+    perm_name: Joi.string().min(3).trim().required(),
     id: Joi.string()
 });
 
@@ -37,7 +39,7 @@ router.post('/create', auth, checkPermission('create-permission'),  requestValid
 router.get('/read/:id', auth, checkPermission('read-permission'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await permissionService.read({_id});
+        const { status, ...data} = await permissionService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PERMISSION-READ-CONTROLLER').error(error);

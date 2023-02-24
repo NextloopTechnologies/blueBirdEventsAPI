@@ -3,10 +3,12 @@ import { model, Schema } from "mongoose";
 const hotelSchema = new Schema({
     hotel_name: {
         type: String,
+        minlength: 3,
         required: true
     }, 
     hotel_add: {
         type: String,
+        minlength: 3,
         required: true,
     }, 
     hotel_mob: {

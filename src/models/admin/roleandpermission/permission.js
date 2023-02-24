@@ -4,8 +4,7 @@ const permissionSchema = new Schema({
     perm_name: {
         type: String,
         required: true,
-        minlenght: 6,
-        maxlength: 60
+        minlenght: 3
     },
     active : {
         type: Boolean,

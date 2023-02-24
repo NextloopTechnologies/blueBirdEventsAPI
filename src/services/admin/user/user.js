@@ -12,7 +12,7 @@ export const create = async(values) => {
             return { status: 400 , msgText: 'Email already taken',success: false}
         }
         await user.save();
-        emailService.sendWelcomeEmail(user.email, user.name, user.password);
+        // emailService.sendWelcomeEmail(user.email, user.name, values.password);
         const token = await user.generateAuthToken();
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, user, token }
@@ -23,7 +23,8 @@ export const create = async(values) => {
 
 export const login = async(values) => {
     try {
-        const user = await User.findOne({email: values.email});
+        const user = await User.findOne({email: values.email})
+        .populate({ path: 'role_id', select: ['role_name']});
         if(!user) {
             return { status: 401 , msgText: "Wrong credentials, unable to login!" ,success: false }
         }
@@ -39,9 +40,12 @@ export const login = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
-        const user = await User.find(whereClause).sort({ _id: -1 });
+        const user = await User.find(whereClause)
+        .populate({ path: "role_id", select: ['role_name']})
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!user.length > 0) {
             return { status: 404 , msgText: "User does not exists!" ,success: false }
         }
@@ -74,8 +78,7 @@ export const forgotPasswordRequest = async(email) => {
         }
         const resetToken = sign ({email: user.email}, config.JWT, { expiresIn: '5m'} );
         emailService.sendForgotPasswordEmail(user._id, user.name, email, resetToken);
-        console.log("form service ", resetToken);
-        return { status: 200, msgText: 'OTP sent your mail!',success: true}
+        return { status: 200, msgText: 'Reset password request sent to your mail!',success: true}
     } catch (error) {
         throw error;
     }

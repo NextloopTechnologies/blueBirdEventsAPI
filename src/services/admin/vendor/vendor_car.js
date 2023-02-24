@@ -11,12 +11,12 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
         const vendorcar = await VendorCar.find(whereClause)
-        .populate([{path: 'client_id', select: ['name']},
-        {path: 'sub_event_id', select: ['subevent_title']}])
-        .sort({ _id: -1 });
+        .populate({path: 'vendor_id', select: ['vendor_name']})
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!vendorcar.length > 0) {
             return { status: 404 , msgText: "VendorCar does not exists!" ,success: false }
         }

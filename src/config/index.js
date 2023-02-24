@@ -10,5 +10,6 @@ export default {
     AWS_BN: process.env.AWS_BUCKET_NAME,
     AWS_AK: process.env.AWS_ACCESS_KEY,
     AWS_SK: process.env.AWS_SECRET_KEY,
+    PM_KEY: process.env.PM_SERVER_TOKEN_API,
     SG_KEY: process.env.SENDGRID_ACCESS
 };

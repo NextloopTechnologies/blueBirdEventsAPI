@@ -7,10 +7,12 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, checkPermission('manage-roomallotment'), async(req, res) => {
+router.post('', auth, checkPermission('manage-roomallotment'), async(req, res) => {
     try {
-        const filterData = await filterService.clientOrCoordinatorPanel(req.body);
-        const { status, ...data} = await roomAllotmentService.read(filterData);
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await roomAllotmentService.read({page, perPage, whereClause});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_ROOMALLOTMENT-READALL-CONTROLLER').error(error);
@@ -21,7 +23,7 @@ router.get('', auth, checkPermission('manage-roomallotment'), async(req, res) =>
 
 const roomAllotmentValidation = Joi.object({
     client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
+    event_id: Joi.string().required(),
     hotel_room_id: Joi.string().required(),
     guest_id: Joi.string().required(),
     id: Joi.string()
@@ -41,7 +43,7 @@ router.post('/create', auth, checkPermission('create-roomallotment'), requestVal
 router.get('/read/:id', auth, checkPermission('read-roomallotment'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await roomAllotmentService.read({_id});
+        const { status, ...data} = await roomAllotmentService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_ROOMALLOTMENT-READ-CONTROLLER').error(error);

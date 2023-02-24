@@ -16,15 +16,18 @@ const hotelRoomSchema = new Schema({
     },
     room_type: {
       type: String,
-      required: true
+      enum: ['Standard','Deluxe', 'Suite'],
+      default: 'Standard'
+    },
+    occupancy: {
+      type: Number,
+      default: 2
     },
     booked_from: {
-      type: Date,
-      required: true
+      type: Date
     },
     booked_to: {
-      type: Date,
-      required: true
+      type: Date
     },
     hospitality_checklist: [{
       _id: false,

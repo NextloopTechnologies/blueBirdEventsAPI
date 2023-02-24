@@ -9,7 +9,9 @@ const router = new Router();
 
 router.get('', auth, checkPermission('manage-hotel'), async(req, res) => {
     try {
-        const { status, ...data} = await hotelService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await hotelService.read({ page, perPage });
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_HOTEL-READALL-CONTROLLER').error(error);
@@ -19,10 +21,10 @@ router.get('', auth, checkPermission('manage-hotel'), async(req, res) => {
 });
 
 const hotelValidation = Joi.object({
-    hotel_name: Joi.string().min(6).max(60).trim().required(),
+    hotel_name: Joi.string().min(3).trim().required(),
     hotel_mob: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
-    hotel_add : Joi.string().required(),
+    hotel_add : Joi.string().min(3).required(),
     id: Joi.string()
 });
 
@@ -40,7 +42,7 @@ router.post('/create', auth, checkPermission('create-hotel'), requestValidator(h
 router.get('/read/:id', auth, checkPermission('read-hotel'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await hotelService.read({_id});
+        const { status, ...data} = await hotelService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_HOTEL-READ-CONTROLLER').error(error);

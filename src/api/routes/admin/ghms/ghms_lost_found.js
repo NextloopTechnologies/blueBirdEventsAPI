@@ -7,10 +7,12 @@ import Joi from 'joi';
 
 const router = new Router();
 
-router.get('', auth, checkPermission('manage-ghmslostfound'),  async(req, res) => {
+router.post('', auth, checkPermission('manage-ghmslostfound'),  async(req, res) => {
     try {
-        const filterData = await filterService.clientOrCoordinatorPanel(req.body);
-        const { status, ...data} = await ghmsLostFoundService.read(filterData);
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const whereClause = await filterService.clientOrCoordinatorPanel(req.body);
+        const { status, ...data} = await ghmsLostFoundService.read({page, perPage, whereClause});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_GHMSLOSTFOUND-READALL-CONTROLLER').error(error);
@@ -21,14 +23,14 @@ router.get('', auth, checkPermission('manage-ghmslostfound'),  async(req, res) =
 
 const ghmsLostFoundValidation = Joi.object({
     client_id: Joi.string().required(),
-    sub_event_id: Joi.string().required(),
+    event_id: Joi.string().required(),
     guest_id: Joi.string().required(),
-    item_name: Joi.string().required(),
-    item_identification: Joi.string().required(),
-    lost_place: Joi.string().required(),
-    found_place: Joi.string().required(),
-    found_by: Joi.string().required(),
-    deliver_type: Joi.string().required(),
+    item_name: Joi.string().min(3).required(),
+    item_identification: Joi.string().min(3).required(),
+    lost_place: Joi.string().min(3).required(),
+    found_place: Joi.string().min(3).required(),
+    found_by: Joi.string().min(3).required(),
+    deliver_type: Joi.string().min(3).required(),
     id: Joi.string()
 });
 
@@ -46,7 +48,7 @@ router.post('/create', auth, checkPermission('create-ghmslostfound'),  requestVa
 router.get('/read/:id', auth, checkPermission('read-ghmslostfound'),  async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await ghmsLostFoundService.read({_id});
+        const { status, ...data} = await ghmsLostFoundService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_GHMSLOSTFOUND-READ-CONTROLLER').error(error);

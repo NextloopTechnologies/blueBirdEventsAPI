@@ -11,12 +11,13 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
         const priortizationlist = await PriortizationList.find(whereClause)
         .populate([{path: 'client_id', select: ['name']},
-        {path: 'sub_event_id', select: ['subevent_title']}])
-        .sort({ _id: -1 });
+        {path: 'event_id', select: ['event_title']}])
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!priortizationlist.length > 0) {
             return { status: 404 , msgText: "PriortizationList does not exists!" ,success: false }
         }
@@ -24,6 +25,21 @@ export const read = async(whereClause={}) => {
     } catch (error) {
         throw error;
 
+    }
+};
+
+export const readForEvent = async({page, perPage, whereClause={}}) => {
+    try {
+        const priortizationlist = await PriortizationList.find(whereClause)
+        .select(['-active','-createdAt','-updatedAt','-__v'])
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
+        if(!priortizationlist.length > 0) {
+            return { status: 404 , msgText: "PriortizationList does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, priortizationlist}
+    } catch (error) {
+        throw error;
     }
 };
 
@@ -42,6 +58,15 @@ export const update = async(id, values) => {
 export const remove = async(ids)=> {
     try {
         await PriortizationList.deleteMany({"_id": { "$in" : ids}});
+        return { status: 200, msgText: 'Deleted Successfully!', success: true}
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const removeMultiple = async(event_id)=> {
+    try {
+        await PriortizationList.deleteMany({event_id});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

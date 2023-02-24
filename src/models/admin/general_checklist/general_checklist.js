@@ -6,25 +6,24 @@ const generalChecklistSchema = new Schema({
       required: true,
       ref: 'User'
     },
-    sub_event_id: {
+    event_id: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'SubEvent'
+      ref: 'Event'
     },
-    checklist_type: {
-      type: String,
-      required: true
-    },
-    generalchecklist_text: {
-      type: String
-    },
-    generalchecklist_date: {
-      type: Date
-    },
-    checklist: [{
+    general_checklist: [{
       _id: false,
-      check_id: Number,
-      check_name: String
+      checklist_type: {
+        type: String,
+        required: true
+      },
+      generalchecklist_text: {type: String, minlength: 3},
+      generalchecklist_date: Date,
+      checklist: [{
+        _id: false,
+        check_id: Number,
+        check_name: String
+      }]
     }],
     active: {
       type: Boolean,

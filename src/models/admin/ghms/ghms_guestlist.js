@@ -6,38 +6,36 @@ const ghmsGuestlistSchema = new Schema({
     required: true,
     ref: 'User'
   },
-  sub_event_id: {
+  event_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'SubEvent'
+    ref: 'Event'
   }, 
   guest_name: {
     type: String,
     required: true,
     trim: true,
-    minlenght: 3,
-    maxlenght: 30
+    minlenght: 3
   },
   guest_mobile: {
-      type: String,
-      required: true
+    type: String,
+    required: true
   },
   guest_email: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
+    type: String,
+    trim: true,
   },
   guest_add: {
     type: String,
-    required: true
+    minlength: 3
   },
   guest_outstation: {
     type: String,
     required: true
   },
   guest_invited: {
-    type: String
+    type: String,
+    required: true
   },
   guest_expected_nos: {
     type: Number

@@ -11,11 +11,11 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({ page, perPage, whereClause={} }) => {
     try {
         const enquiry = await Enquiry.find(whereClause)
-        .populate({path: 'event_id', select: 'event_title'})
-        .sort({ _id: -1 });
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!enquiry.length > 0) {
             return { status: 404 , msgText: "Enquiry does not exists!" ,success: false }
         }

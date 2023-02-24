@@ -11,12 +11,13 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
         const permrole = await PermRole.find(whereClause)
         .populate([{path:'permission_id', select:'perm_name'}, 
         {path:'role_id', select:'role_name'}])
-        .sort({ _id: -1 });
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!permrole.length > 0) {
             return { status: 404 , msgText: "Permission Role does not exists!" ,success: false }
         }

@@ -11,13 +11,27 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage, whereClause={}}) => {
     try {
         const generalchecklist = await GeneralChecklist.find(whereClause)
         .populate([{path: 'client_id', select: ['name']},
-        {path: 'sub_event_id', select: ['subevent_title']}])
-        .sort({ _id: -1 });
+        {path: 'event_id', select: ['event_title']}])
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!generalchecklist.length > 0) {
+            return { status: 404 , msgText: "GeneralChecklist does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, generalchecklist}
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const readForEvent = async(whereClause) => {
+    try {
+        const generalchecklist = await GeneralChecklist.findOne(whereClause)
+        .select(['-active','-createdAt','-updatedAt','-__v']);
+        if(!generalchecklist) {
             return { status: 404 , msgText: "GeneralChecklist does not exists!" ,success: false }
         }
         return { status: 200, success: true, generalchecklist}

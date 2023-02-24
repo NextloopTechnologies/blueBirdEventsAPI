@@ -2,8 +2,10 @@ import { HotelRoom } from '../../../models';
 
 export const create = async(values) => {
     try {
-        const hotelroom = new HotelRoom(values);
-        await hotelroom.save();
+        // const hotelroom = new HotelRoom(values);
+        // await hotelroom.save();
+        const hotelroom =  await HotelRoom.insertMany(values);
+        // console.log(values);
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, hotelroom }
     } catch (error) {
@@ -11,11 +13,12 @@ export const create = async(values) => {
     }
 };
 
-export const read = async(whereClause={}) => {
+export const read = async({page, perPage,whereClause={}}) => {
     try {
         const hotelroom = await HotelRoom.find(whereClause)
         .populate({path: 'hotel_id', select: 'hotel_name'})
-        .sort({ _id: -1 });
+        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
+        .limit(perPage);
         if(!hotelroom.length > 0) {
             return { status: 404 , msgText: "HotelRoom does not exists!" ,success: false }
         }

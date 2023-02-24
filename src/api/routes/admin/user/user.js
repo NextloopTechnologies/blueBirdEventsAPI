@@ -10,7 +10,9 @@ import { auth, fileUploads, requestValidator, passwordValidator } from '../../..
 
 router.get('', auth, async (req,res) => {
     try {
-        const { status, ...data} = await userService.read();
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        const { status, ...data} = await userService.read({ page, perPage })
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_USER-READALL-CONTROLLER').error(error);
@@ -20,7 +22,7 @@ router.get('', auth, async (req,res) => {
 });
 
 const userRegisterValidation = Joi.object({
-    name: Joi.string().alphanum().min(3).max(30).required().trim(),
+    name: Joi.string().min(3).required().trim(),
     email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
     password: Joi.string().min(6).max(16).required().trim(),
     mobile: Joi.string().regex(/^[0-9]{10}$/)
@@ -59,7 +61,7 @@ router.post('/login', requestValidator(userLoginValidation),async (req, res) => 
 router.get('/read/:id', auth, async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await userService.read({_id});
+        const { status, ...data} = await userService.read({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_USER-READ-CONTROLLER').error(error);
@@ -86,7 +88,7 @@ router.post('/account/profile', auth, fileUploads('profile',1),(req, res) => {
 });
 
 const userUpdateValidation = Joi.object({
-    name: Joi.string().alphanum().min(3).max(30).required().trim(),
+    name: Joi.string().min(3).required().trim(),
     mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
     role_id: Joi.string().required(),
