@@ -14,21 +14,23 @@ const hotelRoomSchema = new Schema({
       type: Number,
       required: true
     },
+    room_type_id: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'HotelRoomType'
+    },
     room_type: {
-      type: String,
-      enum: ['Standard','Deluxe', 'Suite'],
-      default: 'Standard'
+      type: String
     },
     occupancy: {
-      type: Number,
-      default: 2
+      type: Number
     },
-    booked_from: {
-      type: Date
-    },
-    booked_to: {
-      type: Date
-    },
+    // booked_from: {
+    //   type: Date
+    // },
+    // booked_to: {
+    //   type: Date
+    // },
     hospitality_checklist: [{
       _id: false,
       check_id: Number,

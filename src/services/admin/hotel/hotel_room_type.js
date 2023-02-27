@@ -3,6 +3,12 @@ import { HotelRoomType } from '../../../models';
 export const create = async(values) => {
     try {
         const hotelroomtype = new HotelRoomType(values);
+        const isMatched = await read({room_type: values.room_type});
+        if(isMatched) {
+            if(isMatched.success === true) {
+                return { status: 404 , msgText: "HotelRoomType already not exists!" ,success: false }
+            }
+        }
         await hotelroomtype.save();
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, hotelroomtype }
@@ -14,7 +20,7 @@ export const create = async(values) => {
 export const read = async(whereClause={}) => {
     try {
         const hotelroomtype = await HotelRoomType.find(whereClause)
-        .populate({path: 'hotel_id', select: 'hotel_name'})
+        // .populate({path: 'hotel_id', select: 'hotel_name'})
         .sort({ _id: -1 });
         if(!hotelroomtype.length > 0) {
             return { status: 404 , msgText: "HotelRoomType does not exists!" ,success: false }
