@@ -25,6 +25,8 @@ export default ({app}) => {
             if (!origin || whitelist.indexOf(origin) !== -1) {
                 callback(null, true)
             } else {
+                console.log("for origin", origin)
+                console.log("for  whitelist", whitelist)
                 callback(new Error('Not allowed by CORS'))
             }
         }
