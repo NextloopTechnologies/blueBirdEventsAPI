@@ -38,6 +38,7 @@ const freelancerValidation = Joi.object({
     course: Joi.string().valid('Yes','No').required(),
     coordination: Joi.string().valid('Yes','No').required(),
     work_of_shadow: Joi.string().valid('Yes','No').required(),
+    pass_size_pic: Joi.string(),
     id: Joi.string()
 });
 

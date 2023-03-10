@@ -71,13 +71,13 @@ router.get('/read/:id', auth, checkPermission('read-offerbanner'),  async (req, 
 router.post('/update/:id', auth, checkPermission('update-offerbanner'), fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
     try {
         if(req.file) {
-            const { imageName } = await fileService.upload(req.file);
+            const { imageName } = await fileService.uploadSingle(req.file);
             req.values.banner_img = imageName;
         }
         const { status, ...data} = await offerBannerService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
-        logger('ADMIN_OFFERBANNER-CREATE-CONTROLLER').error(error);
+        logger('ADMIN_OFFERBANNER-UPDATE-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }
