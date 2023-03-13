@@ -22,7 +22,12 @@ export const read = async({page, perPage, whereClause={}}) => {
         if(!freelancerassignedevent.length > 0) {
             return { status: 404 , msgText: "FreelancerAssignedEvent does not exists!" ,success: false }
         }
-        return { status: 200, success: true, freelancerassignedevent}
+        let count = await FreelancerAssignedEvent.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, freelancerassignedevent}
+
     } catch (error) {
         throw error;
     }

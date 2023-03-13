@@ -19,7 +19,11 @@ export const read = async({page, perPage, whereClause={}}) => {
         if(!freelancer.length > 0) {
             return { status: 404 , msgText: "Freelancer does not exists!" ,success: false }
         }
-        return { status: 200, success: true, freelancer}
+        let count = await Freelancer.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, freelancer}
     } catch (error) {
         throw error;
     }

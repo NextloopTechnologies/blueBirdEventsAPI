@@ -49,7 +49,11 @@ export const read = async({page, perPage, whereClause={}}) => {
         if(!user.length > 0) {
             return { status: 404 , msgText: "User does not exists!" ,success: false }
         }
-        return { status: 200, success: true, user}
+        let count = await User.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, user}
     } catch (error) {
         throw error;
     }

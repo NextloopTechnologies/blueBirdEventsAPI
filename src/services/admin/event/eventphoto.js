@@ -19,7 +19,12 @@ export const read = async(whereClause={}) => {
         if(!eventphoto.length > 0) {
             return { status: 404 , msgText: "EventPhoto does not exists!" ,success: false }
         }
-        return { status: 200, success: true, eventphoto}
+        let count = await EventPhoto.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, eventphoto}
+
     } catch (error) {
         throw error;
 

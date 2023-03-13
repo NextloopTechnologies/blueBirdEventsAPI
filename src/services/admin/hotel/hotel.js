@@ -19,7 +19,11 @@ export const read = async({page, perPage, whereClause={}}) => {
         if(!hotel.length > 0) {
             return { status: 404 , msgText: "Hotel does not exists!" ,success: false }
         }
-        return { status: 200, success: true, hotel}
+        let count = await Hotel.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, hotel}
     } catch (error) {
         throw error;
     }

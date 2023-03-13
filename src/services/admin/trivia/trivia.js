@@ -19,7 +19,11 @@ export const read = async({page, perPage, whereClause={}}) => {
         if(!trivia.length > 0) {
             return { status: 404 , msgText: "Trivia does not exists!" ,success: false }
         }
-        return { status: 200, success: true, trivia}
+        let count = await Trivia.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, trivia}
     } catch (error) {
         throw error;
     }

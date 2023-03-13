@@ -31,7 +31,11 @@ export const read = async({page, perPage, whereClause={}}) => {
         if(!ghmsguestlist.length > 0) {
             return { status: 404 , msgText: "GHMSGuestList does not exists!" ,success: false }
         }
-        return { status: 200, success: true, ghmsguestlist}
+        let count = await GHMSGuestList.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, ghmsguestlist}
     } catch (error) {
         throw error;
     }
