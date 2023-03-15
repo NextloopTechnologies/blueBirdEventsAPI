@@ -76,10 +76,12 @@ router.get('/read/:id', auth, checkPermission('read-freelancer'), async (req, re
 
 router.post('/update/:id', auth, checkPermission('update-freelancer'), fileUploads('pass_size_pic',1), requestValidator(freelancerValidation), async(req, res) => {
     try {
+        console.log("before s3", req.file);
         if(req.file) {
             const { fileName } = await fileService.uploadSingle(req.file);
             req.values.pass_size_pic = fileName;
         }
+        console.log("From update Freelancer after s3",req.values);
         const { status, ...data} = await freelancerService.update(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
