@@ -27,7 +27,6 @@ const vendorValidation = Joi.object({
     vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
     reason_for_blacklist: Joi.string().min(3),
-    blacklisted: Joi.boolean(),
     id: Joi.string()
 });
 

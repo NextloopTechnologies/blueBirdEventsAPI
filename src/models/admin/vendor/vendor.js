@@ -20,10 +20,6 @@ const vendorSchema = Schema({
     type: String,
     minlenght: 3
   },
-  blacklisted: {
-    type: Boolean,
-    default: false
-  },
   active: {
     type: Boolean,
     default: true
