@@ -18,7 +18,7 @@ export const read = async({page, perPage,whereClause={}}) => {
         const hotelroom = await HotelRoom.find(whereClause)
         .populate([
             {path: 'hotel_id', select: 'hotel_name'},
-            {path: 'room_type_id', select: ['room_type','occupancy']}
+            // {path: 'room_type_id', select: ['room_type','occupancy']}
         ])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
