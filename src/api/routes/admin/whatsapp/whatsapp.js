@@ -34,27 +34,23 @@ const templateValidation = Joi.object({
 });
 
 router.post('/sendTempTextMessage', requestValidator(templateValidation), async(req, res) => {
-    try {
-        const { status, ...data} = await whatsappService.sendMessage(req.values);
-        res.status(status).send(data);
-    } catch (error) {
-        logger('ADMIN_WA_MSG-CONTROLLER').error(error);
-        const { status, ...data } = formatFormError(error);
-        res.status(status).send(data);
+   
+    const data = await whatsappService.prepareTempTextMessage(req.values);
+    console.log('payload data: ', data);
+    if(data && data.to){
+        whatsappService.sendMessage(data).then(val => {
+            console.log('data:', val);
+            res.status(200).json(val);
+        })
+        .catch(error => {
+            console.log('error:', error);
+            res.status(500).json({
+                error
+            });
+        })
+    } else {
+        res.status(404).send({ msgText: 'Client or event not found', success: false})
     }
-    // const data = whatsappService.prepareTempTextMessage(req.values);
-    // console.log('payload data: ', data);
-    
-    // whatsappService.sendMessage(data).then(val => {
-    //     console.log('data:', val);
-    //     res.status(200).json(val);
-    // })
-    // .catch(error => {
-    //     console.log('error:', error);
-    //     res.status(500).json({
-    //         error
-    //     });
-    // })
 });
 
 export default router;

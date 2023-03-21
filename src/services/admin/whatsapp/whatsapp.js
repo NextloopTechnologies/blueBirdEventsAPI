@@ -27,7 +27,11 @@ export const prepareTempTextMessage = async(values) => {
     type: "template"
   }
 
-  // let clientNumber = await Event.find(values.event_id)
+  let clientNumber =  await eventService.getWhatsappRecipients(values.event_id);
+  if(clientNumber.success === false) {
+    return clientNumber;
+  }
+  console.log("cleint numbers",clientNumber);
   if(template_name === 'bbe_good_morning' || template_name === 'bbe_good_night'){
     const simpleTemplateKeys = {
       ...defaultKeys,
@@ -87,11 +91,7 @@ export const prepareTempTextMessage = async(values) => {
   }
 }
 
-export const sendMessage = async(values) => {
-  try {
-    console.log("before request", values);
-    const body = prepareTempTextMessage(values);
-    console.log("after body", body);
+export const sendMessage = async(body) => {
     const response = await fetch(`https://graph.facebook.com/${process.env.VERSION}/${process.env.PHONE_NUMBER_ID}/messages`, {
       method: 'post',
       body: JSON.stringify(body),
@@ -100,21 +100,6 @@ export const sendMessage = async(values) => {
         'Content-Type': 'application/json'
       }
     });
-    // response.json().then(val => {
-    //     console.log('data:', val);
-    //     return res.status(200).json(val);
-    // })
-    // .catch(error => {
-    //     console.log('error:', error);
-    //     return res.status(500).json({
-    //         error
-    //     });
-    // })
-    // console.log("response:", response);
-    // return await response.json();
-    const data = await response.json();
-    return { status: 200, msgText: 'Sent Successfully!', success: true, data}
-  } catch (error) {
-    throw error;
-  }
+    console.log("response:", response);
+    return await response.json();
 };

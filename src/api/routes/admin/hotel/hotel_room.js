@@ -25,7 +25,7 @@ const bulkHotelRoomValidation = Joi.object({
         hotel_id: Joi.string().required(),
         room_no: Joi.number().required(),
         floor_no: Joi.number().required(),
-        room_type_id: Joi.string().required(),
+        room_type_id: Joi.string(),
         // booked_from: Joi.date().min(todaysDate),
         // booked_to: Joi.date().greater(Joi.ref('booked_from')),
         hospitality_checklist: Joi.array().items({
@@ -75,7 +75,7 @@ const singleHotelRoomValidation = Joi.object({
     hotel_id: Joi.string().required(),
     room_no: Joi.number().required(),
     floor_no: Joi.number().required(),
-    room_type_id: Joi.string().required(),
+    room_type_id: Joi.string(),
     // booked_from: Joi.date().min(todaysDate),
     // booked_to: Joi.date().greater(Joi.ref('booked_from')),
     hospitality_checklist: Joi.array().items({

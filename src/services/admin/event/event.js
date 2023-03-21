@@ -9,6 +9,8 @@ import {
     priortizationListService, 
     roomAllotmentService 
 } from '../..';
+import mongoose from 'mongoose';
+const ObjectId = mongoose.Types.ObjectId;
 
 export const create = async(values) => {
     try {
@@ -231,6 +233,38 @@ export const updateSingleEvent = async(id, values) => {
     }
 };
 
+export const getWhatsappRecipients = async(event_id) => {
+    try {
+        const event = await Event.aggregate([
+            {
+                $match: {"_id": ObjectId(event_id)}
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "client_id",
+                    foreignField: "_id",
+                    as: "users"
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    client_id: '$users._id',
+                    client_mobile: '$users.mobile'
+                }
+            }, { $limit: 1}
+        ]);
+
+        console.log("from event serrvice", event);
+        if(!event.length>0) {
+            return { status: 404 , msgText: "Event does not exists!" ,success: false }
+        }  
+        return { status: 200, msgText: 'Updated Successfully! ',success: true}
+    } catch (error) {
+        throw error;
+    }
+}
 // export const updateEventIds = async(ids, event_id) => {
 //     const users = await Promise.all(ids.map(async(id) => await User.findById(id)))
 //     const event_ids = mongoose.Types.ObjectId(event_id);
