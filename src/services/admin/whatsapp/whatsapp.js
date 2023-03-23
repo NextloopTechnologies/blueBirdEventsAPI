@@ -20,19 +20,24 @@ export const prepareTextMessage = ({
 }
 
 export const prepareTempTextMessage = async(values) => {
-  const { template_name } = values;
+  const { template_name, template_value1, template_value2 } = values;
+  let to;
   const defaultKeys = {
     messaging_product: "whatsapp",
     recipient_type: "individual",
     type: "template"
   }
 
-  let clientNumber =  await eventService.getWhatsappRecipients(values.event_id);
-  if(clientNumber.success === false) {
-    return clientNumber;
+  const { success, msgText, recipientMobileNumbers } =  await eventService.getWhatsappRecipients(values.event_id);
+  if(success === false) {
+    return msgText;
   }
-  console.log("cleint numbers",clientNumber);
+  console.log("cleint numbers",recipientMobileNumbers);
   if(template_name === 'bbe_good_morning' || template_name === 'bbe_good_night'){
+    if(recipientMobileNumbers.guest_mobiles.lenght<0){
+      return "No guest found!"
+    }
+    to = recipientMobileNumbers.guest_mobiles;
     const simpleTemplateKeys = {
       ...defaultKeys,
       to: '919892252713',
@@ -45,8 +50,10 @@ export const prepareTempTextMessage = async(values) => {
     }
     return simpleTemplateKeys;
   } else if(template_name === 'bbe_guest_pickup') {
+    to = recipientMobileNumbers.client_mobile;
     const multipleParamKeys = {
       ...defaultKeys,
+      to,
       template: {
         name: template_name,
         language: {
@@ -57,20 +64,26 @@ export const prepareTempTextMessage = async(values) => {
           parameters: [
             {
               type: "text",
-              text: "Josh"
+              text: template_value1
             },
             {
               type: "text",
-              text: "Airport"
+              text: template_value2
             }
           ]
         }]
       } 
     }
     return multipleParamKeys;
-  } else {
+  } else {   // decoration, get_ready and food
+    if(template_name === 'bbe_decoration') {
+      to = recipientMobileNumbers.client_mobile;
+    } else {
+      to = recipientMobileNumbers.guest_mobiles;
+    }
     const singleParamKeys = {
       ...defaultKeys,
+      to,
       template: {
         name: template_name,
         language: {
@@ -81,7 +94,7 @@ export const prepareTempTextMessage = async(values) => {
           parameters: [
             {
               type: "text",
-              text: "Haldi"
+              text: template_value1
             }
           ]
         }]

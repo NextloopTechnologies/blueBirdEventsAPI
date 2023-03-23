@@ -31,6 +31,16 @@ const templateValidation = Joi.object({
     event_id: Joi.string().required(),
     template_name: Joi.string().valid('bbe_decoration','bbe_good_night',
     'bbe_guest_pickup','bbe_get_ready','bbe_good_morning','bbe_food').required(),
+    template_value1: Joi.when('template_name', {
+        is: Joi.exist().valid('bbe_decoration','bbe_guest_pickup','bbe_get_ready','bbe_food'),
+        then: Joi.string().min(3).required(),
+        otherwise: Joi.forbidden()
+    }),
+    template_value2: Joi.when('template_name', {
+        is: Joi.exist().valid('bbe_guest_pickup'),
+        then: Joi.string().min(3).required(),
+        otherwise: Joi.forbidden()
+    }),
 });
 
 router.post('/sendTempTextMessage', requestValidator(templateValidation), async(req, res) => {
@@ -49,7 +59,7 @@ router.post('/sendTempTextMessage', requestValidator(templateValidation), async(
             });
         })
     } else {
-        res.status(404).send({ msgText: 'Client or event not found', success: false})
+        res.status(404).send({ success: false, msgText: data, })
     }
 });
 

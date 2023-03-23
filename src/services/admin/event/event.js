@@ -246,21 +246,30 @@ export const getWhatsappRecipients = async(event_id) => {
                     foreignField: "_id",
                     as: "users"
                 }
+            }, { $unwind: "$users" },
+            {
+                $lookup: {
+                    from: "ghmsguestlists",
+                    localField: "_id",
+                    foreignField: "event_id",
+                    as: "guests"
+                }
             },
             {
                 $project: {
                     _id: 1,
                     client_id: '$users._id',
-                    client_mobile: '$users.mobile'
+                    client_mobile: '$users.mobile',
+                    guest_mobiles: "$guests.guest_mobile"
                 }
-            }, { $limit: 1}
+            }
         ]);
-
-        console.log("from event serrvice", event);
         if(!event.length>0) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
-        }  
-        return { status: 200, msgText: 'Updated Successfully! ',success: true}
+        }
+        const { client_mobile, guest_mobiles } = event[0];
+        const recipientMobileNumbers = { client_mobile, guest_mobiles}
+        return { status: 200, success: true, recipientMobileNumbers}
     } catch (error) {
         throw error;
     }
