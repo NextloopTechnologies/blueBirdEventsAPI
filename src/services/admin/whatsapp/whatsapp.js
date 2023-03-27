@@ -33,10 +33,11 @@ export const prepareTempTextMessage = async(values) => {
     return msgText;
   }
   console.log("cleint numbers",recipientMobileNumbers);
+  if(recipientMobileNumbers.guest_mobiles.lenght<0){
+    return "No guest found!"
+  }
+  
   if(template_name === 'bbe_good_morning' || template_name === 'bbe_good_night'){
-    if(recipientMobileNumbers.guest_mobiles.lenght<0){
-      return "No guest found!"
-    }
     to = recipientMobileNumbers.guest_mobiles;
     const simpleTemplateKeys = {
       ...defaultKeys,
