@@ -1,27 +1,28 @@
-import { model, Schema } from "mongoose";
+import { Schema, model} from "mongoose";
 
 const hotelRoomTypeSchema = new Schema({
-    hotel_id: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'Hotel'
-    }, 
-    room_type_name: {
+    // hotel_id: {
+    //   type: Schema.Types.ObjectId,
+    //   required: true,
+    //   ref: 'Hotel'
+    // }, 
+    room_type: {
       type: String,
-      required: true,
-    }, 
-    beds: {
-      type: String,
+      unique: true,
       required: true
-    },
-    max_occupancy: {
+    }, 
+    // beds: {
+    //   type: String,
+    //   required: true
+    // },
+    occupancy: {
       type: Number,
       required: true
     },
-    cost_per_night: {
-      type: Number,
-      required: true
-    },
+    // cost_per_night: {
+    //   type: Number,
+    //   required: true
+    // },
     active: {
       type: Boolean,
       default: true

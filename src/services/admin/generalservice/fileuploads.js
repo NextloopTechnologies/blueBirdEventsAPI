@@ -13,6 +13,7 @@ const s3 = new S3Client({
 export const uploadSingle = async (file) => {
     try {
         const fileName = Date.now()+ '' +file.originalname;
+        console.log("before uploading", fileName);
         const clientParams = {
             Bucket: config.AWS_BN,
             Body: file.buffer,
@@ -21,6 +22,7 @@ export const uploadSingle = async (file) => {
         }
         const client = new PutObjectCommand(clientParams);
         await s3.send(client);
+        console.log("uploaded s3", fileName);
         return { fileName }
     } catch (error) {
         throw error;

@@ -21,7 +21,11 @@ export const read = async({page, perPage, whereClause={}}) => {
         if(!priortizationlist.length > 0) {
             return { status: 404 , msgText: "PriortizationList does not exists!" ,success: false }
         }
-        return { status: 200, success: true, priortizationlist}
+        let count = await PriortizationList.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, priortizationlist}
     } catch (error) {
         throw error;
 

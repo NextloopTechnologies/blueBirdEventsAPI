@@ -19,7 +19,11 @@ export const read = async({page, perPage, whereClause={}}) => {
         if(!offerbanner.length > 0) {
             return { status: 404 , msgText: "OfferBanner does not exists!" ,success: false }
         }
-        return { status: 200, success: true, offerbanner}
+        let count = await OfferBanner.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, offerbanner}
     } catch (error) {
         throw error;
 

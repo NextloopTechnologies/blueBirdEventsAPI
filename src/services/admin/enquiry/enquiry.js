@@ -19,7 +19,11 @@ export const read = async({ page, perPage, whereClause={} }) => {
         if(!enquiry.length > 0) {
             return { status: 404 , msgText: "Enquiry does not exists!" ,success: false }
         }
-        return { status: 200, success: true, enquiry}
+        let count = await Enquiry.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, enquiry}
     } catch (error) {
         throw error;
     }

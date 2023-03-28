@@ -23,7 +23,11 @@ export const read = async({page, perPage, whereClause={}}) => {
         if(!ghmsarrivalmgmt.length > 0) {
             return { status: 404 , msgText: "GHMSArrivalMgmt does not exists!" ,success: false }
         }
-        return { status: 200, success: true, ghmsarrivalmgmt}
+        let count = await GHMSArrivalMgmt.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, ghmsarrivalmgmt}
     } catch (error) {
         throw error;
     }

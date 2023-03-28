@@ -9,6 +9,8 @@ import {
     priortizationListService, 
     roomAllotmentService 
 } from '../..';
+import mongoose from 'mongoose';
+const ObjectId = mongoose.Types.ObjectId;
 
 export const create = async(values) => {
     try {
@@ -64,7 +66,11 @@ export const readAll = async({page, perPage, whereClause={}}) => {
         if(!event.length > 0) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         }
-        return { status: 200, success: true, event}
+        let count = await Event.find(whereClause).count();
+        if(count === 1) {
+            count = undefined;
+        }
+        return { status: 200, success: true, count, event}
     } catch (error) {
         throw error;
     }
@@ -227,6 +233,47 @@ export const updateSingleEvent = async(id, values) => {
     }
 };
 
+export const getWhatsappRecipients = async(event_id) => {
+    try {
+        const event = await Event.aggregate([
+            {
+                $match: {"_id": ObjectId(event_id)}
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "client_id",
+                    foreignField: "_id",
+                    as: "users"
+                }
+            }, { $unwind: "$users" },
+            {
+                $lookup: {
+                    from: "ghmsguestlists",
+                    localField: "_id",
+                    foreignField: "event_id",
+                    as: "guests"
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    client_id: '$users._id',
+                    client_mobile: '$users.mobile',
+                    guest_mobiles: "$guests.guest_mobile"
+                }
+            }
+        ]);
+        if(!event.length>0) {
+            return { status: 404 , msgText: "Event does not exists!" ,success: false }
+        }
+        const { client_mobile, guest_mobiles } = event[0];
+        const recipientMobileNumbers = { client_mobile, guest_mobiles}
+        return { status: 200, success: true, recipientMobileNumbers}
+    } catch (error) {
+        throw error;
+    }
+}
 // export const updateEventIds = async(ids, event_id) => {
 //     const users = await Promise.all(ids.map(async(id) => await User.findById(id)))
 //     const event_ids = mongoose.Types.ObjectId(event_id);

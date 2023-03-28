@@ -19,11 +19,11 @@ router.get('', auth, async(req, res) => {
 });
 
 const hotelRoomTypeValidation = Joi.object({
-    hotel_id: Joi.string().required(),
-    room_type_name: Joi.string().required(),
-    beds: Joi.string().required(),
-    max_occupancy: Joi.number().required(),
-    cost_per_night: Joi.number().required(),
+    // hotel_id: Joi.string().required(),
+    room_type: Joi.string().required(),
+    // beds: Joi.string().required(),
+    occupancy: Joi.number().required(),
+    // cost_per_night: Joi.number().required(),
     id: Joi.string()
 });
 

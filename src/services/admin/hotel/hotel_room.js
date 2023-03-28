@@ -16,9 +16,13 @@ export const create = async(values) => {
 export const read = async({page, perPage,whereClause={}}) => {
     try {
         const hotelroom = await HotelRoom.find(whereClause)
-        .populate({path: 'hotel_id', select: 'hotel_name'})
+        .populate([
+            {path: 'hotel_id', select: 'hotel_name'},
+            // {path: 'room_type_id', select: ['room_type','occupancy']}
+        ])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
+        
         if(!hotelroom.length > 0) {
             return { status: 404 , msgText: "HotelRoom does not exists!" ,success: false }
         }

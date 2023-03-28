@@ -20,15 +20,14 @@ router.get('', auth, checkPermission('manage-hotelroom'), async(req, res) => {
     }
 });
 
-const hotelRoomValidation = Joi.object({
+const bulkHotelRoomValidation = Joi.object({
     hotelroom: Joi.array().items({
         hotel_id: Joi.string().required(),
         room_no: Joi.number().required(),
         floor_no: Joi.number().required(),
-        room_type: Joi.string().valid('Standard','Suite','Deluxe'),
-        occupancy: Joi.number(),
-        booked_from: Joi.date().min(todaysDate),
-        booked_to: Joi.date().greater(Joi.ref('booked_from')),
+        room_type_id: Joi.string(),
+        // booked_from: Joi.date().min(todaysDate),
+        // booked_to: Joi.date().greater(Joi.ref('booked_from')),
         hospitality_checklist: Joi.array().items({
             check_id: Joi.number(),
             check_name: Joi.string()
@@ -37,7 +36,7 @@ const hotelRoomValidation = Joi.object({
     id: Joi.string()
 });
 
-router.post('/create', auth, checkPermission('create-hotelroom'), requestValidator(hotelRoomValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-hotelroom'), requestValidator(bulkHotelRoomValidation), async(req, res) => {
     try {
         const { status, ...data} = await hotelRoomService.create(req.values.hotelroom);
         res.status(status).send(data);
@@ -72,7 +71,21 @@ router.get('/checked/:id', auth, checkPermission('read-hotelroom'), async (req, 
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-hotelroom'), requestValidator(hotelRoomValidation), async(req, res) => {
+const singleHotelRoomValidation = Joi.object({
+    hotel_id: Joi.string().required(),
+    room_no: Joi.number().required(),
+    floor_no: Joi.number().required(),
+    room_type_id: Joi.string(),
+    // booked_from: Joi.date().min(todaysDate),
+    // booked_to: Joi.date().greater(Joi.ref('booked_from')),
+    hospitality_checklist: Joi.array().items({
+        check_id: Joi.number(),
+        check_name: Joi.string()
+    }),
+    id: Joi.string()
+});
+
+router.post('/update/:id', auth, checkPermission('update-hotelroom'), requestValidator(singleHotelRoomValidation), async(req, res) => {
     try {
         const { status, ...data} = await hotelRoomService.update(req.params.id,req.values);
         res.status(status).send(data);
