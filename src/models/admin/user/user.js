@@ -57,7 +57,7 @@ userSchema.methods.toJSON = function() {
 //generateAuth token 
 userSchema.methods.generateAuthToken = async function() {
     const user = this;
-    const token = sign({_id:user._id.toString()}, config.JWT, {expiresIn: "20m"});
+    const token = sign({_id:user._id.toString()}, config.JWT);
     user.tokens = user.tokens.concat({ token });
     await user.save();
     return token;
