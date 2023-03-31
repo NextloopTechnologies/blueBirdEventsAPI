@@ -45,8 +45,10 @@ router.post('/create', auth, checkPermission('create-priortizationlist'), reques
 
 router.get('/read/:id', auth, checkPermission('read-priortizationlist'), async (req, res)=> {
     try {
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
         const _id = req.params.id;
-        const { status, ...data} = await priortizationListService.read({whereClause:{_id: new mongoose.Types.ObjectId(_id)}});
+        const { status, ...data} = await priortizationListService.read({page, perPage, whereClause:{_id: new mongoose.Types.ObjectId(_id)}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PRIORTIZATIONLIST-READ-CONTROLLER').error(error);
