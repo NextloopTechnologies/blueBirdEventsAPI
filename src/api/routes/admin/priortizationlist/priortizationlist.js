@@ -4,6 +4,7 @@ import { priortizationListService, filterService } from "../../../../services";
 import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
+import mongoose from "mongoose";
 
 const router = new Router();
 
@@ -22,7 +23,6 @@ router.post('', auth, checkPermission('manage-priortizationlist'),  async(req, r
 });
 
 const priortizationListValidation = Joi.object({
-    client_id: Joi.string().required(),
     event_id: Joi.string().required(),
     title: Joi.string().min(3).trim().required(),
     descp: Joi.string().min(3).trim(),
@@ -46,12 +46,12 @@ router.post('/create', auth, checkPermission('create-priortizationlist'), reques
 router.get('/read/:id', auth, checkPermission('read-priortizationlist'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await priortizationListService.read({whereClause:{_id}});
+        const { status, ...data} = await priortizationListService.read({whereClause:{_id: new mongoose.Types.ObjectId(_id)}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PRIORTIZATIONLIST-READ-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
-        res.status(status).send(data);
+        res.status(status).send(data)
     }
 });
 

@@ -1,11 +1,6 @@
 import { Schema, model } from "mongoose";
 
 const priortizationListSchema = Schema({
-  client_id: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'User'
-  },
   event_id: {
     type: Schema.Types.ObjectId,
     required: true,
