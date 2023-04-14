@@ -45,7 +45,7 @@ const freelancerValidation = Joi.object({
 router.post('/create', fileUploads('pass_size_pic',1), requestValidator(freelancerValidation), async(req, res) => {
     try {
         if(!req.file) {
-            throw {status: 401, msgText: 'File is required', success:false}
+            throw {status: 400, msgText: 'File is required', success:false}
         }
         const { fileName } = await fileService.uploadSingle(req.file);
         req.values.pass_size_pic = fileName;

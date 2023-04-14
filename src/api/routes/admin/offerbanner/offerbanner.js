@@ -39,7 +39,7 @@ router.post('/create', auth, checkPermission('create-offerbanner'),  fileUploads
     try {
         
         if(!req.file) {
-            throw {status: 401, msgText: 'File is required', success:false}
+            throw {status: 400, msgText: 'File is required', success:false}
         }
         const { fileName } = await fileService.uploadSingle(req.file);
         req.values.banner_img = fileName;

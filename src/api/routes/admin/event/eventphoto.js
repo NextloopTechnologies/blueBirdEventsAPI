@@ -33,7 +33,7 @@ const eventPhotoValidation = Joi.object({
 router.post('/create', auth, checkPermission('create-eventphoto'),fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
     try {
         if(req.files.length === 0) {
-            throw {status: 401, msgText: 'File is required', success:false}
+            throw {status: 400, msgText: 'File is required', success:false}
         }
         const files = await fileService.uploadMultiple(req.files);
         req.values.ep_img = files;

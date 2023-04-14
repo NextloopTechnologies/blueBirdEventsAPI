@@ -345,11 +345,11 @@ router.post('/update_single_event/:id', auth, checkPermission('update-event'), r
 router.post('/uploadfiles', auth, checkPermission('create-event'), fileUploads('img_files'), async(req, res) => {
     try {
         if(!req.files) {
-            return res.status(401).send({msgText: 'File is required', success:false})
+            return res.status(400).send({msgText: 'File is required', success:false})
         }
         const files = await fileService.uploadMultiple(req.files);
         if(!files.length > 0 ){
-            return res.status(401).send({msgText: 'File key is incorrect', success:false})
+            return res.status(400).send({msgText: 'File key is incorrect', success:false})
         }
         res.status(201).send({ files, success: true });
     } catch (error) {
