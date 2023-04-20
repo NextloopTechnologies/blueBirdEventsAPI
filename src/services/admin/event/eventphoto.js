@@ -46,10 +46,32 @@ export const readForEvent = async(whereClause) => {
 
 export const update = async(id, values) => {
     try {
-        const eventphoto = await EventPhoto.findByIdAndUpdate(id, values);
+        const eventphoto = await EventPhoto.findById(id);
         if(!eventphoto) {
             return { status: 404 , msgText: "EventPhoto does not exists!" ,success: false }
         }  
+        if(values.ep_img) {
+            eventphoto.ep_img.push.apply(eventphoto.ep_img,values.ep_img);
+        }
+        if(eventphoto.ep_img.length > 1) {     //if there is only single image skip delete
+            if(values.deleted_img) {
+                if(values.deleted_img.length === eventphoto.ep_img.length){
+                    values.deleted_img.pop();
+                }
+                for (const value of values.deleted_img) {
+                    const  matchedImgIndex = eventphoto.ep_img.findIndex(item => item.file === value)
+                    if(matchedImgIndex !== -1){
+                        eventphoto.ep_img.splice(matchedImgIndex, 1)
+                    }   
+                }
+            } 
+        }
+        eventphoto.event_id = values.event_id;
+        eventphoto.ep_title = values.ep_title;
+        eventphoto.ep_descp = values.ep_descp;
+        eventphoto.event_date = values.event_date; 
+        await eventphoto.save();
+        
         return { status: 200, msgText: 'Updated Successfully! ',success: true}
     } catch (error) {
         throw error;

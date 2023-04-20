@@ -24,8 +24,9 @@ const eventPhotoValidation = Joi.object({
     ep_title: Joi.string().min(3).trim().required(),
     ep_descp: Joi.string().min(3).required(),
     event_id: Joi.string().required(),
-    event_date: Joi.date().min(todaysDate).required(),
-    ep_img: Joi.string(),
+    event_date: Joi.date().required(),
+    // ep_img: Joi.string(),
+    deleted_img: Joi.array(),
     id: Joi.string(),
     active: Joi.boolean()
 });
