@@ -69,7 +69,7 @@ router.post('/update/:id', auth, checkPermission('update-ghmsdeparture'), reques
     }
 });
 
-router.post('/delete/:id', auth, checkPermission('delete-ghmsdeparture'), async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-ghmsdeparture'), async (req, res) => {
     try {
         const { status, ...data} = await ghmsDepartureMgmtService.remove(req.body.ids);
         res.status(status).send(data);
