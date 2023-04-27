@@ -43,6 +43,7 @@ const eventValidation = Joi.object({
                 room_nos: Joi.array().items({
                     room_no: Joi.number().required(),
                     hotel_room_id: Joi.string().required(),
+                    room_type_id: Joi.string().required(),
                     isBooked: Joi.boolean().required()
                 })
             })

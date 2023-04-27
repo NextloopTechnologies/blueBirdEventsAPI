@@ -57,6 +57,10 @@ const eventSchema = new Schema({
                     type: Schema.Types.ObjectId,
                     required: true
                 },
+                room_type_id: {
+                    type: Schema.Types.ObjectId,
+                    required: true
+                },
                 isBooked: {
                     type: Number,
                     required: true
@@ -75,7 +79,7 @@ const eventSchema = new Schema({
     }],
     // event vendor //
     event_vendors: [{
-        _id: false,
+        // _id: false,
         vendor_name: {
             type: String,
             required: true,
@@ -107,13 +111,13 @@ const eventSchema = new Schema({
     }],
     // event food bev //
     event_foodbev: [{
-        _id: false,
+        // _id: false,
         food_type: {
             type: String,
             required: true,
         },
         menu: [{
-            _id: false,
+            // _id: false,
             file: String,
             filename: String
         }],
@@ -135,10 +139,10 @@ const eventSchema = new Schema({
         plates_used: String
     }],
     event_proddecor: [{
-        _id: false,
+        // _id: false,
         decor_title: {type: String, minlength: 3},
         decor_img: [{
-            _id: false,
+            // _id: false,
             file: String,
             filename: String
         }],
