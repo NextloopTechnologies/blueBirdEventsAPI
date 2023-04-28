@@ -288,6 +288,7 @@ const singleEventValidation = Joi.object({
     }), 
     // vendors //
     event_vendors : Joi.array().items({
+        _id: Joi.string().required(),
         vendor_name: Joi.string().min(3).required().trim(),
         vendor_work: Joi.string().min(3).required(),
         vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
@@ -302,6 +303,7 @@ const singleEventValidation = Joi.object({
     }),
     // food bev
     event_foodbev: Joi.array().items({
+        _id: Joi.string().required(),
         food_type: Joi.string().required(),
         menu: Joi.array().items({
             _id: false,
@@ -320,6 +322,7 @@ const singleEventValidation = Joi.object({
    
     // vendor prod //
     event_proddecor: Joi.array().items({
+        _id: Joi.string().required(),
         decor_title: Joi.string().min(3).required(),
         decor_img: Joi.array().items({
             _id: false,
