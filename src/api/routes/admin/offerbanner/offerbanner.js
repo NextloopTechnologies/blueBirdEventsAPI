@@ -84,6 +84,22 @@ router.post('/update/:id', auth, checkPermission('update-offerbanner'), fileUplo
     }
 });
 
+const offerBannerStatusValidation = Joi.object({
+    active: Joi.boolean().required(),
+    id: Joi.string()
+});
+
+router.post('/updateofferstatus/:id', auth, checkPermission('update-offerbanner'), requestValidator(offerBannerStatusValidation), async(req, res) => {
+    try {
+        const { status, ...data} = await offerBannerService.update(req.params.id,req.values);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_OFFERBANNER-STATUSUPDATE-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
 router.post('/delete', auth, checkPermission('delete-offerbanner'),  async (req, res) => {
     try {
         const { status, ...data} = await offerBannerService.remove(req.body.ids);

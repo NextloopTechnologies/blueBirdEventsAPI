@@ -66,8 +66,8 @@ const eventValidation = Joi.object({
         event_foodbev: Joi.array().items({
             food_type: Joi.string().required(),
             menu: Joi.array().items({
-                _id: false,
-                file: String
+                // _id: false,
+                file: Joi.string()
             }).required(),
             serve_date: Joi.date().min(todaysDate).required(),
             serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
@@ -84,8 +84,8 @@ const eventValidation = Joi.object({
         event_proddecor: Joi.array().items({
             decor_title: Joi.string().min(3).required(),
             decor_img: Joi.array().items({
-                _id: false,
-                file: String
+                 // _id: false,
+                 file: Joi.string()
             }).required(),
             decor_remark: Joi.string().min(3),
             decor_date: Joi.date().min(todaysDate).required(),
@@ -170,6 +170,7 @@ const eventValidation = Joi.object({
         client_id: Joi.string(),
         event_id: Joi.string(),
         general_checklist: Joi.array().items({
+            _id: Joi.string(),
             checklist: Joi.array().items({
                 check_id: Joi.number().required(),
                 check_name: Joi.string().required()
@@ -186,8 +187,8 @@ const eventValidation = Joi.object({
         ep_title: Joi.string().min(3).required(),
         ep_descp: Joi.string().min(3).required(),
         ep_img: Joi.array().items({
-            _id: false,
-            file: String
+            // _id: false,
+            file: Joi.string()
         }).required()
     }),
 });
@@ -306,8 +307,8 @@ const singleEventValidation = Joi.object({
         _id: Joi.string(),
         food_type: Joi.string().required(),
         menu: Joi.array().items({
-            _id: false,
-            file: String
+             // _id: false,
+             file: Joi.string()
         }).required(),
         serve_date: Joi.date().min(todaysDate).required(),
         serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
@@ -325,8 +326,8 @@ const singleEventValidation = Joi.object({
         _id: Joi.string(),
         decor_title: Joi.string().min(3).required(),
         decor_img: Joi.array().items({
-            _id: false,
-            file: String
+             // _id: false,
+             file: Joi.string()
         }).required(),
         decor_remark: Joi.string().min(3),
         decor_date: Joi.date().min(todaysDate).required(),
