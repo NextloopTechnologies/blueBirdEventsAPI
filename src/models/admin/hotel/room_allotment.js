@@ -1,11 +1,11 @@
 import { model, Schema } from "mongoose";
 
 const roomAllotmentSchema = new Schema({
-    client_id: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'User'
-    },
+    // client_id: {
+    //   type: Schema.Types.ObjectId,
+    //   required: true,
+    //   ref: 'User'
+    // },
     event_id: {
       type: Schema.Types.ObjectId,
       required: true,

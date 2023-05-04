@@ -5,7 +5,7 @@ export const create = async(values) => {
         const roomallotment = new RoomAllotment(values);
         await roomallotment.save();
         await Event.updateOne({
-            client_id: values.client_id,
+            // client_id: values.client_id,
             _id: values.event_id,
             'hotels.hotel_rooms_required.hotel_room_id': values.hotel_room_id
         }, 
@@ -33,7 +33,7 @@ export const read = async({page, perPage, whereClause={}}) => {
     try {
         const roomallotment = await RoomAllotment.find(whereClause)
         .populate([
-        {path: 'client_id', select: ['name']},
+        // {path: 'client_id', select: ['name']},
         {path: 'event_id', select: ['event_title']},
         {path: 'hotel_room_id', select: ['hotel_id','room_no','floor_no']},
         {path: 'guest_id', select: ['guest_name','guest_mobile','guest_add','guest_email']}])
@@ -108,7 +108,7 @@ export const update = async(id, values) => {
     try {
         const roomallotment = await RoomAllotment.findByIdAndUpdate(id, values);
         await Event.updateOne({
-            client_id: values.client_id,
+            // client_id: values.client_id,
             _id: values.event_id,
             'hotels.hotel_rooms_required.hotel_room_id': values.hotel_room_id
         }, 

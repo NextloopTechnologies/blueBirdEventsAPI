@@ -135,13 +135,13 @@ const eventValidation = Joi.object({
             special_note: Joi.string().min(3),
             date_of_departure: Joi.date().min(todaysDate).required(),
         }),
-        roomallotment: Joi.array().items({
-            _id: Joi.string(),
-            client_id: Joi.string(),
-            event_id: Joi.string(),
-            hotel_room_id: Joi.string().required(),
-            guest_id: Joi.string().required(), 
-        }),
+        // roomallotment: Joi.array().items({
+        //     _id: Joi.string(),
+        //     client_id: Joi.string(),
+        //     event_id: Joi.string(),
+        //     hotel_room_id: Joi.string().required(),
+        //     guest_id: Joi.string().required(), 
+        // }),
         lostandfound: Joi.array().items({
             _id: Joi.string(),
             client_id: Joi.string(),

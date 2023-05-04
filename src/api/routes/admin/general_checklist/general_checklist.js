@@ -25,6 +25,7 @@ const generalChecklistValidation = Joi.object({
     client_id: Joi.string().required(),
     event_id: Joi.string().required(),
     general_checklist: Joi.array().items({
+        _id: Joi.string(),
         checklist_type: Joi.string().valid('Prod','Food','L&C').required(),
         generalchecklist_text: Joi.string().min(3),
         generalchecklist_date: Joi.date().min(todaysDate),

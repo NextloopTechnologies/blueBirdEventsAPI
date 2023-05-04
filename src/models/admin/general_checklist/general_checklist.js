@@ -12,7 +12,7 @@ const generalChecklistSchema = new Schema({
       ref: 'Event'
     },
     general_checklist: [{
-      _id: false,
+      // _id: false,
       checklist_type: {
         type: String,
         required: true
