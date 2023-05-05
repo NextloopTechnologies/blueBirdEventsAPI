@@ -117,7 +117,7 @@ const eventSchema = new Schema({
             required: true,
         },
         menu: [{
-            // _id: false,
+            _id: false,
             file: String,
             filename: String
         }],
@@ -142,7 +142,7 @@ const eventSchema = new Schema({
         // _id: false,
         decor_title: {type: String, minlength: 3},
         decor_img: [{
-            // _id: false,
+            _id: false,
             file: String,
             filename: String
         }],
