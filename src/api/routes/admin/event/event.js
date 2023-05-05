@@ -276,7 +276,7 @@ const singleEventValidation = Joi.object({
     event_type: Joi.string().required(),
     event_title: Joi.string().min(3).trim().required(),
     event_descp: Joi.string().min(3),
-    event_start_date: Joi.date().min(todaysDate).required(),
+    event_start_date: Joi.date().min().required(),
     event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
     event_remark: Joi.string().min(3),
     // hotel //
@@ -310,7 +310,7 @@ const singleEventValidation = Joi.object({
              // _id: false,
              file: Joi.string()
         }).required(),
-        serve_date: Joi.date().min(todaysDate).required(),
+        serve_date: Joi.date().min().required(),
         serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
         .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
         serve_end_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
@@ -330,7 +330,7 @@ const singleEventValidation = Joi.object({
              file: Joi.string()
         }).required(),
         decor_remark: Joi.string().min(3),
-        decor_date: Joi.date().min(todaysDate).required(),
+        decor_date: Joi.date().min().required(),
         expected_decor_time: Joi.string()
     }),
     id: Joi.string()
