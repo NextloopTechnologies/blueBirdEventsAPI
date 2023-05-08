@@ -22,17 +22,16 @@ router.post('', auth, checkPermission('manage-priortizationlist'),  async(req, r
     }
 });
 
-const priortizationListValidation = Joi.object({
+const priortizationListCreateValidtn = Joi.object({
     event_id: Joi.string().required(),
     title: Joi.string().min(3).trim().required(),
     descp: Joi.string().min(3).trim(),
     deadline_date: Joi.date().min(todaysDate).required(),
     contact: Joi.string().regex(/^[0-9]{10}$/)
-    .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    id: Joi.string()
+    .messages({'string.pattern.base': `Phone number must have 10 digits.`})
 });
 
-router.post('/create', auth, checkPermission('create-priortizationlist'), requestValidator(priortizationListValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-priortizationlist'), requestValidator(priortizationListCreateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await priortizationListService.create(req.values);
         res.status(status).send(data);
@@ -57,7 +56,17 @@ router.get('/read/:id', auth, checkPermission('read-priortizationlist'), async (
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-priortizationlist'), requestValidator(priortizationListValidation), async(req, res) => {
+const priortizationListUpdateValidtn = Joi.object({
+    event_id: Joi.string().required(),
+    title: Joi.string().min(3).trim().required(),
+    descp: Joi.string().min(3).trim(),
+    deadline_date: Joi.date().required(),
+    contact: Joi.string().regex(/^[0-9]{10}$/)
+    .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+    id: Joi.string()
+});
+
+router.post('/update/:id', auth, checkPermission('update-priortizationlist'), requestValidator(priortizationListUpdateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await priortizationListService.update(req.params.id,req.values);
         res.status(status).send(data);

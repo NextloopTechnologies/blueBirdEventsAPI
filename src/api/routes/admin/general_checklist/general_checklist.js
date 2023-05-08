@@ -21,7 +21,7 @@ router.post('', auth, checkPermission('manage-generalchecklist'), async(req, res
     }
 });
 
-const generalChecklistValidation = Joi.object({
+const generalChcklstCreateValidtn = Joi.object({
     client_id: Joi.string().required(),
     event_id: Joi.string().required(),
     general_checklist: Joi.array().items({
@@ -33,11 +33,10 @@ const generalChecklistValidation = Joi.object({
             check_id: Joi.number().required(),
             check_name: Joi.string().required()
         })
-    }),  
-    id: Joi.string()
+    })
 });
 
-router.post('/create', auth, checkPermission('create-generalchecklist'), requestValidator(generalChecklistValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-generalchecklist'), requestValidator(generalChcklstCreateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await generalChecklistService.create(req.values);
         res.status(status).send(data);
@@ -60,7 +59,23 @@ router.get('/read/:id', auth, checkPermission('read-generalchecklist'), async (r
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-generalchecklist'), requestValidator(generalChecklistValidation), async(req, res) => {
+const generalChcklstUpdateValidtn = Joi.object({
+    client_id: Joi.string().required(),
+    event_id: Joi.string().required(),
+    general_checklist: Joi.array().items({
+        _id: Joi.string(),
+        checklist_type: Joi.string().valid('Prod','Food','L&C').required(),
+        generalchecklist_text: Joi.string().min(3),
+        generalchecklist_date: Joi.date(),
+        checklist: Joi.array().items({
+            check_id: Joi.number().required(),
+            check_name: Joi.string().required()
+        })
+    }),  
+    id: Joi.string()
+});
+
+router.post('/update/:id', auth, checkPermission('update-generalchecklist'), requestValidator(generalChcklstUpdateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await generalChecklistService.update(req.params.id,req.values);
         res.status(status).send(data);
