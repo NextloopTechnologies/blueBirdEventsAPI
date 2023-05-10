@@ -17,7 +17,7 @@ export default ({app}) => {
         };
     }
 
-    const whitelist = [config.clientbaseUrl,'http://localhost:3000','http://localhost:3001','https://eloquent-sorbet-863364.netlify.app','https://www.bluebirdevents.co.in','https://admin.bluebirdevents.co.in', 'https://stg.bluebirdevents.co.in','https://stg.admin.bluebirdevents.co.in'];
+    const whitelist = [config.clientbaseUrl,'http://localhost:3000','http://localhost:3001','https://blue-bird-admin-interface-olhrol127-bluebirdevents.vercel.app/','https://www.bluebirdevents.co.in','https://admin.bluebirdevents.co.in', 'https://stg.bluebirdevents.co.in','https://stg.admin.bluebirdevents.co.in'];
     
     var corsOptions = {
         credentials: true,
