@@ -134,8 +134,8 @@ const eventSchema = new Schema({
             required: true
         },
         plates_guaranteed: String,
-        plated_added: String,
-        plated_remaining: String,
+        plates_added: String,
+        plates_remaining: String,
         plates_used: String
     }],
     event_proddecor: [{
