@@ -66,13 +66,12 @@ const eventSchema = new Schema({
                     required: true
                 },
                 guestDetails: [{
-                    _id: false,
+                    _id: Schema.Types.ObjectId,
                     guest_name: String,
                     guest_mobile: String,
                     guest_email: String,
                     guest_add: String,
                     guest_date_of_arrival: Date,
-                    
                 }]
             }]
         }],

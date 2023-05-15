@@ -50,7 +50,7 @@ export const read = async({page, perPage, whereClause={}}) => {
 
 export const readGuest = async(hotels, event_id) => {
     try {
-        let hotel_room_ids=[];
+        let hotel_room_ids = [];
         for(const hotel of hotels) {
             for (const hotelroom of hotel.hotel_rooms_required) {
                 for (const roomnos of hotelroom.room_nos) {
@@ -65,8 +65,9 @@ export const readGuest = async(hotels, event_id) => {
         if(hotel_room_ids.length > 0){
             const guestDetails = await Promise.all(hotel_room_ids.map(async(hotel_room_id) => {
                 return await RoomAllotment.findOne(hotel_room_id)
-                .populate('guest_id','-_id -client_id -event_id -guest_outstation -guest_invited -guest_expected_nos -guest_invitation_type -__v -createdAt -updatedAt')
+                .populate('guest_id','-client_id -event_id -guest_outstation -guest_invited -guest_expected_nos -guest_invitation_type -__v -createdAt -updatedAt')
             }));
+            console.log("guest detaisl", guestDetails);
             if(guestDetails.length > 0){
                 for(const hotel of hotels) {
                     for (const hotelroom of hotel.hotel_rooms_required) {
