@@ -63,9 +63,9 @@ router.post('/update/:id', auth, checkPermission('update-roomallotment'), reques
     }
 });
 
-router.post('/delete', auth, checkPermission('delete-roomallotment'), async (req, res) => {
+router.post('/delete/:id', auth, checkPermission('delete-roomallotment'), async (req, res) => {
     try {
-        const { status, ...data} = await roomAllotmentService.remove(req.body.ids);
+        const { status, ...data} = await roomAllotmentService.remove(req.params.id);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})

@@ -63,11 +63,13 @@ export const readGuest = async(hotels, event_id) => {
             }
         };
         if(hotel_room_ids.length > 0){
-            const guestDetails = await Promise.all(hotel_room_ids.map(async(hotel_room_id) => {
+            const guestRoomAllotments = await Promise.all(hotel_room_ids.map(async(hotel_room_id) => {
                 return await RoomAllotment.findOne(hotel_room_id)
                 .populate('guest_id','-client_id -event_id -guest_outstation -guest_invited -guest_expected_nos -guest_invitation_type -__v -createdAt -updatedAt')
+               
             }));
-            console.log("guest detaisl", guestDetails);
+            const guestDetails = guestRoomAllotments.filter(guest => guest !== null)
+
             if(guestDetails.length > 0){
                 for(const hotel of hotels) {
                     for (const hotelroom of hotel.hotel_rooms_required) {
@@ -108,6 +110,9 @@ export const readForEvent = async({page, perPage, whereClause={}}) => {
 export const update = async(id, values) => {
     try {
         const roomallotment = await RoomAllotment.findByIdAndUpdate(id, values);
+        if(!roomallotment) {
+            return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
+        }  
         await Event.updateOne({
             // client_id: values.client_id,
             _id: values.event_id,
@@ -126,18 +131,39 @@ export const update = async(id, values) => {
             ]
         }
         )
-        if(!roomallotment) {
-            return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
-        }  
+       
         return { status: 200, msgText: 'Updated Successfully! ',success: true}
     } catch (error) {
         throw error;
     }
 };
 
-export const remove = async(ids)=> {
+export const remove = async(id)=> {
     try {
-        await RoomAllotment.deleteMany({"_id": { "$in" : ids}});
+        // await RoomAllotment.deleteMany({"_id": { "$in" : ids}});
+        const roomallotment = await RoomAllotment.findByIdAndDelete(id);
+        console.log("deleted room allotment", roomallotment)
+        if(!roomallotment) {
+            return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
+        }  
+        await Event.updateOne({
+            // client_id: values.client_id,
+            _id: roomallotment.event_id,
+            'hotels.hotel_rooms_required.hotel_room_id': roomallotment.hotel_room_id
+        }, 
+        {
+            $set: {
+                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': false
+            },
+        },
+        {
+            arrayFilters: [
+                {
+                    "room.hotel_room_id": roomallotment.hotel_room_id
+                }
+            ]
+        }
+        )
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;
