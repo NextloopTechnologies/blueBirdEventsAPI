@@ -170,6 +170,38 @@ export const remove = async(id)=> {
     }
 };
 
+export const removeFromGuest = async(guest_id)=> {
+    try {
+        // await RoomAllotment.deleteMany({"_id": { "$in" : ids}});
+        const roomallotment = await RoomAllotment.findOneAndDelete({ guest_id });
+        console.log("deleted room allotment", roomallotment)
+        if(!roomallotment) {
+            return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
+        }  
+        await Event.updateOne({
+            // client_id: values.client_id,
+            _id: roomallotment.event_id,
+            'hotels.hotel_rooms_required.hotel_room_id': roomallotment.hotel_room_id
+        }, 
+        {
+            $set: {
+                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': false
+            },
+        },
+        {
+            arrayFilters: [
+                {
+                    "room.hotel_room_id": roomallotment.hotel_room_id
+                }
+            ]
+        }
+        )
+        return { status: 200, msgText: 'Deleted Successfully!', success: true}
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const removeMultiple = async(event_id)=> {
     try {
         await RoomAllotment.deleteMany({event_id});
