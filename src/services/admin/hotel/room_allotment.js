@@ -11,7 +11,7 @@ export const create = async(values) => {
         }, 
         {
             $set: {
-                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': true
+                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': 1
             },
         },
         {
@@ -120,7 +120,7 @@ export const update = async(id, values) => {
         }, 
         {
             $set: {
-                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': true
+                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': 1
             },
         },
         {
@@ -153,7 +153,7 @@ export const remove = async(id)=> {
         }, 
         {
             $set: {
-                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': false
+                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': 0
             },
         },
         {
@@ -185,7 +185,7 @@ export const removeFromGuest = async(guest_id)=> {
         }, 
         {
             $set: {
-                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': false
+                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': 0
             },
         },
         {

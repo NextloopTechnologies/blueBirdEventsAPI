@@ -44,8 +44,8 @@ const eventValidation = Joi.object({
                     room_no: Joi.number().required(),
                     hotel_room_id: Joi.string().required(),
                     room_type_id: Joi.string().required(),
-                    isBooked: Joi.boolean().required()
-                })
+                    isBooked: Joi.number().valid(0,1).required()
+                }).required()
             })
         }), 
         // vendors //
@@ -284,8 +284,13 @@ const singleEventValidation = Joi.object({
         hotel_id: Joi.string(),
         hotel_rooms_required: Joi.array().items({
             floor_no: Joi.number().required(),
-            room_nos: Joi.array().required()
-        })
+            room_nos: Joi.array().items({
+                room_no: Joi.number().required(),
+                hotel_room_id: Joi.string().required(),
+                room_type_id: Joi.string().required(),
+                isBooked: Joi.number().valid(0,1).required()
+            }).required()
+        }).required()
     }), 
     // vendors //
     event_vendors : Joi.array().items({
@@ -338,6 +343,7 @@ const singleEventValidation = Joi.object({
 
 router.post('/update_single_event/:id', auth, checkPermission('update-event'), requestValidator(singleEventValidation), async(req, res) => {
     try {
+
         const { status, ...data} = await eventService.updateSingleEvent(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
