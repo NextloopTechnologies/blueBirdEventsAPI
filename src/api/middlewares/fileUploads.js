@@ -1,6 +1,6 @@
 import multer, { MulterError } from 'multer';
 
-export default (filename,filelimit=30) => {
+export default (filename,filelimit=15) => {
     if(filelimit === 1) {
         var upload = multer({
             limits: { fileSize: 2 * 1024 * 1024 }
@@ -15,14 +15,14 @@ export default (filename,filelimit=30) => {
             if(err instanceof MulterError) {
                 if(err.message == 'File too large') {
                     console.log(`Multer: ${err}`);
-                    return res.status(401).send({msgText: "File too Large" ,success: false })
+                    return res.status(400).send({msgText: "File too Large" ,success: false })
                 } else if(err.message == 'Unexpected field' && filelimit === 1) {
                     console.log(`Multer: ${err.message}`);
-                    return res.status(401).send({msgText: "Max one allowed" ,success: false })
+                    return res.status(400).send({msgText: "Max one allowed" ,success: false })
                 } 
             } else if (err) {
                 console.log(`U.E: ${err.message}`);
-                return res.status(401).send({error: `U.E: ${err.message}` ,success: false }) // Unknown  error while uploading
+                return res.status(400).send({error: `U.E: ${err.message}` ,success: false }) // Unknown  error while uploading
             }
             next();
         });

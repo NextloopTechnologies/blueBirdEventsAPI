@@ -1,4 +1,4 @@
-import { Freelancer } from '../../../models';
+import { Freelancer, FreelancerAssignedEvent } from '../../../models';
 
 export const create = async(values) => {
     try {
@@ -41,9 +41,12 @@ export const update = async(id, values) => {
     }
 };
 
-export const remove = async(ids)=> {
+export const remove = async(id)=> {
     try {
-        await Freelancer.deleteMany({"_id": { "$in" : ids}});
+        const deletedFreelancer = await Freelancer.findByIdAndDelete(id);
+        if(deletedFreelancer){
+            await FreelancerAssignedEvent.deleteMany({"freelancer_id": deletedFreelancer._id });
+        }
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

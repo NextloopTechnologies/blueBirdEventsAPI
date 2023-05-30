@@ -1,4 +1,5 @@
 import { PriortizationList } from '../../../models';
+import mongoose from 'mongoose';
 
 export const create = async(values) => {
     try {
@@ -13,9 +14,39 @@ export const create = async(values) => {
 
 export const read = async({page, perPage, whereClause={}}) => {
     try {
-        const priortizationlist = await PriortizationList.find(whereClause)
-        .populate([{path: 'client_id', select: ['name']},
-        {path: 'event_id', select: ['event_title']}])
+        const priortizationlist = await PriortizationList.aggregate([
+            {
+                $match: whereClause
+            },
+            {
+                $lookup: {
+                    from: "events",
+                    localField: "event_id",
+                    foreignField: "_id",
+                    as: "event"
+                }
+            }, { $unwind: "$event"} ,
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "event.client_id",
+                    foreignField: "_id",
+                    as: "user"
+                }
+            } , { $unwind: "$user" }, 
+            {
+                $addFields: {
+                    event_name: "$event.event_title",
+                    client_name: "$user.name"
+                }
+            },
+            {
+                $project: {
+                    event: 0,
+                    user: 0
+                }
+            },
+        ])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
         if(!priortizationlist.length > 0) {

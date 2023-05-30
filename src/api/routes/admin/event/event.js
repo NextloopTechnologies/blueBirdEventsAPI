@@ -43,8 +43,9 @@ const eventValidation = Joi.object({
                 room_nos: Joi.array().items({
                     room_no: Joi.number().required(),
                     hotel_room_id: Joi.string().required(),
-                    isBooked: Joi.boolean().required()
-                })
+                    room_type_id: Joi.string().required(),
+                    isBooked: Joi.number().valid(0,1).required()
+                }).required()
             })
         }), 
         // vendors //
@@ -65,8 +66,8 @@ const eventValidation = Joi.object({
         event_foodbev: Joi.array().items({
             food_type: Joi.string().required(),
             menu: Joi.array().items({
-                _id: false,
-                file: String
+                // _id: false,
+                file: Joi.string()
             }).required(),
             serve_date: Joi.date().min(todaysDate).required(),
             serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
@@ -83,8 +84,8 @@ const eventValidation = Joi.object({
         event_proddecor: Joi.array().items({
             decor_title: Joi.string().min(3).required(),
             decor_img: Joi.array().items({
-                _id: false,
-                file: String
+                 // _id: false,
+                 file: Joi.string()
             }).required(),
             decor_remark: Joi.string().min(3),
             decor_date: Joi.date().min(todaysDate).required(),
@@ -134,13 +135,13 @@ const eventValidation = Joi.object({
             special_note: Joi.string().min(3),
             date_of_departure: Joi.date().min(todaysDate).required(),
         }),
-        roomallotment: Joi.array().items({
-            _id: Joi.string(),
-            client_id: Joi.string(),
-            event_id: Joi.string(),
-            hotel_room_id: Joi.string().required(),
-            guest_id: Joi.string().required(), 
-        }),
+        // roomallotment: Joi.array().items({
+        //     _id: Joi.string(),
+        //     client_id: Joi.string(),
+        //     event_id: Joi.string(),
+        //     hotel_room_id: Joi.string().required(),
+        //     guest_id: Joi.string().required(), 
+        // }),
         lostandfound: Joi.array().items({
             _id: Joi.string(),
             client_id: Joi.string(),
@@ -169,6 +170,7 @@ const eventValidation = Joi.object({
         client_id: Joi.string(),
         event_id: Joi.string(),
         general_checklist: Joi.array().items({
+            _id: Joi.string(),
             checklist: Joi.array().items({
                 check_id: Joi.number().required(),
                 check_name: Joi.string().required()
@@ -185,8 +187,8 @@ const eventValidation = Joi.object({
         ep_title: Joi.string().min(3).required(),
         ep_descp: Joi.string().min(3).required(),
         ep_img: Joi.array().items({
-            _id: false,
-            file: String
+            // _id: false,
+            file: Joi.string()
         }).required()
     }),
 });
@@ -274,7 +276,7 @@ const singleEventValidation = Joi.object({
     event_type: Joi.string().required(),
     event_title: Joi.string().min(3).trim().required(),
     event_descp: Joi.string().min(3),
-    event_start_date: Joi.date().min(todaysDate).required(),
+    event_start_date: Joi.date().required(),
     event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
     event_remark: Joi.string().min(3),
     // hotel //
@@ -282,11 +284,17 @@ const singleEventValidation = Joi.object({
         hotel_id: Joi.string(),
         hotel_rooms_required: Joi.array().items({
             floor_no: Joi.number().required(),
-            room_nos: Joi.array().required()
-        })
+            room_nos: Joi.array().items({
+                room_no: Joi.number().required(),
+                hotel_room_id: Joi.string().required(),
+                room_type_id: Joi.string().required(),
+                isBooked: Joi.number().valid(0,1).required()
+            }).required()
+        }).required()
     }), 
     // vendors //
     event_vendors : Joi.array().items({
+        _id: Joi.string(),
         vendor_name: Joi.string().min(3).required().trim(),
         vendor_work: Joi.string().min(3).required(),
         vendor_mobile: Joi.string().regex(/^[0-9]{10}$/)
@@ -301,12 +309,13 @@ const singleEventValidation = Joi.object({
     }),
     // food bev
     event_foodbev: Joi.array().items({
+        _id: Joi.string(),
         food_type: Joi.string().required(),
         menu: Joi.array().items({
-            _id: false,
-            file: String
+             // _id: false,
+             file: Joi.string()
         }).required(),
-        serve_date: Joi.date().min(todaysDate).required(),
+        serve_date: Joi.date().required(),
         serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
         .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
         serve_end_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
@@ -319,13 +328,14 @@ const singleEventValidation = Joi.object({
    
     // vendor prod //
     event_proddecor: Joi.array().items({
+        _id: Joi.string(),
         decor_title: Joi.string().min(3).required(),
         decor_img: Joi.array().items({
-            _id: false,
-            file: String
+             // _id: false,
+             file: Joi.string()
         }).required(),
         decor_remark: Joi.string().min(3),
-        decor_date: Joi.date().min(todaysDate).required(),
+        decor_date: Joi.date().required(),
         expected_decor_time: Joi.string()
     }),
     id: Joi.string()
@@ -333,6 +343,7 @@ const singleEventValidation = Joi.object({
 
 router.post('/update_single_event/:id', auth, checkPermission('update-event'), requestValidator(singleEventValidation), async(req, res) => {
     try {
+
         const { status, ...data} = await eventService.updateSingleEvent(req.params.id,req.values);
         res.status(status).send(data);
     } catch (error) {
@@ -345,11 +356,11 @@ router.post('/update_single_event/:id', auth, checkPermission('update-event'), r
 router.post('/uploadfiles', auth, checkPermission('create-event'), fileUploads('img_files'), async(req, res) => {
     try {
         if(!req.files) {
-            return res.status(401).send({msgText: 'File is required', success:false})
+            return res.status(400).send({msgText: 'File is required', success:false})
         }
         const files = await fileService.uploadMultiple(req.files);
         if(!files.length > 0 ){
-            return res.status(401).send({msgText: 'File key is incorrect', success:false})
+            return res.status(400).send({msgText: 'File key is incorrect', success:false})
         }
         res.status(201).send({ files, success: true });
     } catch (error) {

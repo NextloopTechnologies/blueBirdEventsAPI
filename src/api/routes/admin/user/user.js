@@ -43,8 +43,8 @@ router.post('/create', requestValidator(userRegisterValidation), async (req, res
 });
 
 const userLoginValidation = Joi.object({
-    email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).required().trim(),
-    password: Joi.string().min(6).max(16).required().trim()
+    email: Joi.string().email().required().trim(),
+    password: Joi.string().required().trim()
 });
 
 router.post('/login', requestValidator(userLoginValidation),async (req, res) => {
@@ -115,7 +115,7 @@ const changePasswordValidator = Joi.object({
 router.post('/changepassword', auth, requestValidator(changePasswordValidator), passwordValidator, async(req, res) => {
     try {
         if(req.values.password !== req.values.confirmPassword) {
-            throw { status: 401, msgText: "Password mismatch for new and confirm password!", success: false}
+            throw { status: 400, msgText: "Password mismatch for new and confirm password!", success: false}
         }
         const { status, ...data} = await userService.update(req.user._id,{password: req.values.password});
         res.status(status).send(data);
@@ -152,7 +152,7 @@ router.post('/updateforgotpassword', requestValidator(updateForgotPasswordValida
     try {
         verify (req.values.resetToken, config.JWT, (decoded, err)=> {
             if(err) {
-                throw { status: 400, msgText: err , success: false }
+                throw { status: 401, msgText: err , success: false }
             } else if(decoded.name === "JsonWebTokenError"){
                 throw { status: 401, msgText: 'Invalid Token', success: false }
             } else if (decoded.name === "TokenExpiredError") {
@@ -160,7 +160,7 @@ router.post('/updateforgotpassword', requestValidator(updateForgotPasswordValida
             }
         });
         if(req.values.password !== req.values.confirmPassword) {
-            throw { status: 401, msgText: "Password mismatch for new and confirm password!", success: false}
+            throw { status: 400, msgText: "Password mismatch for new and confirm password!", success: false}
         }
         const { status, ...data} = await userService.update(req.values.id, {password: req.values.password});
         res.status(status).send(data);

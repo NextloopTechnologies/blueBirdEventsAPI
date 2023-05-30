@@ -11,5 +11,5 @@ export default {
     AWS_AK: process.env.AWS_ACCESS_KEY,
     AWS_SK: process.env.AWS_SECRET_KEY,
     PM_KEY: process.env.PM_SERVER_TOKEN_API,
-    WAB_KEY: process.env.WA_ACCESS_TOKEN
+    WAB_KEY: process.env.ACCESS_TOKEN
 };

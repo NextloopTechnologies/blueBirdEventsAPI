@@ -11,7 +11,7 @@ router.get('', auth, checkPermission('manage-hotelroom'), async(req, res) => {
     try {
         const page = parseInt(req.query.p) || 1
         const perPage = parseInt (req.query.r) || 10
-        const { status, ...data} = await hotelRoomService.read({ page, perPage });
+        const { status, ...data} = await hotelRoomService.readAll({ page, perPage });
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_HOTELROOM-READALL-CONTROLLER').error(error);
@@ -50,7 +50,7 @@ router.post('/create', auth, checkPermission('create-hotelroom'), requestValidat
 router.get('/read/:id', auth, checkPermission('read-hotelroom'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await hotelRoomService.read({whereClause:{_id}});
+        const { status, ...data} = await hotelRoomService.readAll({whereClause:{_id}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_HOTELROOM-READ-CONTROLLER').error(error);
@@ -62,7 +62,7 @@ router.get('/read/:id', auth, checkPermission('read-hotelroom'), async (req, res
 router.get('/checked/:id', auth, checkPermission('read-hotelroom'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await hotelRoomService.read({whereClause:{hotel_id: _id}});
+        const { status, ...data} = await hotelRoomService.readCheckedRoom(_id);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_HOTELROOM-READ-CONTROLLER').error(error);

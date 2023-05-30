@@ -32,7 +32,7 @@ const vendorProdDecorValidation = Joi.object({
 router.post('/create', auth, checkPermission('create-vendorproddecor'),  fileUploads('decor_img'), requestValidator(vendorProdDecorValidation), async(req, res) => {
     try {
         if(req.files.length === 0) {
-            throw {status: 401, msgText: 'File is required', success:false}
+            throw {status: 400, msgText: 'File is required', success:false}
         }
         const files = await fileService.uploadMultiple(req.files);
         req.values.decor_img = files;

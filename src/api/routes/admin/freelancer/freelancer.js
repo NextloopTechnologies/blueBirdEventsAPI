@@ -45,7 +45,7 @@ const freelancerValidation = Joi.object({
 router.post('/create', fileUploads('pass_size_pic',1), requestValidator(freelancerValidation), async(req, res) => {
     try {
         if(!req.file) {
-            throw {status: 401, msgText: 'File is required', success:false}
+            throw {status: 400, msgText: 'File is required', success:false}
         }
         const { fileName } = await fileService.uploadSingle(req.file);
         req.values.pass_size_pic = fileName;
@@ -91,9 +91,9 @@ router.post('/update/:id', auth, checkPermission('update-freelancer'), fileUploa
     }
 });
 
-router.post('/delete', auth, checkPermission('delete-freelancer'), async (req, res) => {
+router.post('/delete/:id', auth, checkPermission('delete-freelancer'), async (req, res) => {
     try {
-        const { status, ...data} = await freelancerService.remove(req.body.ids);
+        const { status, ...data} = await freelancerService.remove(req.params.id);
         res.status(status).send(data);
     } catch (error) {
         res.status(500).send({ msgText: 'Something went wrong!'})

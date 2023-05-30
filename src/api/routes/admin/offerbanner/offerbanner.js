@@ -22,7 +22,7 @@ router.get('', async(req, res) => {
     }
 });
 
-const offerBannerValidation = Joi.object({
+const offerBannerCreateValidtn = Joi.object({
     banner_title: Joi.string().min(3).trim().required(),
     banner_descp: Joi.string().min(3).required(),
     event_type: Joi.string().required(),
@@ -30,16 +30,14 @@ const offerBannerValidation = Joi.object({
     offer_ends: Joi.date().greater(Joi.ref('offer_starts')).required(),
     banner_img: Joi.string(),
     price: Joi.number().required(),
-    discount: Joi.string().required(),
-    id: Joi.string(),
-    active: Joi.boolean()
+    discount: Joi.string().required()
 });
 
-router.post('/create', auth, checkPermission('create-offerbanner'),  fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-offerbanner'),  fileUploads('banner_img', 1), requestValidator(offerBannerCreateValidtn), async(req, res) => {
     try {
         
         if(!req.file) {
-            throw {status: 401, msgText: 'File is required', success:false}
+            throw {status: 400, msgText: 'File is required', success:false}
         }
         const { fileName } = await fileService.uploadSingle(req.file);
         req.values.banner_img = fileName;
@@ -69,7 +67,19 @@ router.get('/read/:id', auth, checkPermission('read-offerbanner'),  async (req, 
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-offerbanner'), fileUploads('banner_img', 1), requestValidator(offerBannerValidation), async(req, res) => {
+const offerBannerUpdateValidtn = Joi.object({
+    banner_title: Joi.string().min(3).trim().required(),
+    banner_descp: Joi.string().min(3).required(),
+    event_type: Joi.string().required(),
+    offer_starts: Joi.date().required(),
+    offer_ends: Joi.date().greater(Joi.ref('offer_starts')).required(),
+    banner_img: Joi.string(),
+    price: Joi.number().required(),
+    discount: Joi.string().required(),
+    id: Joi.string()
+});
+
+router.post('/update/:id', auth, checkPermission('update-offerbanner'), fileUploads('banner_img', 1), requestValidator(offerBannerUpdateValidtn), async(req, res) => {
     try {
         if(req.file) {
             const { fileName } = await fileService.uploadSingle(req.file);
@@ -79,6 +89,22 @@ router.post('/update/:id', auth, checkPermission('update-offerbanner'), fileUplo
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_OFFERBANNER-UPDATE-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
+const offerBannerStatusValidation = Joi.object({
+    active: Joi.boolean().required(),
+    id: Joi.string()
+});
+
+router.post('/updateofferstatus/:id', auth, checkPermission('update-offerbanner'), requestValidator(offerBannerStatusValidation), async(req, res) => {
+    try {
+        const { status, ...data} = await offerBannerService.update(req.params.id,req.values);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_OFFERBANNER-STATUSUPDATE-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
         res.status(status).send(data);
     }

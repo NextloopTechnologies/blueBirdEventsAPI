@@ -21,7 +21,7 @@ router.post('', auth, checkPermission('manage-ghmsarrival'), async(req, res) => 
     }
 });
 
-const ghmsArrivalMgmtValidation = Joi.object({
+const ghmsArrivalMgmtCreateValidtn = Joi.object({
     client_id: Joi.string().required(),
     event_id: Joi.string().required(),
     guest_id: Joi.string().required(),
@@ -32,11 +32,10 @@ const ghmsArrivalMgmtValidation = Joi.object({
     welcome_checklist: Joi.string().min(3),
     no_of_guest_arrived: Joi.number().required(),
     special_note: Joi.string().min(3),
-    date_of_arrival: Joi.date().min(todaysDate).required(),
-    id: Joi.string()
+    date_of_arrival: Joi.date().min(todaysDate).required()
 });
 
-router.post('/create', auth, checkPermission('create-ghmsarrival'), requestValidator(ghmsArrivalMgmtValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-ghmsarrival'), requestValidator(ghmsArrivalMgmtCreateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await ghmsArrivalMgmtService.create(req.values);
         res.status(status).send(data);
@@ -59,7 +58,22 @@ router.get('/read/:id', auth, checkPermission('read-ghmsarrival'), async (req, r
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-ghmsarrival'), requestValidator(ghmsArrivalMgmtValidation), async(req, res) => {
+const ghmsArrivalMgmtUpdateValidtn = Joi.object({
+    client_id: Joi.string().required(),
+    event_id: Joi.string().required(),
+    guest_id: Joi.string().required(),
+    car_id: Joi.string().required(),
+    arrived_at: Joi.string().required(),
+    mode_of_arrival: Joi.string().required(),
+    expected_arrival_time: Joi.string().required(),
+    welcome_checklist: Joi.string().min(3),
+    no_of_guest_arrived: Joi.number().required(),
+    special_note: Joi.string().min(3),
+    date_of_arrival: Joi.date().required(),
+    id: Joi.string()
+});
+
+router.post('/update/:id', auth, checkPermission('update-ghmsarrival'), requestValidator(ghmsArrivalMgmtUpdateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await ghmsArrivalMgmtService.update(req.params.id,req.values);
         res.status(status).send(data);

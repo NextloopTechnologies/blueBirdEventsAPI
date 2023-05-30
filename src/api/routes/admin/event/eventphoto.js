@@ -24,8 +24,9 @@ const eventPhotoValidation = Joi.object({
     ep_title: Joi.string().min(3).trim().required(),
     ep_descp: Joi.string().min(3).required(),
     event_id: Joi.string().required(),
-    event_date: Joi.date().min(todaysDate).required(),
-    ep_img: Joi.string(),
+    event_date: Joi.date().required(),
+    // ep_img: Joi.string(),
+    deleted_img: Joi.array(),
     id: Joi.string(),
     active: Joi.boolean()
 });
@@ -33,7 +34,7 @@ const eventPhotoValidation = Joi.object({
 router.post('/create', auth, checkPermission('create-eventphoto'),fileUploads('ep_img'), requestValidator(eventPhotoValidation), async(req, res) => {
     try {
         if(req.files.length === 0) {
-            throw {status: 401, msgText: 'File is required', success:false}
+            throw {status: 400, msgText: 'File is required', success:false}
         }
         const files = await fileService.uploadMultiple(req.files);
         req.values.ep_img = files;

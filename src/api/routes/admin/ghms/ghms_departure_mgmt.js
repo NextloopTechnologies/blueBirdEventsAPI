@@ -21,7 +21,7 @@ router.post('', auth, checkPermission('manage-ghmsdeparture'), async(req, res) =
     }
 });
 
-const ghmsDepartureMgmtValidation = Joi.object({
+const ghmsDepartureMgmtCreateValidtn = Joi.object({
     event_id: Joi.string().required(),
     client_id: Joi.string().required(),
     car_id: Joi.string().required(),
@@ -31,11 +31,10 @@ const ghmsDepartureMgmtValidation = Joi.object({
     return_checklist: Joi.string().min(3),
     no_of_guest_arrived: Joi.number().required(),
     special_note: Joi.string().min(3),
-    date_of_departure: Joi.date().min(todaysDate).required(),
-    id: Joi.string()
+    date_of_departure: Joi.date().min(todaysDate).required()
 });
 
-router.post('/create', auth, checkPermission('create-ghmsdeparture'), requestValidator(ghmsDepartureMgmtValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-ghmsdeparture'), requestValidator(ghmsDepartureMgmtCreateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await ghmsDepartureMgmtService.create(req.values);
         res.status(status).send(data);
@@ -58,7 +57,21 @@ router.get('/read/:id', auth, checkPermission('read-ghmsdeparture'), async (req,
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-ghmsdeparture'), requestValidator(ghmsDepartureMgmtValidation), async(req, res) => {
+const ghmsDepartureMgmtUpdateValidtn = Joi.object({
+    event_id: Joi.string().required(),
+    client_id: Joi.string().required(),
+    car_id: Joi.string().required(),
+    guest_id: Joi.string().required(),
+    departure_time: Joi.string().required(),
+    mode_of_departure: Joi.string().required(),
+    return_checklist: Joi.string().min(3),
+    no_of_guest_arrived: Joi.number().required(),
+    special_note: Joi.string().min(3),
+    date_of_departure: Joi.date().required(),
+    id: Joi.string()
+});
+
+router.post('/update/:id', auth, checkPermission('update-ghmsdeparture'), requestValidator(ghmsDepartureMgmtUpdateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await ghmsDepartureMgmtService.update(req.params.id,req.values);
         res.status(status).send(data);
@@ -69,7 +82,7 @@ router.post('/update/:id', auth, checkPermission('update-ghmsdeparture'), reques
     }
 });
 
-router.post('/delete/:id', auth, checkPermission('delete-ghmsdeparture'), async (req, res) => {
+router.post('/delete', auth, checkPermission('delete-ghmsdeparture'), async (req, res) => {
     try {
         const { status, ...data} = await ghmsDepartureMgmtService.remove(req.body.ids);
         res.status(status).send(data);

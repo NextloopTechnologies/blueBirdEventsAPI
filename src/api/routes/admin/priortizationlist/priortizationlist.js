@@ -4,6 +4,7 @@ import { priortizationListService, filterService } from "../../../../services";
 import { formatFormError, todaysDate } from '../../../../utils/helper';
 import logger from "../../../../loaders/logger";
 import Joi from 'joi';
+import mongoose from "mongoose";
 
 const router = new Router();
 
@@ -21,18 +22,16 @@ router.post('', auth, checkPermission('manage-priortizationlist'),  async(req, r
     }
 });
 
-const priortizationListValidation = Joi.object({
-    client_id: Joi.string().required(),
+const priortizationListCreateValidtn = Joi.object({
     event_id: Joi.string().required(),
     title: Joi.string().min(3).trim().required(),
     descp: Joi.string().min(3).trim(),
     deadline_date: Joi.date().min(todaysDate).required(),
     contact: Joi.string().regex(/^[0-9]{10}$/)
-    .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    id: Joi.string()
+    .messages({'string.pattern.base': `Phone number must have 10 digits.`})
 });
 
-router.post('/create', auth, checkPermission('create-priortizationlist'), requestValidator(priortizationListValidation), async(req, res) => {
+router.post('/create', auth, checkPermission('create-priortizationlist'), requestValidator(priortizationListCreateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await priortizationListService.create(req.values);
         res.status(status).send(data);
@@ -45,17 +44,29 @@ router.post('/create', auth, checkPermission('create-priortizationlist'), reques
 
 router.get('/read/:id', auth, checkPermission('read-priortizationlist'), async (req, res)=> {
     try {
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
         const _id = req.params.id;
-        const { status, ...data} = await priortizationListService.read({whereClause:{_id}});
+        const { status, ...data} = await priortizationListService.read({page, perPage, whereClause:{_id: new mongoose.Types.ObjectId(_id)}});
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_PRIORTIZATIONLIST-READ-CONTROLLER').error(error);
         const { status, ...data } = formatFormError(error);
-        res.status(status).send(data);
+        res.status(status).send(data)
     }
 });
 
-router.post('/update/:id', auth, checkPermission('update-priortizationlist'), requestValidator(priortizationListValidation), async(req, res) => {
+const priortizationListUpdateValidtn = Joi.object({
+    event_id: Joi.string().required(),
+    title: Joi.string().min(3).trim().required(),
+    descp: Joi.string().min(3).trim(),
+    deadline_date: Joi.date().required(),
+    contact: Joi.string().regex(/^[0-9]{10}$/)
+    .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+    id: Joi.string()
+});
+
+router.post('/update/:id', auth, checkPermission('update-priortizationlist'), requestValidator(priortizationListUpdateValidtn), async(req, res) => {
     try {
         const { status, ...data} = await priortizationListService.update(req.params.id,req.values);
         res.status(status).send(data);

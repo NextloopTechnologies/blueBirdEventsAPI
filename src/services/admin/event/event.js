@@ -99,9 +99,6 @@ export const readSingle = async(page, perPage, _id) => {
         // { path: 'event_vendors.vendor_id', select: ['vendor_name','vendor_work',
         // 'vendor_mobile','blacklisted','reason_for_blacklist']}
         // ]);
-        if(event.hotels.length > 0) {
-            event.hotels = await roomAllotmentService.readGuest(event.hotels, event._id)
-        }
         if(!event) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         } else {
@@ -118,7 +115,11 @@ export const readSingle = async(page, perPage, _id) => {
                 event.coordinator_ids = undefined
             }
         }
-
+        if(event.hotels ){
+            if(event.hotels.length > 0) {
+                event.hotels = await roomAllotmentService.readGuest(event.hotels, event._id)
+            }
+        }
         const whereClause = { event_id: _id };
         const { ghmsguestlist: guestlist } = await ghmsGuestlistService.readForEvent({ page, perPage, whereClause });
         const { ghmsarrivalmgmt: arrival } = await ghmsArrivalMgmtService.readForEvent({ page, perPage, whereClause });

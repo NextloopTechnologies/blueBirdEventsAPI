@@ -13,7 +13,7 @@ export const create = async(values) => {
     }
 };
 
-export const read = async({page, perPage,whereClause={}}) => {
+export const readAll = async({page, perPage,whereClause={}}) => {
     try {
         const hotelroom = await HotelRoom.find(whereClause)
         .populate([
@@ -23,6 +23,19 @@ export const read = async({page, perPage,whereClause={}}) => {
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
         
+        if(!hotelroom.length > 0) {
+            return { status: 404 , msgText: "HotelRoom does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, hotelroom}
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const readCheckedRoom = async(id) => {
+    try {
+        const hotelroom = await HotelRoom.find({ hotel_id: id })
+        .sort({ _id: -1 })
         if(!hotelroom.length > 0) {
             return { status: 404 , msgText: "HotelRoom does not exists!" ,success: false }
         }
