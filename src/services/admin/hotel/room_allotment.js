@@ -92,12 +92,13 @@ export const readGuest = async(hotels, event_id) => {
     }
 };
 
-export const readForEvent = async({page, perPage, whereClause={}}) => {
+export const readForEvent = async(whereClause={}) => {
     try {
         const roomallotment = await RoomAllotment.find(whereClause)
         .select(['-active','-createdAt','-updatedAt','-__v'])
-        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
-        .limit(perPage);
+        .sort({ _id: -1 })
+        // .skip(((perPage * page) - perPage))
+        // .limit(perPage);
         if(!roomallotment.length > 0) {
             return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
         }

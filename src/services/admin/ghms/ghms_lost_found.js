@@ -32,12 +32,13 @@ export const read = async({page, perPage, whereClause={}}) => {
     }
 };
 
-export const readForEvent = async({page, perPage, whereClause={}}) => {
+export const readForEvent = async(whereClause={}) => {
     try {
         const ghmslostfound = await GHMSLostFound.find(whereClause)
         .select(['-active','-createdAt','-updatedAt','-__v'])
-        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
-        .limit(perPage);
+        .sort({ _id: -1 })
+        // .skip(((perPage * page) - perPage))
+        // .limit(perPage);
         if(!ghmslostfound.length > 0) {
             return { status: 404 , msgText: "GHMSLostFound does not exists!" ,success: false }
         }
