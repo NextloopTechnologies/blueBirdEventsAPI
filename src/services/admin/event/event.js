@@ -121,7 +121,7 @@ export const readSingle = async(page, perPage, _id) => {
             }
         }
         const whereClause = { event_id: _id };
-        const { ghmsguestlist: guestlist } = await ghmsGuestlistService.readForEvent({ page, perPage, whereClause });
+        const { ghmsguestlist: guestlist } = await ghmsGuestlistService.readForEvent(whereClause);
         const { ghmsarrivalmgmt: arrival } = await ghmsArrivalMgmtService.readForEvent({ page, perPage, whereClause });
         const { ghmsdeparturemgmt: departure } = await ghmsDepartureMgmtService.readForEvent({ page, perPage, whereClause });
         const { ghmslostfound: lostandfound } = await ghmsLostFoundService.readForEvent({ page, perPage, whereClause });

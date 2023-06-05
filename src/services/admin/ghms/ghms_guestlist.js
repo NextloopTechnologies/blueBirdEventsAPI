@@ -42,12 +42,13 @@ export const read = async({page, perPage, whereClause={}}) => {
     }
 };
 
-export const readForEvent = async({page, perPage, whereClause={}}) => {
+export const readForEvent = async(whereClause={}) => {
     try {
         const ghmsguestlist = await GHMSGuestList.find(whereClause)
         .select(['-active','-createdAt','-updatedAt','-__v'])
-        .sort({ _id: -1 }).skip(((perPage * page) - perPage))
-        .limit(perPage);
+        .sort({ _id: -1 })
+        // .skip(((perPage * page) - perPage))
+        // .limit(perPage);
         if(!ghmsguestlist.length > 0) {
             return { status: 404 , msgText: "GHMSGuestList does not exists!" ,success: false }
         }
