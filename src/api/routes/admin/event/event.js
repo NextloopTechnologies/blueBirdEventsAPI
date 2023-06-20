@@ -293,7 +293,7 @@ const singleEventValidation = Joi.object({
                 isBooked: Joi.number().valid(0,1).required()
             }).required()
         }).required()
-    }).required(), 
+    }), 
     // vendors //
     // event_vendors : Joi.array().items({
     //     _id: Joi.string(),
