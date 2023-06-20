@@ -31,13 +31,13 @@ export const create = async(values) => {
                 await GHMSGuestList.insertMany(values.ghms.guestlist);
             }
 
-            if(values.priortization){
-                values.priortization.forEach(prior => {
-                    prior.client_id = event.client_id
-                    prior.event_id = event._id
-                });
-                await PriortizationList.insertMany(values.priortization);
-            }
+            // if(values.priortization){
+            //     values.priortization.forEach(prior => {
+            //         prior.client_id = event.client_id
+            //         prior.event_id = event._id
+            //     });
+            //     await PriortizationList.insertMany(values.priortization);
+            // }
             
             if(values.checklist){
                 values.checklist.client_id = event.client_id
@@ -102,8 +102,14 @@ export const readSingle = async(page, perPage, _id) => {
         if(!event) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         } else {
-            if(event.event_vendors.length === 0){
+            if(!event.event_vendors){
                 event.event_vendors = undefined
+            }
+            if(event.event_vendors && event.event_vendors.vendors.length === 0){
+                event.event_vendors.vendors = undefined
+            }
+            if(event.event_vendors && event.event_vendors.cars.length === 0){
+                event.event_vendors.cars = undefined
             }
             if(event.event_foodbev.length === 0){
                 event.event_foodbev = undefined
