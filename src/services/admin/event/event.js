@@ -10,6 +10,7 @@ import {
     roomAllotmentService 
 } from '../..';
 import mongoose from 'mongoose';
+import { todaysDate } from '../../../utils/helper';
 const ObjectId = mongoose.Types.ObjectId;
 
 export const create = async(values) => {
@@ -80,9 +81,15 @@ export const readCoordinator = async(id) => {
     try {
         let coordinator_ids = [];
         coordinator_ids.push(id);
-        const event = await Event.find({ coordinator_ids: { $in: coordinator_ids }}) 
+        const event = await Event.find({ 
+            coordinator_ids: { $in: coordinator_ids },
+            $or: [ 
+                { event_start_date: { $gte: todaysDate }}, 
+                { event_end_date: { $gte: todaysDate }} 
+            ]
+        }) 
         if(!event.length > 0) {
-            return { status: 404 , msgText: "Event does not exists!" ,success: false }
+            return { status: 404 , msgText: "No events assigned!" ,success: false }
         }
         return { status: 200, success: true, event}
     } catch (error) {

@@ -73,9 +73,9 @@ const eventValidation = Joi.object({
             }).required(),
             serve_date: Joi.date().min(todaysDate).required(),
             serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
-            .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
+            .messages({'string.pattern.base': `Time should be in 24 hrs format.`}),
             serve_end_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
-            .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
+            .messages({'string.pattern.base': `Time should be in 24 hrs format.`}),
             plates_guaranteed: Joi.string().trim(),
             plates_added: Joi.string().trim(),
             plates_remaining: Joi.string().trim(),
@@ -347,9 +347,9 @@ const singleEventValidation = Joi.object({
         }).required(),
         serve_date: Joi.date().required(),
         serve_start_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
-        .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
+        .messages({'string.pattern.base': `Time should be in 24 hrs format.`}),
         serve_end_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/)
-        .messages({'string.pattern.base': `Time should be in 24 hrs format.`}).required(),
+        .messages({'string.pattern.base': `Time should be in 24 hrs format.`}),
         plates_guaranteed: Joi.string().trim(),
         plates_added: Joi.string().trim(),
         plates_remaining: Joi.string().trim(),

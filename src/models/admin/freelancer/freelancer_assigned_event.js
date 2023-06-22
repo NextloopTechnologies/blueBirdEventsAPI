@@ -16,12 +16,10 @@ const freelancerAssignedEventSchema = new Schema({
       required: true
     },
     expected_working_hours: {
-      type: Number,
-      required: true,
+      type: Number
     },
     hours_worked: {
-      type: Number,
-      required: true,
+      type: Number
     },
     active : {
         type: Boolean,

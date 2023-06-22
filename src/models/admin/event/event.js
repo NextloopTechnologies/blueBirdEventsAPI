@@ -169,14 +169,8 @@ const eventSchema = new Schema({
             type: Date,
             required: true
         },
-        serve_start_time: {
-            type: String,
-            required: true
-        },
-        serve_end_time: {
-            type: String,
-            required: true
-        },
+        serve_start_time: String,
+        serve_end_time: String,
         plates_guaranteed: String,
         plates_added: String,
         plates_remaining: String,
