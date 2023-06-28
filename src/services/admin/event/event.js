@@ -81,13 +81,16 @@ export const readCoordinator = async(id) => {
     try {
         let coordinator_ids = [];
         coordinator_ids.push(id);
-        const event = await Event.find({ 
-            coordinator_ids: { $in: coordinator_ids },
-            $or: [ 
-                { event_start_date: { $gte: todaysDate }}, 
-                { event_end_date: { $gte: todaysDate }} 
-            ]
-        }) 
+        const event = await Event.find(
+            { 
+                coordinator_ids: { $in: coordinator_ids },
+                $or: [ 
+                    { event_start_date: { $gte: todaysDate }}, 
+                    { event_end_date: { $gte: todaysDate }} 
+                ]
+            }, 
+            { _id: 1, event_title: 1}
+        ) 
         if(!event.length > 0) {
             return { status: 404 , msgText: "No events assigned!" ,success: false }
         }

@@ -92,7 +92,7 @@ const eventSchema = new Schema({
                 minlenght: 3
             },
             vendor_mobile: {
-                type: String,
+                type: Number,
                 required: true  
             },
             // reason_for_blacklist: {

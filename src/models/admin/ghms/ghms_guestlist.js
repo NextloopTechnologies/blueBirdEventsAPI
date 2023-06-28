@@ -18,7 +18,7 @@ const ghmsGuestlistSchema = new Schema({
     minlenght: 3
   },
   guest_mobile: {
-    type: String,
+    type: Number,
     required: true
   },
   guest_email: {

@@ -11,7 +11,7 @@ const userSchema = new Schema({
         minlength: 3
     },
     mobile: {
-        type: String
+        type: Number
     },
     email: {
         type: String,

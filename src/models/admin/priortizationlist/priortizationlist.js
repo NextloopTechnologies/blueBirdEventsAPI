@@ -16,7 +16,7 @@ const priortizationListSchema = Schema({
     minlength: 3
   },
   contact: {
-    type: String
+    type: Number
   },
   deadline_date: {
     type: Date,
