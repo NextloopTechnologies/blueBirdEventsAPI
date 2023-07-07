@@ -72,7 +72,8 @@ const eventSchema = new Schema({
                     guest_email: String,
                     guest_add: String,
                     guest_date_of_arrival: Date,
-                }]
+                }],
+                note: String
             }]
         }],
     }],

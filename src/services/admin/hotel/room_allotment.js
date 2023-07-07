@@ -69,7 +69,6 @@ export const readGuest = async(hotels, event_id) => {
                
             }));
             const guestDetails = guestRoomAllotments.filter(guest => guest !== null)
-
             if(guestDetails.length > 0){
                 for(const hotel of hotels) {
                     for (const hotelroom of hotel.hotel_rooms_required) {
@@ -78,6 +77,7 @@ export const readGuest = async(hotels, event_id) => {
                                 if(guest){
                                     if(roomnos.hotel_room_id.equals(guest.hotel_room_id)){
                                         roomnos.guestDetails = guest.guest_id;
+                                        roomnos.note = guest.note && guest.note;
                                     }
                                 }
                             }

@@ -1,4 +1,5 @@
 import { FreelancerAssignedEvent } from '../../../models';
+import { ObjectId } from '../../../utils/helper';
 
 export const create = async(values) => {
     try {
@@ -28,6 +29,52 @@ export const read = async({page, perPage, whereClause={}}) => {
         }
         return { status: 200, success: true, count, freelancerassignedevent}
 
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const readForEvent = async(event_id) => {
+    try {
+        // const deployedfreelancers = await FreelancerAssignedEvent.find({event_id})
+        // .select(['-active','-createdAt','-updatedAt','-__v'])
+        // .sort({ _id: -1 })
+        // .skip(((perPage * page) - perPage))
+        // .limit(perPage);
+        const deployedfreelancers = await FreelancerAssignedEvent.aggregate([
+        {
+            $match : { event_id: ObjectId(event_id) }
+        },
+        {
+            $lookup: {
+                from: "freelancers",
+                localField: "freelancer_id",
+                foreignField: "_id",
+                as: "freelancer"
+            }
+        }, 
+        { 
+            $unwind: '$freelancer'
+        },
+        {
+            $project: {
+                _id: 1,
+                event_id: 1,
+                freelancer_id: 1,
+                department_type: 1,
+                expected_working_hours: 1,
+                hours_worked: 1,
+                freelancer_name: "$freelancer.name"
+            }
+        },
+        { 
+            $sort: { _id: -1 }
+        }]);
+        // console.log("deplyed freelancer", deployedfreelancers);
+        if(!deployedfreelancers.length > 0) {
+            return { status: 404 , msgText: "Freelancer Assignee does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, deployedfreelancers}
     } catch (error) {
         throw error;
     }

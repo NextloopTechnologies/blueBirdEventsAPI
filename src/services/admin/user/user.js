@@ -7,7 +7,7 @@ import { sign } from 'jsonwebtoken';
 export const create = async(values) => {
     try {
         const user = new User(values);
-        const emailExists = await User.findOne({ email: user.email});
+        const emailExists = await User.findOne({ email: user.email}).select('email');
         if(emailExists){
             return { status: 400 , msgText: 'Email already taken',success: false}
         }

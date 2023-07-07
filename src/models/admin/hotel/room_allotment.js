@@ -16,10 +16,14 @@ const roomAllotmentSchema = new Schema({
       required: true,
       ref: 'HotelRoom'
     },
-    guest_id: {
+    guest_id: [{
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'GHMSGuestList'
+    }],
+    note: {
+      type: String,
+      minlength: 3
     },
     active: {
       type: Boolean,

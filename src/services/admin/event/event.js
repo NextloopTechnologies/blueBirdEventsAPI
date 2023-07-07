@@ -1,6 +1,7 @@
 import { Event,  GeneralChecklist,  GHMSGuestList, PriortizationList, User } from '../../../models';
 import { 
     eventPhotoService,
+    freelancerAssignedEventService,
     generalChecklistService, 
     ghmsArrivalMgmtService, 
     ghmsDepartureMgmtService, 
@@ -9,9 +10,7 @@ import {
     priortizationListService, 
     roomAllotmentService 
 } from '../..';
-import mongoose from 'mongoose';
-import { todaysDate } from '../../../utils/helper';
-const ObjectId = mongoose.Types.ObjectId;
+import { ObjectId, todaysDate } from '../../../utils/helper';
 
 export const create = async(values) => {
     try {
@@ -143,6 +142,7 @@ export const readSingle = async(page, perPage, _id) => {
         const { ghmslostfound: lostandfound } = await ghmsLostFoundService.readForEvent(whereClause);
         const { roomallotment } = await roomAllotmentService.readForEvent(whereClause);  
         const { priortizationlist: priortization } = await priortizationListService.readForEvent(whereClause);     
+        const { deployedfreelancers } = await freelancerAssignedEventService.readForEvent(_id);     
         const { generalchecklist: checklist } = await generalChecklistService.readForEvent(whereClause);     
         const { eventphoto: gallery } = await eventPhotoService.readForEvent(whereClause);     
         
@@ -163,6 +163,7 @@ export const readSingle = async(page, perPage, _id) => {
             event,
             ghms,
             priortization,
+            deployedfreelancers,
             checklist,
             gallery
         }
