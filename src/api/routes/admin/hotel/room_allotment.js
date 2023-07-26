@@ -27,7 +27,7 @@ const roomAllotmentValidation = Joi.object({
     hotel_room_id: Joi.string().required(),
     // guest_id: Joi.string().required(),
     guest_id: Joi.array().required(),
-    note: Joi.string().min(3),
+    note: Joi.string().allow(''),
     id: Joi.string()
 });
 
