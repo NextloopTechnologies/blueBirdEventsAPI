@@ -301,7 +301,18 @@ export const getWhatsappRecipients = async(event_id) => {
 //     }))
 //     return updatedUsersEvents;
 // };
-
+// Remove Coordinator from events
+export const removeUserFromEvent = async(id) => {
+    try {
+        await Event.updateMany(
+            {},
+            { $pull: { coordinator_ids: id }}
+        );
+    } catch (error) {
+        throw error;
+    }
+};
+// Remove Events
 export const remove = async(_id)=> {
     try {
         const event = await Event.findOneAndDelete({ _id }); 

@@ -171,33 +171,34 @@ export const remove = async(id)=> {
     }
 };
 
-export const removeFromGuest = async(guest_id)=> {
+export const removeGuestFromAllotment = async(guest_id)=> {
     try {
-        // await RoomAllotment.deleteMany({"_id": { "$in" : ids}});
-        const roomallotment = await RoomAllotment.findOneAndDelete({ guest_id });
-        console.log("deleted room allotment", roomallotment)
-        if(!roomallotment) {
-            return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
-        }  
-        await Event.updateOne({
-            // client_id: values.client_id,
-            _id: roomallotment.event_id,
-            'hotels.hotel_rooms_required.hotel_room_id': roomallotment.hotel_room_id
-        }, 
-        {
-            $set: {
-                'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': 0
-            },
-        },
-        {
-            arrayFilters: [
-                {
-                    "room.hotel_room_id": roomallotment.hotel_room_id
-                }
-            ]
-        }
+        const roomallotment = await RoomAllotment.findOneAndUpdate(
+            { guest_id },
+            { $pull: { guest_id }},
+            { returnDocument: "after" }
         )
-        return { status: 200, msgText: 'Deleted Successfully!', success: true}
+        if(roomallotment && Array.isArray(roomallotment.guest_id) && !roomallotment.guest_id.length){
+            await Event.updateOne(
+                {
+                    // client_id: values.client_id,
+                    _id: roomallotment.event_id,
+                    'hotels.hotel_rooms_required.hotel_room_id': roomallotment.hotel_room_id
+                }, 
+                {
+                    $set: {
+                        'hotels.$[].hotel_rooms_required.$[].room_nos.$[room].isBooked': 0
+                    },
+                },
+                {
+                    arrayFilters: [
+                        {
+                            "room.hotel_room_id": roomallotment.hotel_room_id
+                        }
+                    ]
+                }
+            )
+        }
     } catch (error) {
         throw error;
     }
