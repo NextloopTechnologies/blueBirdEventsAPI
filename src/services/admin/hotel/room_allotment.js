@@ -179,14 +179,14 @@ export const removeGuestFromAllotment = async(guest_id)=> {
             { returnDocument: "after" }
         )
         if(roomallotment && Array.isArray(roomallotment.guest_id) && !roomallotment.guest_id.length){
-            const roomallotment = await RoomAllotment.findByIdAndDelete(roomallotment._id);
-            console.log("deleted room allotment", roomallotment)
-            if(roomallotment) {
+            const { _id: id } = roomallotment;
+            const deletedRoomallotment = await RoomAllotment.findByIdAndDelete(id);
+            if(deletedRoomallotment) {
                 await Event.updateOne(
                     {
                         // client_id: values.client_id,
-                        _id: roomallotment.event_id,
-                        'hotels.hotel_rooms_required.hotel_room_id': roomallotment.hotel_room_id
+                        _id: deletedRoomallotment.event_id,
+                        'hotels.hotel_rooms_required.hotel_room_id': deletedRoomallotment.hotel_room_id
                     }, 
                     {
                         $set: {
@@ -196,7 +196,7 @@ export const removeGuestFromAllotment = async(guest_id)=> {
                     {
                         arrayFilters: [
                             {
-                                "room.hotel_room_id": roomallotment.hotel_room_id
+                                "room.hotel_room_id": deletedRoomallotment.hotel_room_id
                             }
                         ]
                     }

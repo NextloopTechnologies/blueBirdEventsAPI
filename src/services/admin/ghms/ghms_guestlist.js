@@ -73,9 +73,9 @@ export const update = async(id, values) => {
 export const remove = async(ids)=> {
     try {
         const deletedGuestList = await Promise.all(ids.map(id => GHMSGuestList.findByIdAndDelete(id)))
-
+        
         const filteredDeletedGuest = deletedGuestList.filter(guest => guest !== null)
-    
+        
         if(filteredDeletedGuest){
             await Promise.all(filteredDeletedGuest.map(({_id}) => roomAllotmentService.removeGuestFromAllotment(_id)))
         }
