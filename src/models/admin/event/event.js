@@ -80,7 +80,6 @@ const eventSchema = new Schema({
     // event vendor //
     event_vendors: {
         vendors: [{
-            // _id: false,
             vendor_name: {
                 type: String,
                 required: true,
@@ -96,14 +95,6 @@ const eventSchema = new Schema({
                 type: String,
                 required: true  
             },
-            // reason_for_blacklist: {
-            //     type: String,
-            //     minlenght: 3
-            // },
-            // blacklisted: {
-            //     type: Boolean,
-            //     default: false
-            // },
             scope_of_work: {type: String, minlength: 3},
             arriving_time: String,
             total_package: String,
@@ -154,9 +145,7 @@ const eventSchema = new Schema({
         }]
     },
   
-    // event food bev //
     event_foodbev: [{
-        // _id: false,
         food_type: {
             type: String,
             required: true,

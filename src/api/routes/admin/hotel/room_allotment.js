@@ -22,10 +22,8 @@ router.post('', auth, checkPermission('manage-roomallotment'), async(req, res) =
 });
 
 const roomAllotmentValidation = Joi.object({
-    // client_id: Joi.string().required(),
     event_id: Joi.string().required(),
     hotel_room_id: Joi.string().required(),
-    // guest_id: Joi.string().required(),
     guest_id: Joi.array().required(),
     note: Joi.string().allow(''),
     id: Joi.string()
