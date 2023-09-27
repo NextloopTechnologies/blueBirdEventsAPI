@@ -72,45 +72,80 @@ const eventSchema = new Schema({
                     guest_email: String,
                     guest_add: String,
                     guest_date_of_arrival: Date,
-                }]
+                }],
+                note: String
             }]
         }],
     }],
     // event vendor //
-    event_vendors: [{
-        // _id: false,
-        vendor_name: {
-            type: String,
-            required: true,
-            trim: true,
-            minlenght: 3
-        },
-        vendor_work: {
-            type: String,
-            required: true,
-            minlenght: 3
-        },
-        vendor_mobile: {
-            type: String,
-            required: true  
-        },
-        reason_for_blacklist: {
-            type: String,
-            minlenght: 3
-        },
-        blacklisted: {
-            type: Boolean,
-            default: false
-        },
-        scope_of_work: {type: String, minlength: 3},
-        arriving_time: String,
-        total_package: String,
-        paid_amount: String,
-        due_amount: String,
-    }],
-    // event food bev //
+    event_vendors: {
+        vendors: [{
+            vendor_name: {
+                type: String,
+                required: true,
+                trim: true,
+                minlenght: 3
+            },
+            vendor_work: {
+                type: String,
+                required: true,
+                minlenght: 3
+            },
+            vendor_mobile: {
+                type: String,
+                required: true  
+            },
+            scope_of_work: {type: String, minlength: 3},
+            arriving_time: String,
+            total_package: String,
+            paid_amount: String,
+            due_amount: String,
+        }],
+        cars: [{
+            vendor_id: {
+                type: Schema.Types.ObjectId,
+                required: true,
+            },
+            car_model: {
+                type: String,
+                required: true,
+                trim: true,
+                minlength: 3
+            },
+            owner_name: {
+                type: String,
+                required: true,
+                trim: true,
+                minlength: 3
+            },
+            car_reg: {
+                type: String,
+                minlength: 3,
+                required: true
+            },
+            car_number: {
+                type: String,
+                required: true,
+                minlength: 3
+            },
+            car_type: {
+                type: String,
+                required: true
+            },
+            driver_name: {
+                type: String,
+                required: true,
+                trim: true,
+                minlength: 3
+            },
+            driver_mobile: {
+                type: String,
+                required: true
+            },
+        }]
+    },
+  
     event_foodbev: [{
-        // _id: false,
         food_type: {
             type: String,
             required: true,
@@ -124,14 +159,8 @@ const eventSchema = new Schema({
             type: Date,
             required: true
         },
-        serve_start_time: {
-            type: String,
-            required: true
-        },
-        serve_end_time: {
-            type: String,
-            required: true
-        },
+        serve_start_time: String,
+        serve_end_time: String,
         plates_guaranteed: String,
         plates_added: String,
         plates_remaining: String,

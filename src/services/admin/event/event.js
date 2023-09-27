@@ -1,6 +1,7 @@
 import { Event,  GeneralChecklist,  GHMSGuestList, PriortizationList, User } from '../../../models';
 import { 
     eventPhotoService,
+    freelancerAssignedEventService,
     generalChecklistService, 
     ghmsArrivalMgmtService, 
     ghmsDepartureMgmtService, 
@@ -9,8 +10,7 @@ import {
     priortizationListService, 
     roomAllotmentService 
 } from '../..';
-import mongoose from 'mongoose';
-const ObjectId = mongoose.Types.ObjectId;
+import { ObjectId, todaysDate } from '../../../utils/helper';
 
 export const create = async(values) => {
     try {
@@ -31,13 +31,13 @@ export const create = async(values) => {
                 await GHMSGuestList.insertMany(values.ghms.guestlist);
             }
 
-            if(values.priortization){
-                values.priortization.forEach(prior => {
-                    prior.client_id = event.client_id
-                    prior.event_id = event._id
-                });
-                await PriortizationList.insertMany(values.priortization);
-            }
+            // if(values.priortization){
+            //     values.priortization.forEach(prior => {
+            //         prior.client_id = event.client_id
+            //         prior.event_id = event._id
+            //     });
+            //     await PriortizationList.insertMany(values.priortization);
+            // }
             
             if(values.checklist){
                 values.checklist.client_id = event.client_id
@@ -80,9 +80,18 @@ export const readCoordinator = async(id) => {
     try {
         let coordinator_ids = [];
         coordinator_ids.push(id);
-        const event = await Event.find({ coordinator_ids: { $in: coordinator_ids }}) 
+        const event = await Event.find(
+            { 
+                coordinator_ids: { $in: coordinator_ids },
+                $or: [ 
+                    { event_start_date: { $gte: todaysDate }}, 
+                    { event_end_date: { $gte: todaysDate }} 
+                ]
+            }, 
+            { _id: 1, event_title: 1}
+        ) 
         if(!event.length > 0) {
-            return { status: 404 , msgText: "Event does not exists!" ,success: false }
+            return { status: 404 , msgText: "No events assigned!" ,success: false }
         }
         return { status: 200, success: true, event}
     } catch (error) {
@@ -102,8 +111,14 @@ export const readSingle = async(page, perPage, _id) => {
         if(!event) {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         } else {
-            if(event.event_vendors.length === 0){
+            if(!event.event_vendors){
                 event.event_vendors = undefined
+            }
+            if(event.event_vendors && event.event_vendors.vendors.length === 0){
+                event.event_vendors.vendors = undefined
+            }
+            if(event.event_vendors && event.event_vendors.cars.length === 0){
+                event.event_vendors.cars = undefined
             }
             if(event.event_foodbev.length === 0){
                 event.event_foodbev = undefined
@@ -127,6 +142,7 @@ export const readSingle = async(page, perPage, _id) => {
         const { ghmslostfound: lostandfound } = await ghmsLostFoundService.readForEvent(whereClause);
         const { roomallotment } = await roomAllotmentService.readForEvent(whereClause);  
         const { priortizationlist: priortization } = await priortizationListService.readForEvent(whereClause);     
+        const { deployedfreelancers } = await freelancerAssignedEventService.readForEvent(_id);     
         const { generalchecklist: checklist } = await generalChecklistService.readForEvent(whereClause);     
         const { eventphoto: gallery } = await eventPhotoService.readForEvent(whereClause);     
         
@@ -147,6 +163,7 @@ export const readSingle = async(page, perPage, _id) => {
             event,
             ghms,
             priortization,
+            deployedfreelancers,
             checklist,
             gallery
         }
@@ -284,7 +301,18 @@ export const getWhatsappRecipients = async(event_id) => {
 //     }))
 //     return updatedUsersEvents;
 // };
-
+// Remove Coordinator from events
+export const removeUserFromEvent = async(id) => {
+    try {
+        await Event.updateMany(
+            {},
+            { $pull: { coordinator_ids: id }}
+        );
+    } catch (error) {
+        throw error;
+    }
+};
+// Remove Events
 export const remove = async(_id)=> {
     try {
         const event = await Event.findOneAndDelete({ _id }); 

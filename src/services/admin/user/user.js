@@ -1,13 +1,13 @@
 import { User } from '../../../models';
 import bcrypt from 'bcryptjs';
-import { emailService } from '../..';
+import { emailService, eventService } from '../..';
 import config from '../../../config';
 import { sign } from 'jsonwebtoken';
 
 export const create = async(values) => {
     try {
         const user = new User(values);
-        const emailExists = await User.findOne({ email: user.email});
+        const emailExists = await User.findOne({ email: user.email}).select('email');
         if(emailExists){
             return { status: 400 , msgText: 'Email already taken',success: false}
         }
@@ -88,9 +88,16 @@ export const forgotPasswordRequest = async(email) => {
     }
 };
 
-export const remove = async(ids)=> {
+export const remove = async(ids) => {
     try {
-        await User.deleteMany({"_id": { "$in" : ids}});
+        const deletedUsers = await Promise.all(ids.map(id => User.findByIdAndDelete(id)))
+
+        const filteredDeletedUsers = deletedUsers.filter(user => user !== null)
+    
+        if(filteredDeletedUsers){
+            await Promise.all(filteredDeletedUsers.map(({_id}) => eventService.removeUserFromEvent(_id)))
+        }
+
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

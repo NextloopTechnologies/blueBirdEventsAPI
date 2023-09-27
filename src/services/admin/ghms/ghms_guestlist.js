@@ -72,13 +72,12 @@ export const update = async(id, values) => {
 
 export const remove = async(ids)=> {
     try {
-        // await GHMSGuestList.deleteMany({"_id": { "$in" : ids}});
         const deletedGuestList = await Promise.all(ids.map(id => GHMSGuestList.findByIdAndDelete(id)))
-
+        
         const filteredDeletedGuest = deletedGuestList.filter(guest => guest !== null)
-    
+        
         if(filteredDeletedGuest){
-            await Promise.all(filteredDeletedGuest.map(({_id}) => roomAllotmentService.removeFromGuest(_id)))
+            await Promise.all(filteredDeletedGuest.map(({_id}) => roomAllotmentService.removeGuestFromAllotment(_id)))
         }
 
         return { status: 200, msgText: 'Deleted Successfully!', success: true}

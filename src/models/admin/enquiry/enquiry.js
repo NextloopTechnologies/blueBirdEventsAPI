@@ -31,7 +31,7 @@ const enquirySchema = new Schema({
         trim: true
     },
     mobile: {
-        type: String,
+        type: Number,
         required: true
     },
     ref_from: {
