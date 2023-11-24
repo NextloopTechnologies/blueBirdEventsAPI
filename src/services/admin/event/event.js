@@ -286,6 +286,9 @@ export const getWhatsappRecipients = async(event_id) => {
             return { status: 404 , msgText: "Event does not exists!" ,success: false }
         }
         const { client_mobile, guest_mobiles } = event[0];
+        if(!guest_mobiles.length || !client_mobile) {
+            return { status: 404 , msgText: "No Guests in the event!" ,success: false }
+        } 
         const recipientMobileNumbers = { client_mobile, guest_mobiles}
         return { status: 200, success: true, recipientMobileNumbers}
     } catch (error) {

@@ -19,7 +19,7 @@ export const prepareTextMessage = ({
   }
 }
 
-export const prepareTempTextMessage = async(values) => {
+export const prepareTempTextMessage = ({ values, guestContacts, clientContact }) => {
   const { template_name, template_value1, template_value2 } = values;
   let to;
   const defaultKeys = {
@@ -27,38 +27,29 @@ export const prepareTempTextMessage = async(values) => {
     recipient_type: "individual",
     type: "template"
   }
-
-  const { success, msgText, recipientMobileNumbers } =  await eventService.getWhatsappRecipients(values.event_id);
-  if(success === false) {
-    return msgText;
-  }
-  console.log("cleint numbers",recipientMobileNumbers);
-  if(recipientMobileNumbers.guest_mobiles.lenght<0){
-    return "No guest found!"
-  }
   
   if(template_name === 'bbe_good_morning' || template_name === 'bbe_good_night'){
-    to = recipientMobileNumbers.guest_mobiles;
+    to = guestContacts;
     const simpleTemplateKeys = {
       ...defaultKeys,
-      to: '919892252713',
+      to,
       template: {
         name: template_name,
         language: {
-          code: "en_US"
+          code: "en"
         }
       }
     }
     return simpleTemplateKeys;
   } else if(template_name === 'bbe_guest_pickup') {
-    to = recipientMobileNumbers.client_mobile;
+    to = clientContact;
     const multipleParamKeys = {
       ...defaultKeys,
       to,
       template: {
         name: template_name,
         language: {
-          code: "en_US"
+          code: "en"
         },
         components: [{
           type: "body",
@@ -78,9 +69,9 @@ export const prepareTempTextMessage = async(values) => {
     return multipleParamKeys;
   } else {   // decoration, get_ready and food
     if(template_name === 'bbe_decoration') {
-      to = recipientMobileNumbers.client_mobile;
+      to = clientContact;
     } else {
-      to = recipientMobileNumbers.guest_mobiles;
+      to = guestContacts;
     }
     const singleParamKeys = {
       ...defaultKeys,
@@ -88,7 +79,7 @@ export const prepareTempTextMessage = async(values) => {
       template: {
         name: template_name,
         language: {
-          code: "en_US"
+          code: "en"
         },
         components: [{
           type: "body",
@@ -114,6 +105,5 @@ export const sendMessage = async(body) => {
         'Content-Type': 'application/json'
       }
     });
-    console.log("response:", response);
     return await response.json();
 };
