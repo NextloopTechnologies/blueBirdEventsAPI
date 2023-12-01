@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { whatsappService } from "../../../../services";
-import { requestValidator } from "../../../middlewares";
+import { auth, requestValidator } from "../../../middlewares";
 import Joi from 'joi';
 import { eventService } from "../../../../services";
 
@@ -42,7 +42,7 @@ const templateValidation = Joi.object({
     }),
 });
 
-router.post('/sendTempTextMessage', requestValidator(templateValidation), async(req, res) => {
+router.post('/sendTempTextMessage', auth, requestValidator(templateValidation), async(req, res) => {
    
     const { status, success, msgText, recipientMobileNumbers } =  await eventService.getWhatsappRecipients(req.values.event_id);
     if(!success) {
