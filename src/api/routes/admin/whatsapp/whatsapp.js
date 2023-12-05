@@ -1,9 +1,8 @@
 import { Router } from "express";
 import { whatsappService } from "../../../../services";
-import { requestValidator } from "../../../middlewares";
-import logger from "../../../../loaders/logger";
+import { auth, requestValidator } from "../../../middlewares";
 import Joi from 'joi';
-import { formatFormError } from "../../../../utils/helper";
+import { eventService } from "../../../../services";
 
 const router = new Router();
 
@@ -43,24 +42,26 @@ const templateValidation = Joi.object({
     }),
 });
 
-router.post('/sendTempTextMessage', requestValidator(templateValidation), async(req, res) => {
+router.post('/sendTempTextMessage', auth, requestValidator(templateValidation), async(req, res) => {
    
-    const data = await whatsappService.prepareTempTextMessage(req.values);
-    console.log('payload data: ', data);
-    if(data && data.to){
-        whatsappService.sendMessage(data).then(val => {
-            console.log('data:', val);
-            res.status(200).json(val);
-        })
-        .catch(error => {
-            console.log('error:', error);
-            res.status(500).json({
-                error
-            });
-        })
-    } else {
-        res.status(404).send({ success: false, msgText: data, })
+    const { status, success, msgText, recipientMobileNumbers } =  await eventService.getWhatsappRecipients(req.values.event_id);
+    if(!success) {
+        return res.status(status).send({ success, msgText });
     }
+    const guestContacts = recipientMobileNumbers.guest_mobiles;
+    const clientContact = recipientMobileNumbers.client_mobile;
+
+    if(req.values.template_name === "bbe_decoration" || req.values.template_name === "bbe_guest_pickup"){
+        const data = whatsappService.prepareTempTextMessage({ values: req.values, clientContact } );
+        whatsappService.sendMessage(data)
+    } else {
+        await Promise.all(guestContacts.map(guest => {
+            const data = whatsappService.prepareTempTextMessage({ values: req.values, guestContacts: guest });
+            whatsappService.sendMessage(data)
+        }));
+    }
+    
+    res.status(200).send({ success: true, msgText: "Sent Successfully", })
 });
 
 export default router;
