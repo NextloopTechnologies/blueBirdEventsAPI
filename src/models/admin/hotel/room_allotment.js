@@ -21,10 +21,7 @@ const roomAllotmentSchema = new Schema({
       required: true,
       ref: 'GHMSGuestList'
     }],
-    note: {
-      type: String,
-      minlength: 3
-    },
+    note: String,
     active: {
       type: Boolean,
       default: true

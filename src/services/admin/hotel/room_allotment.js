@@ -141,9 +141,7 @@ export const update = async(id, values) => {
 
 export const remove = async(id)=> {
     try {
-        // await RoomAllotment.deleteMany({"_id": { "$in" : ids}});
         const roomallotment = await RoomAllotment.findByIdAndDelete(id);
-        console.log("deleted room allotment", roomallotment)
         if(!roomallotment) {
             return { status: 404 , msgText: "RoomAllotment does not exists!" ,success: false }
         }  
