@@ -20,10 +20,10 @@ const ghmsDepartureMgmtSchema = new Schema({
       type: Date,
       required: true
     },
-    no_of_guest_arrived: {
-      type: Number,
-      required: true
-    },
+    // no_of_guest_arrived: {
+    //   type: Number,
+    //   required: true
+    // },
     mode_of_departure: {
       type: String,
       required: true
@@ -37,14 +37,8 @@ const ghmsDepartureMgmtSchema = new Schema({
       required: true,
       ref: 'VendorCar'
     },
-    return_checklist: {
-      type: String,
-      minlength: 3
-    },
-    special_note: {
-      type: String,
-      minlength: 3
-    },
+    return_checklist: String,
+    special_note: String,
     active: {
       type: Boolean,
       default: true

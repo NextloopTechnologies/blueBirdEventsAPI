@@ -28,9 +28,9 @@ const ghmsDepartureMgmtCreateValidtn = Joi.object({
     guest_id: Joi.string().required(),
     departure_time: Joi.string().required(),
     mode_of_departure: Joi.string().required(),
-    return_checklist: Joi.string().min(3),
-    no_of_guest_arrived: Joi.number().required(),
-    special_note: Joi.string().min(3),
+    return_checklist: Joi.string().allow(''),
+    // no_of_guest_arrived: Joi.number().required(),
+    special_note: Joi.string().allow(''),
     date_of_departure: Joi.date().min(todaysDate).required()
 });
 
@@ -64,9 +64,9 @@ const ghmsDepartureMgmtUpdateValidtn = Joi.object({
     guest_id: Joi.string().required(),
     departure_time: Joi.string().required(),
     mode_of_departure: Joi.string().required(),
-    return_checklist: Joi.string().min(3),
-    no_of_guest_arrived: Joi.number().required(),
-    special_note: Joi.string().min(3),
+    return_checklist: Joi.string().allow(''),
+    // no_of_guest_arrived: Joi.number().required(),
+    special_note: Joi.string().allow(''),
     date_of_departure: Joi.date().required(),
     id: Joi.string()
 });

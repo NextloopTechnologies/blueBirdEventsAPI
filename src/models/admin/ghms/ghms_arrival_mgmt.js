@@ -33,27 +33,21 @@ const ghmsArrivalMgmtSchema = new Schema({
       required: true
     },
     arrived_at: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     },
     car_id: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'VendorCar'
     },
-    welcome_checklist: {
-      type: String,
-      minlength: 3
-    },
-    special_note: {
-      type: String,
-      minlength: 3
-    },
+    welcome_checklist: String,
+    special_note: String,
     active: {
       type: Boolean,
       default: true
     }
-}, { timestamps: true});
+}, { timestamps: true });
 
 const GHMSArrivalMgmt = model('GHMSArrivalMgmt', ghmsArrivalMgmtSchema);
 
