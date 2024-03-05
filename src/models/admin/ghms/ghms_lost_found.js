@@ -43,7 +43,7 @@ const ghmsLostFoundSchema = new Schema({
     },
     deliver_type: {
       type: String,
-      minlength: 3,
+      enum: ['Self','Courier'],
       required: true
     },
     active: {

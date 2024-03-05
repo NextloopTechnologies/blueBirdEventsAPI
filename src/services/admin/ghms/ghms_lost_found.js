@@ -50,11 +50,11 @@ export const readForEvent = async(whereClause={}) => {
 
 export const update = async(id, values) => {
     try {
-        const ghmslostfound = await GHMSLostFound.findByIdAndUpdate(id, values);
+        const ghmslostfound = await GHMSLostFound.findByIdAndUpdate(id, values, { returnDocument: 'after' });
         if(!ghmslostfound) {
             return { status: 404 , msgText: "GHMSLostFound does not exists!" ,success: false }
         }  
-        return { status: 200, msgText: 'Updated Successfully! ',success: true}
+        return { status: 200, msgText: 'Updated Successfully! ',success: true, updatedLostAndFound: ghmslostfound}
     } catch (error) {
         throw error;
     }
