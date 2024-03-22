@@ -30,7 +30,7 @@ const ghmsLostFoundValidation = Joi.object({
     lost_place: Joi.string().min(3).required(),
     found_place: Joi.string().min(3).required(),
     found_by: Joi.string().min(3).required(),
-    deliver_type: Joi.string().min(3).required(),
+    deliver_type: Joi.string().valid('Self','Courier').required(),
     id: Joi.string()
 });
 

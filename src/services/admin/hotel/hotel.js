@@ -14,6 +14,7 @@ export const create = async(values) => {
 export const read = async({page, perPage, whereClause={}}) => {
     try {
         const hotel = await Hotel.find(whereClause)
+        .select(['-active','-createdAt','-updatedAt','-__v'])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
         if(!hotel.length > 0) {
@@ -24,6 +25,20 @@ export const read = async({page, perPage, whereClause={}}) => {
             count = undefined;
         }
         return { status: 200, success: true, count, hotel}
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const readEventHotels = async(hotelIds) => {
+    try {
+        const hotel = await Hotel.find({ _id: { $in: hotelIds }})
+        .select(['hotel_name'])
+        if(!hotel.length > 0) {
+            return { status: 404 , msgText: "Hotel does not exists!" ,success: false }
+        }
+       
+        return { status: 200, success: true, hotel}
     } catch (error) {
         throw error;
     }

@@ -51,11 +51,11 @@ export const readForEvent = async(whereClause={}) => {
 
 export const update = async(id, values) => {
     try {
-        const ghmsdeparturemgmt = await GHMSDepartureMgmt.findByIdAndUpdate(id, values);
+        const ghmsdeparturemgmt = await GHMSDepartureMgmt.findByIdAndUpdate(id, values, { returnDocument: 'after' });
         if(!ghmsdeparturemgmt) {
             return { status: 404 , msgText: "GHMSDepartureMgmt does not exists!" ,success: false }
         }  
-        return { status: 200, msgText: 'Updated Successfully! ',success: true}
+        return { status: 200, msgText: 'Updated Successfully! ',success: true, updatedDeparture: ghmsdeparturemgmt}
     } catch (error) {
         throw error;
     }

@@ -51,6 +51,18 @@ router.get('/read/:id', auth, checkPermission('read-hotel'), async (req, res)=> 
     }
 });
 
+router.post('/readEventHotels', auth, checkPermission('read-hotel'), async (req, res)=> {
+    try {
+        console.log(req.body.hotelIds);
+        const { status, ...data} = await hotelService.readEventHotels(req.body.hotelIds);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_HOTEL-READ-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
 router.post('/update/:id', auth, checkPermission('update-hotel'), requestValidator(hotelValidation), async(req, res) => {
     try {
         const { status, ...data} = await hotelService.update(req.params.id,req.values);

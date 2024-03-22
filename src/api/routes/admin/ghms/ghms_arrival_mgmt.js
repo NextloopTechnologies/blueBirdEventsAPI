@@ -29,9 +29,9 @@ const ghmsArrivalMgmtCreateValidtn = Joi.object({
     arrived_at: Joi.string().required(),
     mode_of_arrival: Joi.string().required(),
     expected_arrival_time: Joi.string().required(),
-    welcome_checklist: Joi.string().min(3),
+    welcome_checklist: Joi.string().allow(''),
     no_of_guest_arrived: Joi.number().required(),
-    special_note: Joi.string().min(3),
+    special_note: Joi.string().allow(''),
     date_of_arrival: Joi.date().min(todaysDate).required()
 });
 
@@ -66,9 +66,9 @@ const ghmsArrivalMgmtUpdateValidtn = Joi.object({
     arrived_at: Joi.string().required(),
     mode_of_arrival: Joi.string().required(),
     expected_arrival_time: Joi.string().required(),
-    welcome_checklist: Joi.string().min(3),
+    welcome_checklist: Joi.string().allow(''),
     no_of_guest_arrived: Joi.number().required(),
-    special_note: Joi.string().min(3),
+    special_note: Joi.string().allow(''),
     date_of_arrival: Joi.date().required(),
     id: Joi.string()
 });
