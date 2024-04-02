@@ -31,17 +31,20 @@ const ghmsGuestlistSchema = new Schema({
   },
   guest_outstation: {
     type: String,
+    enum: ['Local','Outstation'],
     required: true
   },
   guest_invited: {
     type: String,
+    enum: ['Individual','Family'],
     required: true
   },
   guest_expected_nos: {
     type: Number
   },
   guest_invitation_type: {
-    type: String
+    type: String,
+    enum: ['Courier','Personally','Digitally']
   },
   guest_date_of_arrival: {
     type: Date

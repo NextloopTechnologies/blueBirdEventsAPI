@@ -31,7 +31,8 @@ const generalChcklstCreateValidtn = Joi.object({
         generalchecklist_date: Joi.date().min(todaysDate),
         checklist: Joi.array().items({
             check_id: Joi.number().required(),
-            check_name: Joi.string().required()
+            check_name: Joi.string().required(),
+            isChecked: Joi.boolean()
         })
     })
 });
@@ -69,7 +70,8 @@ const generalChcklstUpdateValidtn = Joi.object({
         generalchecklist_date: Joi.date(),
         checklist: Joi.array().items({
             check_id: Joi.number().required(),
-            check_name: Joi.string().required()
+            check_name: Joi.string().required(),
+            isChecked: Joi.boolean(),
         })
     }),  
     id: Joi.string()
