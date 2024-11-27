@@ -1,11 +1,11 @@
-import { GHMSLostFound } from '../../../models';
+import { GHMSOutstation } from '../../../models';
 
 export const create = async(values) => {
     try {
-        const ghmslostfound = new GHMSLostFound(values);
-        await ghmslostfound.save();
+        const ghmsoutstation = new GHMSOutstation(values);
+        await ghmsoutstation.save();
         return { status: 201, msgText: 'Created Successfully! ',
-        success: true, ghmslostfound }
+        success: true, ghmsoutstation }
     } catch (error) {
         throw error;
     }
@@ -13,20 +13,20 @@ export const create = async(values) => {
 
 export const read = async({page, perPage, whereClause={}}) => {
     try {
-        const ghmslostfound = await GHMSLostFound.find(whereClause)
+        const ghmsoutstation = await GHMSOutstation.find(whereClause)
         .populate([{path: 'event_id', select: 'event_title'},
         {path: 'guest_id', select: ['guest_name', 'guest_mobile']},
         {path: 'client_id', select: 'name'}])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
-        if(!ghmslostfound.length > 0) {
-            return { status: 404 , msgText: "GHMSLostFound does not exists!" ,success: false }
+        if(!ghmsoutstation.length > 0) {
+            return { status: 404 , msgText: "GHMSOutstation does not exists!" ,success: false }
         }
-        let count = await GHMSLostFound.find(whereClause).count();
+        let count = await GHMSOutstation.find(whereClause).count();
         if(count === 1) {
             count = undefined;
         }
-        return { status: 200, success: true, count, ghmslostfound}
+        return { status: 200, success: true, count, ghmsoutstation}
     } catch (error) {
         throw error;
     }
@@ -34,15 +34,15 @@ export const read = async({page, perPage, whereClause={}}) => {
 
 export const readForEvent = async(whereClause={}) => {
     try {
-        const ghmslostfound = await GHMSLostFound.find(whereClause)
+        const ghmsoutstation = await GHMSOutstation.find(whereClause)
         .select(['-active','-createdAt','-updatedAt','-__v'])
         .sort({ _id: -1 })
         // .skip(((perPage * page) - perPage))
         // .limit(perPage);
-        if(!ghmslostfound.length > 0) {
-            return { status: 404 , msgText: "GHMSLostFound does not exists!" ,success: false }
+        if(!ghmsoutstation.length > 0) {
+            return { status: 404 , msgText: "GHMSOutstation does not exists!" ,success: false }
         }
-        return { status: 200, success: true, ghmslostfound}
+        return { status: 200, success: true, ghmsoutstation}
     } catch (error) {
         throw error;
     }
@@ -50,11 +50,11 @@ export const readForEvent = async(whereClause={}) => {
 
 export const update = async(id, values) => {
     try {
-        const ghmslostfound = await GHMSLostFound.findByIdAndUpdate(id, values, { returnDocument: 'after' });
-        if(!ghmslostfound) {
-            return { status: 404 , msgText: "GHMSLostFound does not exists!" ,success: false }
+        const ghmsoutstation = await GHMSOutstation.findByIdAndUpdate(id, values, { returnDocument: 'after' });
+        if(!ghmsoutstation) {
+            return { status: 404 , msgText: "GHMSOutstation does not exists!" ,success: false }
         }  
-        return { status: 200, msgText: 'Updated Successfully! ',success: true, updatedLostAndFound: ghmslostfound}
+        return { status: 200, msgText: 'Updated Successfully! ',success: true, updatedLostAndFound: ghmsoutstation}
     } catch (error) {
         throw error;
     }
@@ -62,7 +62,7 @@ export const update = async(id, values) => {
 
 export const remove = async(ids)=> {
     try {
-        await GHMSLostFound.deleteMany({"_id": { "$in" : ids}});
+        await GHMSOutstation.deleteMany({"_id": { "$in" : ids}});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;
@@ -71,7 +71,7 @@ export const remove = async(ids)=> {
 
 export const removeMultiple = async(event_id)=> {
     try {
-        await GHMSLostFound.deleteMany({event_id});
+        await GHMSOutstation.deleteMany({event_id});
         return { status: 200, msgText: 'Deleted Successfully!', success: true}
     } catch (error) {
         throw error;

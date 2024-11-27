@@ -95,6 +95,9 @@ export const readGuest = async(hotels, event_id) => {
 export const readForEvent = async(whereClause={}) => {
     try {
         const roomallotment = await RoomAllotment.find(whereClause)
+        .populate([
+            {path: 'hotel_room_id', select: ['hospitality_checklist','is_hospitality_checklist_visible']}
+        ])
         .select(['-active','-createdAt','-updatedAt','-__v'])
         .sort({ _id: -1 })
         // .skip(((perPage * page) - perPage))

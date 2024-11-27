@@ -1,10 +1,22 @@
 import { roomAllotmentService } from '../..';
-import { GHMSGuestList } from '../../../models';
+import { GHMSArrivalMgmt, GHMSDepartureMgmt, GHMSGuestList, GHMSLostFound, GHMSOutstation } from '../../../models';
 
 export const create = async(values) => {
     try {
         const ghmsguestlist = new GHMSGuestList(values);
         await ghmsguestlist.save();
+        if(ghmsguestlist){
+            const guestDetails = {
+                client_id: ghmsguestlist.client_id,
+                event_id: ghmsguestlist.event_id,
+                guest_id: ghmsguestlist._id
+            }
+            await Promise.all([
+                GHMSArrivalMgmt.create(guestDetails),
+                GHMSDepartureMgmt.create(guestDetails),
+                GHMSOutstation.create(guestDetails)
+            ])
+        }
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, ghmsguestlist }
     } catch (error) {
@@ -14,7 +26,22 @@ export const create = async(values) => {
 
 export const createBulk = async(values) => {
     try {
-        const ghmsguestlist = await GHMSGuestList.insertMany(values);;
+        const ghmsguestlist = await GHMSGuestList.insertMany(values);
+        const promises = ghmsguestlist.map((guest) => {
+            const guestDetails = {
+                client_id: guest.client_id,
+                event_id: guest.event_id,
+                guest_id: guest._id,
+            };
+
+            return Promise.all([
+                GHMSArrivalMgmt.create(guestDetails),
+                GHMSDepartureMgmt.create(guestDetails),
+                GHMSOutstation.create(guestDetails),
+            ]);
+        });
+
+        await Promise.all(promises);
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, ghmsguestlist }
     } catch (error) {
@@ -73,6 +100,13 @@ export const update = async(id, values) => {
 export const remove = async(ids)=> {
     try {
         const deletedGuestList = await Promise.all(ids.map(id => GHMSGuestList.findByIdAndDelete(id)))
+
+        await Promise.all([
+            GHMSArrivalMgmt.deleteMany({ guest_id: { $in: ids } }),
+            GHMSDepartureMgmt.deleteMany({ guest_id: { $in: ids } }),
+            GHMSLostFound.deleteMany({ guest_id: { $in: ids } }),
+            GHMSOutstation.deleteMany({ guest_id: { $in: ids } })
+        ])
         
         const filteredDeletedGuest = deletedGuestList.filter(guest => guest !== null)
         
