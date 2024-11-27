@@ -31,7 +31,8 @@ const bulkHotelRoomValidation = Joi.object({
         hospitality_checklist: Joi.array().items({
             check_id: Joi.number(),
             check_name: Joi.string()
-        })
+        }),
+        is_hospitality_checklist_visible: Joi.boolean().required()
     }).required(),
     id: Joi.string()
 });
@@ -82,6 +83,7 @@ const singleHotelRoomValidation = Joi.object({
         check_id: Joi.number(),
         check_name: Joi.string()
     }),
+    is_hospitality_checklist_visible: Joi.boolean().required(),
     id: Joi.string()
 });
 
