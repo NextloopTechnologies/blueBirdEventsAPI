@@ -27,11 +27,14 @@ const ghmsDepartureMgmtCreateValidtn = Joi.object({
     car_id: Joi.string().required(),
     guest_id: Joi.string().required(),
     departure_time: Joi.string().required(),
-    mode_of_departure: Joi.string().required(),
-    return_checklist: Joi.string().allow(''),
+    departure_location: Joi.string().required(),
+    departure_conveyance: Joi.valid('Self','RentalCar','PrivateCar').required(),
+    details: Joi.string().allow(''),
+    // mode_of_departure: Joi.string().required(),
+    // return_checklist: Joi.string().allow(''),
     // no_of_guest_arrived: Joi.number().required(),
-    special_note: Joi.string().allow(''),
-    date_of_departure: Joi.date().min(todaysDate).required()
+    // special_note: Joi.string().allow(''),
+    // date_of_departure: Joi.date().min(todaysDate).required()
 });
 
 router.post('/create', auth, checkPermission('create-ghmsdeparture'), requestValidator(ghmsDepartureMgmtCreateValidtn), async(req, res) => {
@@ -63,11 +66,14 @@ const ghmsDepartureMgmtUpdateValidtn = Joi.object({
     car_id: Joi.string().required(),
     guest_id: Joi.string().required(),
     departure_time: Joi.string().required(),
-    mode_of_departure: Joi.string().required(),
-    return_checklist: Joi.string().allow(''),
+    departure_location: Joi.string().required(),
+    departure_conveyance: Joi.string().valid('Self','RentalCar','PrivateCar').required(),
+    details: Joi.string().allow(''),
+    // mode_of_departure: Joi.string().required(),
+    // return_checklist: Joi.string().allow(''),
     // no_of_guest_arrived: Joi.number().required(),
-    special_note: Joi.string().allow(''),
-    date_of_departure: Joi.date().required(),
+    // special_note: Joi.string().allow(''),
+    // date_of_departure: Joi.date().min(todaysDate).required()
     id: Joi.string()
 });
 

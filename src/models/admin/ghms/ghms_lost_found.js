@@ -16,36 +16,38 @@ const ghmsLostFoundSchema = new Schema({
       required: true,
       ref: 'GHMSGuestList'
     },
-    item_name: {
-      type: String,
-      minlength: 3,
-      required: true
-    },
-    item_identification: {
-      type: String,
-      minlength: 3,
-      required: true
-    },
-    lost_place: {
-      type: String,
-      minlength: 3,
-      required: true
-    },
-    found_place: {
-      type: String,
-      minlength: 3,
-      required: true
-    },
-    found_by: {
-      type: String,
-      minlength: 3,
-      required: true
-    },
-    deliver_type: {
-      type: String,
-      enum: ['Self','Courier'],
-      required: true
-    },
+    lost_item: { type: String, minlength: 3 },
+    delivery_type: { type: String, minlength: 3 },
+    // item_name: {
+    //   type: String,
+    //   minlength: 3,
+    //   required: true
+    // },
+    // item_identification: {
+    //   type: String,
+    //   minlength: 3,
+    //   required: true
+    // },
+    // lost_place: {
+    //   type: String,
+    //   minlength: 3,
+    //   required: true
+    // },
+    // found_place: {
+    //   type: String,
+    //   minlength: 3,
+    //   required: true
+    // },
+    // found_by: {
+    //   type: String,
+    //   minlength: 3,
+    //   required: true
+    // },
+    // deliver_type: {
+    //   type: String,
+    //   enum: ['Self','Courier'],
+    //   required: true
+    // },
     active: {
       type: Boolean,
       default: true

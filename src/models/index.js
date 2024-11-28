@@ -26,6 +26,7 @@ import VendorProdDecorChecklist from './admin/vendor/vendor_proddecor_checklist'
 import VendorFoodBev from './admin/vendor/vendor_food_bev';
 import GHMSDepartureMgmt from './admin/ghms/ghms_departure_mgmt';
 import GHMSLostFound from './admin/ghms/ghms_lost_found';
+import GHMSOutstation from './admin/ghms/ghms_outstation';
 import GeneralChecklist from './admin/general_checklist/general_checklist';
 import PriortizationList from './admin/priortizationlist/priortizationlist';
 
@@ -52,6 +53,7 @@ export {
     GHMSArrivalMgmt,
     GHMSDepartureMgmt,
     GHMSLostFound,
+    GHMSOutstation,
     Vendor,
     VendorCar,
     VendorDriver,
