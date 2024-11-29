@@ -26,7 +26,7 @@ const ghmsLostFoundValidation = Joi.object({
     event_id: Joi.string().required(),
     guest_id: Joi.string().required(),
     lost_item: Joi.string().min(3).required(),
-    deliver_type: Joi.string().min(3).required(),
+    delivery_type: Joi.string().min(3).required(),
     // item_name: Joi.string().min(3).required(),
     // item_identification: Joi.string().min(3).required(),
     // lost_place: Joi.string().min(3).required(),
