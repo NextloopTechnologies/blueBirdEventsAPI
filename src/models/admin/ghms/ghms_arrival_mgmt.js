@@ -18,7 +18,7 @@ const ghmsArrivalMgmtSchema = new Schema({
     },
     date_of_arrival: Date,
     arrived_at: String,
-    arrived_location: String,
+    arrival_location: String,
     conveyance_through: { type: String, enum: ['Self', 'RentalCar', 'PrivateCar']},
     details: String,
     // no_of_guest_arrived: {
