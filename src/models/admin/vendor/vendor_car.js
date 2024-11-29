@@ -1,11 +1,6 @@
 import { Schema, model } from "mongoose";
 
 const vendorCarSchema = Schema({
-  vendor_id: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'Vendor'
-  },
   car_model: {
     type: String,
     required: true,
@@ -28,20 +23,25 @@ const vendorCarSchema = Schema({
     required: true,
     minlength: 3
   },
-  car_type: {
-    type: String,
-    required: true
-  },
-  driver_name: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 3
-  },
-  driver_mobile: {
-    type: Number,
-    required: true
-  },
+  // vendor_id: {
+  //   type: Schema.Types.ObjectId,
+  //   required: true,
+  //   ref: 'Vendor'
+  // },
+  // car_type: {
+  //   type: String,
+  //   required: true
+  // },
+  // driver_name: {
+  //   type: String,
+  //   required: true,
+  //   trim: true,
+  //   minlength: 3
+  // },
+  // driver_mobile: {
+  //   type: Number,
+  //   required: true
+  // },
   active: {
     type: Boolean,
     default: true

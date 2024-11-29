@@ -21,15 +21,15 @@ router.get('', auth, checkPermission('manage-vendorcar'),  async(req, res) => {
 });
 
 const vendorCarValidation = Joi.object({
-    vendor_id: Joi.string().required(),
     owner_name: Joi.string().min(3).trim().required(),
     car_model: Joi.string().min(3).required(),
     car_reg: Joi.string().min(3).required(),
     car_number: Joi.string().min(3).required(),
-    car_type: Joi.string().valid('Rental','Private').required(),
-    driver_name: Joi.string().min(3).required().trim(),
-    driver_mobile: Joi.string().regex(/^[0-9]{10}$/)
-    .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
+    // vendor_id: Joi.string().required(),
+    // car_type: Joi.string().valid('Rental','Private').required(),
+    // driver_name: Joi.string().min(3).required().trim(),
+    // driver_mobile: Joi.string().regex(/^[0-9]{10}$/)
+    // .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
     id: Joi.string()
 });
 

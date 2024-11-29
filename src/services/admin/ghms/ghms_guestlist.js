@@ -5,18 +5,7 @@ export const create = async(values) => {
     try {
         const ghmsguestlist = new GHMSGuestList(values);
         await ghmsguestlist.save();
-        if(ghmsguestlist){
-            const guestDetails = {
-                client_id: ghmsguestlist.client_id,
-                event_id: ghmsguestlist.event_id,
-                guest_id: ghmsguestlist._id
-            }
-            await Promise.all([
-                GHMSArrivalMgmt.create(guestDetails),
-                GHMSDepartureMgmt.create(guestDetails),
-                GHMSOutstation.create(guestDetails)
-            ])
-        }
+        if(ghmsguestlist) await createOtherGuestManagement(ghmsguestlist)
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, ghmsguestlist }
     } catch (error) {
@@ -27,20 +16,7 @@ export const create = async(values) => {
 export const createBulk = async(values) => {
     try {
         const ghmsguestlist = await GHMSGuestList.insertMany(values);
-        const promises = ghmsguestlist.map((guest) => {
-            const guestDetails = {
-                client_id: guest.client_id,
-                event_id: guest.event_id,
-                guest_id: guest._id,
-            };
-
-            return Promise.all([
-                GHMSArrivalMgmt.create(guestDetails),
-                GHMSDepartureMgmt.create(guestDetails),
-                GHMSOutstation.create(guestDetails),
-            ]);
-        });
-
+        const promises = ghmsguestlist.map(async(guest) => await createOtherGuestManagement(guest))
         await Promise.all(promises);
         return { status: 201, msgText: 'Created Successfully! ',
         success: true, ghmsguestlist }
@@ -48,6 +24,24 @@ export const createBulk = async(values) => {
         throw error;
     }
 };
+
+const createOtherGuestManagement = async(guest) => {
+    try {
+        const guestDetails = {
+            client_id: guest.client_id,
+            event_id: guest.event_id,
+            guest_id: guest._id,
+        };
+
+        return Promise.all([
+            GHMSArrivalMgmt.create(guestDetails),
+            GHMSDepartureMgmt.create(guestDetails),
+            guest.guest_outstation==='Outstation' && GHMSOutstation.create(guestDetails),
+        ]);
+    } catch (error) {
+        throw error
+    }
+}
 
 export const read = async({page, perPage, whereClause={}}) => {
     try {

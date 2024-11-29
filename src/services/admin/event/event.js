@@ -7,6 +7,7 @@ import {
     ghmsDepartureMgmtService, 
     ghmsGuestlistService, 
     ghmsLostFoundService, 
+    ghmsOutstationService, 
     priortizationListService, 
     roomAllotmentService 
 } from '../..';
@@ -143,6 +144,7 @@ export const readSingle = async(page, perPage, _id) => {
         const { ghmsarrivalmgmt: arrival } = await ghmsArrivalMgmtService.readForEvent(whereClause);
         const { ghmsdeparturemgmt: departure } = await ghmsDepartureMgmtService.readForEvent(whereClause);
         const { ghmslostfound: lostandfound } = await ghmsLostFoundService.readForEvent(whereClause);
+        const { ghmsoutstation: outstation } = await ghmsOutstationService.readForEvent(whereClause);
         const { roomallotment } = await roomAllotmentService.readForEvent(whereClause);  
         const { priortizationlist: priortization } = await priortizationListService.readForEvent(whereClause);     
         const { deployedfreelancers } = await freelancerAssignedEventService.readForEvent(_id);     
@@ -150,7 +152,7 @@ export const readSingle = async(page, perPage, _id) => {
         const { eventphoto: gallery } = await eventPhotoService.readForEvent(whereClause);     
         
         let ghms;
-        if(!guestlist && !arrival && !departure && !lostandfound && !roomallotment){
+        if(!guestlist && !arrival && !departure && !lostandfound && !roomallotment && !outstation){
             ghms = undefined;
         } else {
             ghms = {
@@ -158,6 +160,7 @@ export const readSingle = async(page, perPage, _id) => {
                 arrival,
                 departure,
                 lostandfound,
+                outstation,
                 roomallotment
             }
         }
