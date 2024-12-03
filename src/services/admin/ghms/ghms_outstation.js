@@ -54,7 +54,7 @@ export const update = async(id, values) => {
         if(!ghmsoutstation) {
             return { status: 404 , msgText: "GHMSOutstation does not exists!" ,success: false }
         }  
-        return { status: 200, msgText: 'Updated Successfully! ',success: true, updatedLostAndFound: ghmsoutstation}
+        return { status: 200, msgText: 'Updated Successfully! ',success: true, updatedOutstation: ghmsoutstation}
     } catch (error) {
         throw error;
     }

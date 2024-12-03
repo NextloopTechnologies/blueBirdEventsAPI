@@ -29,11 +29,11 @@ export const read = async({page, perPage, whereClause={}}) => {
 
 export const update = async(id, values) => {
     try {
-        const vendorcar = await VendorCar.findByIdAndUpdate(id, values);
+        const vendorcar = await VendorCar.findByIdAndUpdate(id, values, { returnDocument: 'after' });
         if(!vendorcar) {
             return { status: 404 , msgText: "VendorCar does not exists!" ,success: false }
         }  
-        return { status: 200, msgText: 'Updated Successfully! ',success: true}
+        return { status: 200, msgText: 'Updated Successfully! ',updatedCar: vendorcar, success: true}
     } catch (error) {
         throw error;
     }
