@@ -31,7 +31,8 @@ const bulkHotelRoomValidation = Joi.object({
         hospitality_checklist: Joi.array().items({
             check_id: Joi.number(),
             check_name: Joi.string()
-        })
+        }),
+        is_hospitality_checklist_visible: Joi.boolean().required()
     }).required(),
     id: Joi.string()
 });
@@ -50,7 +51,7 @@ router.post('/create', auth, checkPermission('create-hotelroom'), requestValidat
 router.get('/read/:id', auth, checkPermission('read-hotelroom'), async (req, res)=> {
     try {
         const _id = req.params.id;
-        const { status, ...data} = await hotelRoomService.readAll({whereClause:{_id}});
+        const { status, ...data} = await hotelRoomService.read(_id);
         res.status(status).send(data);
     } catch (error) {
         logger('ADMIN_HOTELROOM-READ-CONTROLLER').error(error);
@@ -82,6 +83,7 @@ const singleHotelRoomValidation = Joi.object({
         check_id: Joi.number(),
         check_name: Joi.string()
     }),
+    is_hospitality_checklist_visible: Joi.boolean().required(),
     id: Joi.string()
 });
 

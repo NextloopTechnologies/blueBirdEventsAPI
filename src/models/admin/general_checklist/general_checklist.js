@@ -15,6 +15,7 @@ const generalChecklistSchema = new Schema({
       // _id: false,
       checklist_type: {
         type: String,
+        enum: ['Prod','Food','L&C'],
         required: true
       },
       generalchecklist_text: {type: String, minlength: 3},
@@ -22,7 +23,8 @@ const generalChecklistSchema = new Schema({
       checklist: [{
         _id: false,
         check_id: Number,
-        check_name: String
+        check_name: String,
+        isChecked: { type: Boolean, default: true }
       }]
     }],
     active: {

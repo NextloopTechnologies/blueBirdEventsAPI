@@ -25,15 +25,17 @@ const ghmsGuestlistCreateValidtn = Joi.object({
     client_id: Joi.string().required(),
     event_id: Joi.string().required(),
     guest_name: Joi.string().min(3).required().trim(),
-    guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
     guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    guest_add: Joi.string().min(3),
     guest_outstation: Joi.string().valid('Local','Outstation').required(),
-    guest_invited: Joi.string().valid('Individual','Family').required(),
-    guest_expected_nos: Joi.number(),
-    guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
-    guest_date_of_arrival: Joi.date().min(todaysDate)
+    digital_invitation: Joi.boolean().required(),
+    notes: Joi.string().min(3).trim().required()
+    // guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
+    // guest_add: Joi.string().min(3),
+    // guest_invited: Joi.string().valid('Individual','Family').required(),
+    // guest_expected_nos: Joi.number(),
+    // guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
+    // guest_date_of_arrival: Joi.date().min(todaysDate)
 });
 
 router.post('/create', auth, checkPermission('create-ghmsguestlist'),  requestValidator(ghmsGuestlistCreateValidtn), async(req, res) => {
@@ -52,15 +54,17 @@ const ghmsBulkGuestlistValidation = Joi.object({
         client_id: Joi.string().required(),
         event_id: Joi.string().required(),
         guest_name: Joi.string().min(3).required().trim(),
-        guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
         guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
         .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-        guest_add: Joi.string().min(3),
         guest_outstation: Joi.string().valid('Local','Outstation').required(),
-        guest_invited: Joi.string().valid('Individual','Family'),
-        guest_expected_nos: Joi.number(),
-        guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
-        guest_date_of_arrival: Joi.date().min(todaysDate),
+        digital_invitation: Joi.boolean().required(),
+        notes: Joi.string().min(3).trim().required()
+        // guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
+        // guest_add: Joi.string().min(3),
+        // guest_invited: Joi.string().valid('Individual','Family'),
+        // guest_expected_nos: Joi.number(),
+        // guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
+        // guest_date_of_arrival: Joi.date().min(todaysDate),
     })
 });
 
@@ -91,15 +95,17 @@ const ghmsGuestlistUpdateValidtn = Joi.object({
     client_id: Joi.string().required(),
     event_id: Joi.string().required(),
     guest_name: Joi.string().min(3).required().trim(),
-    guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
     guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
     .messages({'string.pattern.base': `Phone number must have 10 digits.`}),
-    guest_add: Joi.string().min(3),
     guest_outstation: Joi.string().valid('Local','Outstation').required(),
-    guest_invited: Joi.string().valid('Individual','Family').required(),
-    guest_expected_nos: Joi.number(),
-    guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
-    guest_date_of_arrival: Joi.date(),
+    digital_invitation: Joi.boolean().required(),
+    notes: Joi.string().min(3).trim().required(),
+    // guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
+    // guest_add: Joi.string().min(3),
+    // guest_invited: Joi.string().valid('Individual','Family').required(),
+    // guest_expected_nos: Joi.number(),
+    // guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
+    // guest_date_of_arrival: Joi.date(),
     id: Joi.string()
 });
 

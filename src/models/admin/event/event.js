@@ -55,7 +55,8 @@ const eventSchema = new Schema({
                 },
                 hotel_room_id: {
                     type: Schema.Types.ObjectId,
-                    required: true
+                    required: true,
+                    ref: 'HotelRoom'
                 },
                 room_type_id: {
                     type: Schema.Types.ObjectId,
@@ -101,48 +102,48 @@ const eventSchema = new Schema({
             paid_amount: String,
             due_amount: String,
         }],
-        cars: [{
-            vendor_id: {
-                type: Schema.Types.ObjectId,
-                required: true,
-            },
-            car_model: {
-                type: String,
-                required: true,
-                trim: true,
-                minlength: 3
-            },
-            owner_name: {
-                type: String,
-                required: true,
-                trim: true,
-                minlength: 3
-            },
-            car_reg: {
-                type: String,
-                minlength: 3,
-                required: true
-            },
-            car_number: {
-                type: String,
-                required: true,
-                minlength: 3
-            },
-            car_type: {
-                type: String,
-                required: true
-            },
-            driver_name: {
-                type: String,
-                required: true,
-                trim: true,
-                minlength: 3
-            },
-            driver_mobile: {
-                type: String,
-                required: true
-            },
-        }]
+        // cars: [{
+        //     vendor_id: {
+        //         type: Schema.Types.ObjectId,
+        //         required: true,
+        //     },
+        //     car_model: {
+        //         type: String,
+        //         required: true,
+        //         trim: true,
+        //         minlength: 3
+        //     },
+        //     owner_name: {
+        //         type: String,
+        //         required: true,
+        //         trim: true,
+        //         minlength: 3
+        //     },
+        //     car_reg: {
+        //         type: String,
+        //         minlength: 3,
+        //         required: true
+        //     },
+        //     car_number: {
+        //         type: String,
+        //         required: true,
+        //         minlength: 3
+        //     },
+        //     car_type: {
+        //         type: String,
+        //         required: true
+        //     },
+        //     driver_name: {
+        //         type: String,
+        //         required: true,
+        //         trim: true,
+        //         minlength: 3
+        //     },
+        //     driver_mobile: {
+        //         type: String,
+        //         required: true
+        //     },
+        // }]
     },
   
     event_foodbev: [{

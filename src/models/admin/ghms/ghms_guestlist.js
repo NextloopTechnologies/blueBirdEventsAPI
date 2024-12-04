@@ -21,30 +21,42 @@ const ghmsGuestlistSchema = new Schema({
     type: String,
     required: true
   },
-  guest_email: {
-    type: String,
-    trim: true,
-  },
-  guest_add: {
-    type: String,
-    minlength: 3
-  },
+  // guest_email: {
+  //   type: String,
+  //   trim: true,
+  // },
+  // guest_add: {
+  //   type: String,
+  //   minlength: 3
+  // },
   guest_outstation: {
     type: String,
+    enum: ['Local','Outstation'],
     required: true
   },
-  guest_invited: {
+  // guest_invited: {
+  //   type: String,
+  //   enum: ['Individual','Family'],
+  // },
+  // guest_expected_nos: {
+  //   type: Number
+  // },
+  // guest_invitation_type: {
+  //   type: String,
+  //   enum: ['Courier','Personally','Digitally']
+  // },
+  // guest_date_of_arrival: {
+  //   type: Date
+  // },
+  digital_invitation: {
+    type: Boolean,
+    required: true
+  },
+  notes: {
     type: String,
-    required: true
-  },
-  guest_expected_nos: {
-    type: Number
-  },
-  guest_invitation_type: {
-    type: String
-  },
-  guest_date_of_arrival: {
-    type: Date
+    trim: true,
+    required: true,
+    minlenght: 3
   },
   active: {
     type: Boolean

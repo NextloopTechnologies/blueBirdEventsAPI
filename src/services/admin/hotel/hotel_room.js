@@ -32,6 +32,20 @@ export const readAll = async({page, perPage,whereClause={}}) => {
     }
 };
 
+export const read = async(id) => {
+    try {
+        const hotelroom = await HotelRoom.findById(id)
+        .select(['hospitality_checklist']);
+
+        if(!hotelroom) {
+            return { status: 404 , msgText: "HotelRoom does not exists!" ,success: false }
+        }
+        return { status: 200, success: true, hotelroom}
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const readCheckedRoom = async(id) => {
     try {
         const hotelroom = await HotelRoom.find({ hotel_id: id })

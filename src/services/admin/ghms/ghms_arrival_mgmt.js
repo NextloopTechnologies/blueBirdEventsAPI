@@ -14,10 +14,12 @@ export const create = async(values) => {
 export const read = async({page, perPage, whereClause={}}) => {
     try {
         const ghmsarrivalmgmt = await GHMSArrivalMgmt.find(whereClause)
-        .populate([{path: 'event_id', select: 'event_title'},
-        {path: 'guest_id', select: 'guest_name'},
-        {path: 'car_id', select: ['car_name','car_model','car_number','driver_name']},
-        {path: 'client_id', select: 'name'}])
+        .populate([
+            {path: 'event_id', select: 'event_title'},
+            {path: 'guest_id', select: ['guest_name', 'guest_mobile']},
+            // {path: 'car_id', select: ['car_name','car_model','car_number','driver_name']},
+            {path: 'client_id', select: 'name'}
+        ])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
         if(!ghmsarrivalmgmt.length > 0) {
