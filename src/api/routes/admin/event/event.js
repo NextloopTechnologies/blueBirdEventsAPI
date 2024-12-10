@@ -34,6 +34,7 @@ const eventValidation = Joi.object({
         event_start_date: Joi.date().min(todaysDate).required(),
         event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
         event_remark: Joi.string().min(3),
+        is_hospitality_checklist_visible: Joi.boolean().required(),
         hotels: Joi.array().items({
             hotel_id: Joi.string().required(),
             hotel_rooms_required: Joi.array().items({
@@ -89,15 +90,17 @@ const eventValidation = Joi.object({
             client_id: Joi.string(),
             event_id: Joi.string(),
             guest_name: Joi.string().min(3).required().trim(),
-            guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
             guest_mobile: Joi.string().regex(/^[0-9]{10}$/)
             .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
-            guest_add: Joi.string().min(3),
             guest_outstation: Joi.string().valid('Local','Outstation').required(),
-            guest_invited: Joi.string().valid('Individual','Family').required(),
-            guest_expected_nos: Joi.number(),
-            guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
-            guest_date_of_arrival: Joi.date().min(todaysDate)
+            digital_invitation: Joi.boolean().required(),
+            notes: Joi.string().min(3).trim().required(),
+            // guest_email: Joi.string().email({ minDomainSegments:2, tlds: {allow: ['com','in']}}).trim(),
+            // guest_add: Joi.string().min(3),
+            // guest_invited: Joi.string().valid('Individual','Family').required(),
+            // guest_expected_nos: Joi.number(),
+            // guest_invitation_type: Joi.valid('Courier','Personally','Digitally'),
+            // guest_date_of_arrival: Joi.date().min(todaysDate)
         }),
     }),
     // priortization: Joi.array().items({
@@ -209,6 +212,7 @@ const singleEventValidation = Joi.object({
     event_start_date: Joi.date().required(),
     event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
     event_remark: Joi.string().min(3),
+    is_hospitality_checklist_visible: Joi.boolean().required(),
     // hotel //
     hotels: Joi.array().items({
         hotel_id: Joi.string().required(),
@@ -235,18 +239,18 @@ const singleEventValidation = Joi.object({
             total_package: Joi.string(),
             arriving_time: Joi.string()
         }),
-        cars: Joi.array().items({
-            _id: Joi.string(),
-            vendor_id: Joi.string().required(),
-            owner_name: Joi.string().min(3).trim().required(),
-            car_model: Joi.string().min(3).required(),
-            car_reg: Joi.string().min(3).required(),
-            car_number: Joi.string().min(3).required(),
-            car_type: Joi.string().valid('Rental','Private').required(),
-            driver_name: Joi.string().min(3).required().trim(),
-            driver_mobile: Joi.string().regex(/^[0-9]{10}$/)
-            .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
-        })
+        // cars: Joi.array().items({
+        //     _id: Joi.string(),
+        //     vendor_id: Joi.string().required(),
+        //     owner_name: Joi.string().min(3).trim().required(),
+        //     car_model: Joi.string().min(3).required(),
+        //     car_reg: Joi.string().min(3).required(),
+        //     car_number: Joi.string().min(3).required(),
+        //     car_type: Joi.string().valid('Rental','Private').required(),
+        //     driver_name: Joi.string().min(3).required().trim(),
+        //     driver_mobile: Joi.string().regex(/^[0-9]{10}$/)
+        //     .messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
+        // })
     }),
     // food bev
     event_foodbev: Joi.array().items({
