@@ -48,10 +48,10 @@ const hotelRoomSchema = new Schema({
     //   type: Date
     // },
     hospitality_checklist: [hospitalityChecklistSchema],
-    is_hospitality_checklist_visible: {
-      type: Boolean,
-      default: true
-    },
+    // is_hospitality_checklist_visible: {
+    //   type: Boolean,
+    //   default: true
+    // },
     active: {
       type: Boolean,
       default: true
