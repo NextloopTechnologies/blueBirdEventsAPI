@@ -18,7 +18,7 @@ const ghmsOutstationSchema = new Schema({
     },
     arrival_location: { type: String, minlength: 3 },
     date_and_time: Date ,
-    notes: { type: String, minlength: 3 },
+    notes: String,
     active: {
       type: Boolean,
       default: true
