@@ -104,9 +104,9 @@ export const readSingle = async(page, perPage, _id) => {
     try {
         const event = await Event.findById(_id)
         .select(['-active','-createdAt','-updatedAt','-__v'])
-        .populate([
-            { path: 'hotels.hotel_rooms_required.room_nos.hotel_room_id', select: ['is_hospitality_checklist_visible', 'hospitality_checklist']}
-        ])
+        // .populate([
+        //     { path: 'hotels.hotel_rooms_required.room_nos.hotel_room_id', select: ['is_hospitality_checklist_visible', 'hospitality_checklist']}
+        // ])
         // .populate([{ path: 'client_id', select: 'name'},
         // { path: 'hotels.hotel_id', select: 'hotel_name'},
         // { path: 'event_vendors.vendor_id', select: ['vendor_name','vendor_work',
