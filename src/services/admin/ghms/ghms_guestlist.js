@@ -84,7 +84,22 @@ export const update = async(id, values) => {
         const ghmsguestlist = await GHMSGuestList.findByIdAndUpdate(id, values);
         if(!ghmsguestlist) {
             return { status: 404 , msgText: "GHMSGuestList does not exists!" ,success: false }
-        }  
+        }
+        
+        if(values.guest_outstation==='Outstation') {
+            const isExists = await GHMSOutstation.findOne({ guest_id: id })            
+            if(!isExists) {                
+                await GHMSOutstation.create({
+                    client_id: ghmsguestlist.client_id,
+                    event_id: ghmsguestlist.event_id,
+                    guest_id: id,
+                }) 
+            }
+        } else if(values.guest_outstation==='Local') {
+            const isExists = await GHMSOutstation.findOne({ guest_id: id })             
+            if(isExists) await GHMSOutstation.deleteOne({ guest_id: id })
+        }
+
         return { status: 200, msgText: 'Updated Successfully! ',success: true}
     } catch (error) {
         throw error;
