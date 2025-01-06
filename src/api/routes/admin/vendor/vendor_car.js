@@ -44,6 +44,21 @@ router.post('/create', auth, checkPermission('create-vendorcar'),  requestValida
     }
 });
 
+const bulkVendorCarValidation = Joi.object({
+    car: Joi.array().items(vendorCarValidation).required()
+})
+
+router.post('/createBulk', auth, requestValidator(bulkVendorCarValidation), async(req, res) => {
+    try {
+        const { status, ...data} = await vendorCarService.createBulk(req.values.car);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_VENDORCAR-BULK_CREATE-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
 router.get('/read/:id', auth, checkPermission('read-vendorcar'),  async (req, res)=> {
     try {
         const _id = req.params.id;

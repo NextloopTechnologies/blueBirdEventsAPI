@@ -11,6 +11,16 @@ export const create = async(values) => {
     }
 };
 
+export const createBulk = async(values) => {
+    try {
+        const cars = await VendorCar.insertMany(values);
+        return { status: 201, msgText: 'Created Successfully! ',
+        success: true, cars }
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const read = async({page, perPage, whereClause={}}) => {
     try {
         const vendorcar = await VendorCar.find(whereClause)
