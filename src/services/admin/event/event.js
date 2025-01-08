@@ -77,6 +77,145 @@ export const readAll = async({page, perPage, whereClause={}}) => {
     }
 };
 
+export const readTeamSheet = async(page, perPage, event_id) => {
+    try {
+        const skip = ((perPage * page) - perPage)
+
+        const result = await Event.aggregate([
+            {
+                $match: {"_id": ObjectId(event_id)}
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "coordinator_ids",
+                    foreignField: "_id",
+                    as: "coordinators"
+                }
+            },
+            {
+                $lookup: {
+                    from: "freelancerassignedevents",
+                    localField: "_id",
+                    foreignField: "event_id",
+                    as: "deployedFreelancers"
+                }
+            },
+            {
+                $addFields: {
+                    coordinators: {
+                        $map: {
+                            input: "$coordinators",
+                            as: "coordinator",
+                            in: {
+                                name: "$$coordinator.name",
+                                contact: "$$coordinator.mobile",
+                                designation: "Coordinator",
+                            },
+                        },
+                    },
+                },
+            },
+            {
+                $unwind: {
+                  path: "$deployedFreelancers",
+                  preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $lookup: {
+                    from: "freelancers",
+                    localField: "deployedFreelancers.freelancer_id",
+                    foreignField: "_id",
+                    as: "freelancerDetails",
+                },
+            },
+            {
+                $unwind: {
+                    path: "$freelancerDetails",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },        
+            // {
+            //     $addFields: {
+            //         freelancerDetails: {
+            //             $cond: {
+            //             if: { $ne: ["$freelancerDetails", null] },
+            //             then: {
+            //                 name: "$freelancerDetails.name",
+            //                 contact: "$freelancerDetails.wa_contact_no",
+            //                 designation: "Deployed Freelancer",
+            //             },
+            //             else: null,
+            //             },
+            //         },
+            //     },
+            // },
+            {
+                $addFields: {
+                    freelancerDetails: {
+                        $cond: {
+                            if: { 
+                                $and: [
+                                    { $ne: ["$freelancerDetails", null] }, 
+                                    { $ne: ["$freelancerDetails.name", null] } 
+                                ]
+                            },
+                            then: {
+                                name: "$freelancerDetails.name",
+                                contact: "$freelancerDetails.wa_contact_no",
+                                designation: "Deployed Freelancer",
+                            },
+                            else: null,
+                        },
+                    },
+                },
+            },
+            {
+                $match: { freelancerDetails: { $ne: null } },
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    coordinators: { $first: "$coordinators" },
+                    freelancers: { $push: "$freelancerDetails" },
+                },
+            },
+            {
+                $project: {
+                    event_id: "$_id",
+                    combined: { $concatArrays: ["$coordinators", "$freelancers"] },
+                    _id: 0
+                },
+            },
+            {
+                $unwind: "$combined",
+            },
+            {
+                $match: { combined: { $ne: null } },
+            },
+            {
+                $facet: {
+                    paginatedResults: [
+                        { $skip: skip },
+                        { $limit: perPage },
+                    ],
+                    totalCount: [
+                        { $count: "count" },
+                    ],
+                },
+            },
+        ]);
+
+        const teamsheet = result.length ? result[0].paginatedResults : [];
+        const totalCount = (result.length && result[0].totalCount && result[0].totalCount[0].count) ? result[0].totalCount[0].count : 0;
+
+        return { status: 200, success: true, teamsheet, totalCount }
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const readCoordinator = async(id) => {
     try {
         let coordinator_ids = [];

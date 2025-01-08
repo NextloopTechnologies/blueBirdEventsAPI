@@ -21,6 +21,20 @@ router.post('', async(req, res) => {
     }
 });
 
+router.get('/teamsheet/:id', async(req, res) => {
+    try {
+        const page = parseInt(req.query.p) || 1
+        const perPage = parseInt (req.query.r) || 10
+        
+        const { status, ...data} = await eventService.readTeamSheet(page, perPage, req.params.id);
+        res.status(status).send(data);
+    } catch (error) {
+        logger('ADMIN_EVENT-READALL-CONTROLLER').error(error);
+        const { status, ...data } = formatFormError(error);
+        res.status(status).send(data);
+    }
+});
+
 const eventValidation = Joi.object({
     // event //
     id: Joi.string(),
