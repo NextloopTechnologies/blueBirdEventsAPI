@@ -94,14 +94,6 @@ export const readTeamSheet = async(page, perPage, event_id) => {
                 }
             },
             {
-                $lookup: {
-                    from: "freelancerassignedevents",
-                    localField: "_id",
-                    foreignField: "event_id",
-                    as: "deployedFreelancers"
-                }
-            },
-            {
                 $addFields: {
                     coordinators: {
                         $map: {
@@ -115,6 +107,14 @@ export const readTeamSheet = async(page, perPage, event_id) => {
                         },
                     },
                 },
+            },
+            {
+                $lookup: {
+                    from: "freelancerassignedevents",
+                    localField: "_id",
+                    foreignField: "event_id",
+                    as: "deployedFreelancers"
+                }
             },
             {
                 $unwind: {
@@ -136,21 +136,6 @@ export const readTeamSheet = async(page, perPage, event_id) => {
                     preserveNullAndEmptyArrays: true,
                 },
             },        
-            // {
-            //     $addFields: {
-            //         freelancerDetails: {
-            //             $cond: {
-            //             if: { $ne: ["$freelancerDetails", null] },
-            //             then: {
-            //                 name: "$freelancerDetails.name",
-            //                 contact: "$freelancerDetails.wa_contact_no",
-            //                 designation: "Deployed Freelancer",
-            //             },
-            //             else: null,
-            //             },
-            //         },
-            //     },
-            // },
             {
                 $addFields: {
                     freelancerDetails: {
@@ -207,10 +192,29 @@ export const readTeamSheet = async(page, perPage, event_id) => {
             },
         ]);
 
-        const teamsheet = result.length ? result[0].paginatedResults : [];
-        const totalCount = (result.length && result[0].totalCount && result[0].totalCount[0].count) ? result[0].totalCount[0].count : 0;
-
+        let teamsheet = result.length ? result[0].paginatedResults : [];
+        let totalCount = 0;
+        if(teamsheet.length) {
+            teamsheet = teamsheet
+                .filter(item => {
+                    const combined = item.combined;
+                    return (
+                        combined &&
+                        combined.name &&
+                        combined.contact &&
+                        combined.designation
+                    );
+                })
+                .map(item => ({
+                    event_id: item.event_id,
+                    name: item.combined.name,
+                    contact: item.combined.contact,
+                    designation: item.combined.designation,
+                }));
+            totalCount = teamsheet.length
+        }
         return { status: 200, success: true, teamsheet, totalCount }
+
     } catch (error) {
         throw error;
     }
