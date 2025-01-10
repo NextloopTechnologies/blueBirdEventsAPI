@@ -77,6 +77,149 @@ export const readAll = async({page, perPage, whereClause={}}) => {
     }
 };
 
+export const readTeamSheet = async(page, perPage, event_id) => {
+    try {
+        const skip = ((perPage * page) - perPage)
+
+        const result = await Event.aggregate([
+            {
+                $match: {"_id": ObjectId(event_id)}
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "coordinator_ids",
+                    foreignField: "_id",
+                    as: "coordinators"
+                }
+            },
+            {
+                $addFields: {
+                    coordinators: {
+                        $map: {
+                            input: "$coordinators",
+                            as: "coordinator",
+                            in: {
+                                name: "$$coordinator.name",
+                                contact: "$$coordinator.mobile",
+                                designation: "Coordinator",
+                            },
+                        },
+                    },
+                },
+            },
+            {
+                $lookup: {
+                    from: "freelancerassignedevents",
+                    localField: "_id",
+                    foreignField: "event_id",
+                    as: "deployedFreelancers"
+                }
+            },
+            {
+                $unwind: {
+                  path: "$deployedFreelancers",
+                  preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $lookup: {
+                    from: "freelancers",
+                    localField: "deployedFreelancers.freelancer_id",
+                    foreignField: "_id",
+                    as: "freelancerDetails",
+                },
+            },
+            {
+                $unwind: {
+                    path: "$freelancerDetails",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },        
+            {
+                $addFields: {
+                    freelancerDetails: {
+                        $cond: {
+                            if: { 
+                                $and: [
+                                    { $ne: ["$freelancerDetails", null] }, 
+                                    { $ne: ["$freelancerDetails.name", null] } 
+                                ]
+                            },
+                            then: {
+                                name: "$freelancerDetails.name",
+                                contact: "$freelancerDetails.wa_contact_no",
+                                designation: "Deployed Freelancer",
+                            },
+                            else: null,
+                        },
+                    },
+                },
+            },
+            {
+                $match: { freelancerDetails: { $ne: null } },
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    coordinators: { $first: "$coordinators" },
+                    freelancers: { $push: "$freelancerDetails" },
+                },
+            },
+            {
+                $project: {
+                    event_id: "$_id",
+                    combined: { $concatArrays: ["$coordinators", "$freelancers"] },
+                    _id: 0
+                },
+            },
+            {
+                $unwind: "$combined",
+            },
+            {
+                $match: { combined: { $ne: null } },
+            },
+            {
+                $facet: {
+                    paginatedResults: [
+                        { $skip: skip },
+                        { $limit: perPage },
+                    ],
+                    totalCount: [
+                        { $count: "count" },
+                    ],
+                },
+            },
+        ]);
+
+        let teamsheet = result.length ? result[0].paginatedResults : [];
+        let totalCount = 0;
+        if(teamsheet.length) {
+            teamsheet = teamsheet
+                .filter(item => {
+                    const combined = item.combined;
+                    return (
+                        combined &&
+                        combined.name &&
+                        combined.contact &&
+                        combined.designation
+                    );
+                })
+                .map(item => ({
+                    event_id: item.event_id,
+                    name: item.combined.name,
+                    contact: item.combined.contact,
+                    designation: item.combined.designation,
+                }));
+            totalCount = teamsheet.length
+        }
+        return { status: 200, success: true, teamsheet, totalCount }
+
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const readCoordinator = async(id) => {
     try {
         let coordinator_ids = [];
