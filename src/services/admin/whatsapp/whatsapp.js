@@ -28,7 +28,7 @@ export const prepareTempTextMessage = ({ values, guestContacts, clientContact })
     type: "template"
   }
   
-  if(template_name === 'bbe_good_morning' || template_name === 'bbe_good_night'){
+  if(template_name === 'bbe_good_morning' || template_name === 'bbe_good_evening' || template_name === 'bbe_good_night'){
     to = guestContacts;
     const simpleTemplateKeys = {
       ...defaultKeys,
