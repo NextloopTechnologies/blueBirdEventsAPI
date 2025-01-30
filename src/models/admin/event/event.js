@@ -37,7 +37,10 @@ const eventSchema = new Schema({
         minlength: 3
     },
     is_hospitality_checklist_visible: { type: Boolean, required: true, default: true },
-    // hotel //
+    single_event_comments: {
+        type: String,
+        minlength: 3
+    },
     hotels: [{
         _id: false,
         hotel_id: {
