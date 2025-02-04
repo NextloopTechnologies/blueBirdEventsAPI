@@ -12,6 +12,11 @@ const eventSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }], 
+    event_service: {
+        type: String,
+        enum: ['SingleDayEvent','MultiDayEvent'],
+        required: true
+    },
     event_type: {
         type: String,
         required: true

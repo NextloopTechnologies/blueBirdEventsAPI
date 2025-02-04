@@ -43,6 +43,7 @@ const eventValidation = Joi.object({
         client_id: Joi.string().required(),
         coordinator_ids: Joi.array(),
         event_type: Joi.string().required(),
+        event_service: Joi.string().valid('SingleDayEvent','MultiDayEvent').required(),
         event_title: Joi.string().min(3).trim().required(),
         event_descp: Joi.string().min(3),
         event_start_date: Joi.date().min(todaysDate).required(),
@@ -140,7 +141,7 @@ const eventValidation = Joi.object({
             generalchecklist_text: Joi.string().min(3),
             generalchecklist_date: Joi.date().min(todaysDate),
         })
-    }).required(),
+    }),
     // gallery: Joi.object({
     //     _id: Joi.string(),
     //     event_id: Joi.string(),
@@ -222,6 +223,7 @@ const singleEventValidation = Joi.object({
     client_id: Joi.string().required(),
     coordinator_ids: Joi.array(),
     event_type: Joi.string().required(),
+    event_service: Joi.string().valid('SingleDayEvent','MultiDayEvent').required(),
     event_title: Joi.string().min(3).trim().required(),
     event_descp: Joi.string().min(3),
     event_start_date: Joi.date().required(),
