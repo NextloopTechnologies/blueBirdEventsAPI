@@ -43,12 +43,14 @@ const eventValidation = Joi.object({
         client_id: Joi.string().required(),
         coordinator_ids: Joi.array(),
         event_type: Joi.string().required(),
+        event_service: Joi.string().valid('SingleDayEvent','MultiDayEvent').required(),
         event_title: Joi.string().min(3).trim().required(),
         event_descp: Joi.string().min(3),
         event_start_date: Joi.date().min(todaysDate).required(),
         event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
         event_remark: Joi.string().min(3),
         is_hospitality_checklist_visible: Joi.boolean().required(),
+        single_event_comments: Joi.string().min(3),
         hotels: Joi.array().items({
             hotel_id: Joi.string().required(),
             hotel_rooms_required: Joi.array().items({
@@ -60,7 +62,7 @@ const eventValidation = Joi.object({
                     isBooked: Joi.number().valid(0,1).required()
                 }).required()
             }).required()
-        }).required(), 
+        }), 
         event_vendors : Joi.object({
             vendors: Joi.array().items({
                 vendor_name: Joi.string().min(3).required().trim(),
@@ -90,12 +92,12 @@ const eventValidation = Joi.object({
             plates_used: Joi.string().trim()
         }),
         event_proddecor: Joi.array().items({
-            decor_title: Joi.string().min(3).required(),
+            decor_title: Joi.string().min(3),
             decor_img: Joi.array().items({
                 file: Joi.string()
             }).required(),
             decor_remark: Joi.string().min(3),
-            decor_date: Joi.date().min(todaysDate).required(),
+            decor_date: Joi.date().min(todaysDate),
             expected_decor_time: Joi.string()
         })
     }).required(),
@@ -139,7 +141,7 @@ const eventValidation = Joi.object({
             generalchecklist_text: Joi.string().min(3),
             generalchecklist_date: Joi.date().min(todaysDate),
         })
-    }).required(),
+    }),
     // gallery: Joi.object({
     //     _id: Joi.string(),
     //     event_id: Joi.string(),
@@ -221,12 +223,14 @@ const singleEventValidation = Joi.object({
     client_id: Joi.string().required(),
     coordinator_ids: Joi.array(),
     event_type: Joi.string().required(),
+    event_service: Joi.string().valid('SingleDayEvent','MultiDayEvent').required(),
     event_title: Joi.string().min(3).trim().required(),
     event_descp: Joi.string().min(3),
     event_start_date: Joi.date().required(),
     event_end_date: Joi.date().greater(Joi.ref('event_start_date')),
     event_remark: Joi.string().min(3),
     is_hospitality_checklist_visible: Joi.boolean().required(),
+    single_event_comments: Joi.string().min(3),
     // hotel //
     hotels: Joi.array().items({
         hotel_id: Joi.string().required(),
@@ -287,12 +291,12 @@ const singleEventValidation = Joi.object({
     // vendor prod //
     event_proddecor: Joi.array().items({
         _id: Joi.string(),
-        decor_title: Joi.string().min(3).required(),
+        decor_title: Joi.string().min(3),
         decor_img: Joi.array().items({
              file: Joi.string()
         }).required(),
         decor_remark: Joi.string().min(3),
-        decor_date: Joi.date().required(),
+        decor_date: Joi.date(),
         expected_decor_time: Joi.string()
     }),
     id: Joi.string()

@@ -28,7 +28,7 @@ router.post('/sendTextMessage', (req, res) => {
 
 const templateValidation = Joi.object({
     event_id: Joi.string().required(),
-    template_name: Joi.string().valid('bbe_decoration','bbe_good_night',
+    template_name: Joi.string().valid('bbe_decoration','bbe_good_night', 'bbe_good_evening',
     'bbe_guest_pickup','bbe_get_ready','bbe_good_morning','bbe_food').required(),
     template_value1: Joi.when('template_name', {
         is: Joi.exist().valid('bbe_decoration','bbe_guest_pickup','bbe_get_ready','bbe_food'),
