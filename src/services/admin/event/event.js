@@ -60,7 +60,7 @@ export const readAll = async({page, perPage, whereClause={}}) => {
         const event = await Event.find(whereClause)
         .populate([{ path: 'client_id', select: 'name'},
         { path: 'hotels.hotel_id', select: 'hotel_name'}])
-        .select(['event_type','event_title','event_start_date','event_end_date'])
+        .select(['event_service','event_type','event_title','event_start_date','event_end_date'])
         .sort({ _id: -1 }).skip(((perPage * page) - perPage))
         .limit(perPage);
         
@@ -232,7 +232,7 @@ export const readCoordinator = async(id) => {
                     { event_end_date: { $gte: todaysDate }} 
                 ]
             }, 
-            { _id: 1, event_title: 1}
+            { _id: 1, event_service:1, event_title: 1}
         ) 
         if(!event.length > 0) {
             return { status: 404 , msgText: "No events assigned!" ,success: false }
